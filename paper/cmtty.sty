@@ -1,0 +1,91 @@
+\def\filename{cmtty}
+\def\fileversion{v1.2}
+\def\filedate{2006/08/09}
+
+%%% \iffalse meta-comment
+%%%
+%%% $Id$
+%%%
+%%% ====================================================================
+%%% @LaTeX-file{
+%%%   filename  = "cmtty.sty",
+%%%   version   = "$Revision$",
+%%%   date      = "$Date$",
+%%%   author    = "Claire M. Connelly",
+%%%   copyright = "Copyright (C) 2006 Claire M. Connelly.
+%%%   address   = "C.M. Connelly
+%%%                System Administrator
+%%%                Department of Mathematics
+%%%                Harvey Mudd College
+%%%                1250 North Dartmouth Avenue
+%%%                Claremont, CA  91711
+%%%                United States of America",
+%%%   email     = "cmc@math.hmc.edu (Internet)",
+%%%   codetable = "ISO/ASCII",
+%%%   keywords  = "latex",
+%%%   supported = "yes",
+%%%   abstract  = "Use Computer Modern Typewriter as the monospace typeface.",
+%%% }
+%%% ====================================================================
+%%%
+%%%
+%%% License:
+%%%
+%%%   This program is free software; you can redistribute it and/or
+%%%   modify it under the terms of the GNU General Public License as
+%%%   published by the Free Software Foundation; either version 2 of the
+%%%   License, or (at your option) any later version.
+%%%
+%%%   This program is distributed in the hope that it will be useful,
+%%%   but WITHOUT ANY WARRANTY; without even the implied warranty of
+%%%   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%%%   GNU General Public License for more details.
+%%%
+%%%   You should have received a copy of the GNU General Public License
+%%%   along with this program; if not, write to the Free Software
+%%%   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+%%%   02111-1307  USA
+%%%
+%%% \fi
+%%%
+
+\ProvidesPackage{cmtty}[\filedate\space\fileversion]
+\typeout{This is package cmtty.sty.}
+
+\RequirePackage{afterpackage}
+
+
+%%% Use Computer Modern Typewriter as the monospace typeface.
+
+\DeclareRobustCommand{\tyfamily}{%
+  \fontfamily{cmtt}\fontencoding{OT1}\fontseries{m}\selectfont}
+
+\DeclareTextFontCommand{\textty}{\tyfamily}
+
+
+\let\texttt\textty
+\let\tt\tyfamily
+\let\ttfamily\tyfamily
+
+\begingroup
+\catcode`\`=\active
+\gdef\FV@fontfamily@tt{%
+  \def\FV@FontScanPrep{\FV@MakeActive\`}%
+%% SR modification begin - 1995
+%%  \def\FV@FontFamily{\tt`{{\string`}}}}
+  \def\FV@FontFamily{\tyfamily\edef`{{\string`}}}}
+%% SR modification end
+\gdef\FV@fontfamily@cmtt{%
+  \def\FV@FontScanPrep{\FV@MakeActive\`}%
+  \def\FV@FontFamily{\edef`{{\string`}}\fontfamily{cmtt}}}
+\endgroup
+
+
+\AfterPackage{url}{%
+  \def\UrlFont{\tyfamily}
+}
+
+
+\AtBeginDocument{%
+  \def\verbatim@font{\normalfont\tyfamily}
+}
