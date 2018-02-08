@@ -6,16 +6,21 @@
 \usepackage{url}              % For formatting URLs 
 \usepackage{booktabs}         % Publication-quality tables.
 \usepackage{natbib}           % Provides some nice citation and
-                              % bibliography formatting commands.
+							  % bibliography formatting commands.
 \bibpunct[:~]{(}{)}{;}{a}{,}{,~} % Set some defaults for bibliographic
-                                 % punctuation used by natbib.sty.
+								 % punctuation used by natbib.sty.
 \usepackage{verbatim}
 \usepackage{graphicx}
 \usepackage{calc}
 \usepackage{subfig}
 \usepackage{textcomp}
-\usepackage[plainpages=false,pdfpagelabels, hidelinks]{hyperref}
 \usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage{showframe}
+
+\usepackage[plainpages=false,pdfpagelabels, hidelinks]{hyperref}
+
+\usetikzlibrary{arrows, automata}
 
 %%% The following command allows tables to split between pages:
 \allowdisplaybreaks
@@ -49,15 +54,15 @@
 %%% you load with \usepackage.
 
 \newcommand{\coolcommand}[1]{#1 is cool.} % Lets everyone know that
-                                % the person or thing that you provide
-                                % as the argument to the command is
-                                % cool.
+								% the person or thing that you provide
+								% as the argument to the command is
+								% cool.
 
 %%% You probably won't want any of the following commands, which are
 %%% here to allow various the names of commands, make examples typeset
 %%% properly, and so on.  You can, of course, use them as examples for
 %%% your own user-defined commands.
-                                                                               
+																			   
 \newcommand{\bslash}{\symbol{'134}}%backslash
 \newcommand{\bsl}{{\texttt{\bslash}}}
 \newcommand{\com}[1]{\bsl\texttt{#1}\xspace}
@@ -76,7 +81,25 @@
 \newcommand{\tex}{\TeX\xspace}
 \newcommand{\latex}{\LaTeX\xspace}
 \newcommand{\host}[1]{\textsf{#1}\xspace}
-                                                                                
+																				
+\newlength{\oddsidemarginORIG}
+\newenvironment{exstep}[1]
+	{
+		\setlength{\oddsidemarginORIG}{\oddsidemargin}
+		\setlength{\oddsidemargin}{20 pt}
+		\begin{minipage}{0.5 \textwidth}
+			#1
+		\end{minipage} \begin{minipage}{0.5 \textwidth}
+	}
+	{
+		\end{minipage}\\[0.5 em]
+		\setlength{\oddsidemargin}{\oddsidemarginORIG}
+	}
+
+
+
+
+
 \newcounter{cms}
 
 %%% Some theorem-like command definitions.
@@ -131,14 +154,144 @@
 \mainmatter
 
 \chapter{Introduction}%
-\label{sec:introduction}
+\label{ch:introduction}
 
-Introduce the reader to your topic and your problem, separating this chapter as needed into sections.
+	\section{Introduction to Formal Language} % (fold)
+	\label{sec:introduction_to_formal_language}
+		The foundation of a formal language is an alphabet: a nonempty and finite set of symbols typically denoted $\Sigma$.
 
-\section{The Setting}
 
-\section{The Problem }%
-\label{sec:thisdoc}
+	% section introduction_to_formal_language (end)
+
+	\section{Finite Automata Construction Example} % (fold)
+	\label{sec:finite_automata_construction_example}
+		We will construct a simple finite automaton to determine if a binary string represents a number divisible by three.
+		Denote this $M_3 = (Q, q_0, \Sigma, \delta, F)$.
+		Since the inputs are to be binary strings, we know $\Sigma = \{ 0, 1 \}$.
+		We can also assume that each state of $M_3$ should represent the value of the current input modulo 3, so $Q = \{q_0, q_1, q_2\}$.
+		Now we need an initial state. 
+		We'll assume that the machine starts at $q_0$. 
+		This makes sense, because we could achieve the same result by claiming to prefix every input string with a 0, as this would not change its value.
+		Obviously, all numbers divisible by 3 will have a value of 0 modulo 3, so $F = \{q_0\}$.
+
+		Now the only part of $M_3$ left undefined is $\delta$, the set of state transitions.
+
+			\begin{exstep}
+				{
+					We begin with only the initial state.
+					The input so far is $\lambda$.
+				}
+				\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+					\node[initial,state,accepting] (q0)	{$q_0$};
+				\end{tikzpicture}
+			\end{exstep}
+
+			\begin{exstep}
+				{
+					With the 0 as the current state, suppose the first input symbol is 0. 
+					Then the number so far is $0_b = 0 = 0 \mod 3$, so we add the following to $\delta$: $(q_0, 0, q_0)$.
+				}
+				\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+					\node[initial,state,accepting] (q0)      {$q_0$};
+
+					\path[->, very thick] (q0) edge [loop above] node{0} (q0);
+				\end{tikzpicture}
+			\end{exstep}
+
+			\begin{exstep}
+				{
+					Now suppose that the first input symbol is 1. 
+					Then $1_b = 1 \mod 3$, so we need to add state $q_1$ to our drawing, and add $(q_0, 1, q_1)$ to $\delta$.
+				}
+				\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+					\node[initial,state,accepting] (q0)                 {$q_0$};
+					\node[state]                   (q1) [right of = q0] {$q_1$};
+
+					\path[->](q0) edge [loop above] node {0} (q0);
+					\path[->, very thick](q0) edge [bend left]  node {1} (q1);
+				\end{tikzpicture}
+			\end{exstep}
+
+			\begin{exstep}
+				{
+					Now we have all the transitions we need from $q_0$, so we move on to $q_1$.
+					We'll assume that the input so far is $1_b$.
+					Then if the next input symbol is $0$, we have $10_b = 2 = 2 \mod 3$.
+					So we add state $q_2$ to the diagram, and add $(q_1, 0, q_2)$ to $\delta$.
+				}
+				\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+					\node[initial,state,accepting] (0)                {$q_0$};
+					\node[state]                   (1) [right of = 0] {$q_1$};
+					\node[state]                   (2) [right of = 1] {$q_2$};
+
+					\path[->](0) edge [loop above] node {0} (0);
+					\path[->](0) edge [bend left]  node {1} (1);
+					\path[->, very thick](1) edge [bend left]  node {0} (2);
+				\end{tikzpicture}
+			\end{exstep}
+
+			\begin{exstep}
+				{
+					But if the next input is $1$, then we have $11_b = 3 = 0 \mod 3$.
+					So we add $(q_1, 1, q_0)$ to $\delta$.
+				}
+				\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+					\node[initial,state,accepting] (0)                {$q_0$};
+					\node[state]                   (1) [right of = 0] {$q_1$};
+					\node[state]                   (2) [right of = 1] {$q_2$};
+
+
+					\path[->](0) edge [loop above] node {0} (0);
+					\path[->](0) edge [bend left]  node {1} (1);
+					\path[->](1) edge [bend left]  node {0} (2);
+					\path[->, very thick](1) edge [bend left]  node {1} (0);
+				\end{tikzpicture}
+			\end{exstep}
+			
+
+			\begin{exstep}
+				{
+				Now we have all possible transitions from $q_1$, so we move on to $q_2$.
+				Assume that the input so far is $10_b$.
+				if the next symbol is $0$, we will have $100_b = 1 \mod 3$, so we add $(q_2, 0, q_1)$ to $\delta$.
+				}
+				\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+					\node[initial,state,accepting] (0)                {$q_0$};
+					\node[state]                   (1) [right of = 0] {$q_1$};
+					\node[state]                   (2) [right of = 1] {$q_2$};
+
+
+					\path[->](0) edge [loop above] node {0} (0);
+					\path[->](0) edge [bend left]  node {1} (1);
+					\path[->](1) edge [bend left]  node {0} (2);
+					\path[->](1) edge [bend left]  node {1} (0);
+					\path[->, very thick](2) edge [bend left]  node {0} (1);
+				\end{tikzpicture}
+			\end{exstep}
+			
+			\begin{exstep}
+				{
+					But if the next input is $1$, we will have $101_b = 5 = 2 \mod 3$.
+					So we add $(q_2, 1, q_2)$ to $\delta$.
+				}
+				\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+					\node[initial,state,accepting] (0)                {$q_0$};
+					\node[state]                   (1) [right of = 0] {$q_1$};
+					\node[state]                   (2) [right of = 1] {$q_2$};
+
+
+					\path[->](0) edge [loop above] node {0} (0);
+					\path[->](0) edge [bend left]  node {1} (1);
+					\path[->](1) edge [bend left]  node {0} (2);
+					\path[->](1) edge [bend left]  node {1} (0);
+					\path[->](2) edge [bend left]  node {0} (1);
+					\path[->, very thick](2) edge [loop right] node {1} (2);
+				\end{tikzpicture}
+			\end{exstep}
+			
+
+		
+	% section finite_automata_construction_example (end)
 
 \chapter{Main Body}%
 \label{sec:structured-writing}
