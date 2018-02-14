@@ -13,6 +13,7 @@
 \usepackage{subfig}
 \usepackage{textcomp}
 \usepackage{amsfonts}
+\usepackage{amssymb}
 \usepackage{tikz}
 \usepackage{standalone}
 \usepackage{showframe}
@@ -76,9 +77,7 @@
 
 
 %%% End new environments 
-
-
-
+	\renewcommand{\emptyset}{\ensuremath{\varnothing}\xspace}
 %%% New commands
 
 %%% End new commands
@@ -120,7 +119,24 @@
 	\section{Introduction to Formal Language} % (fold)
 	\label{sec:introduction_to_formal_language}
 
-		Formal language theory is the study of sets of strings comprised of some 
+		A formal language (or simply a \textit{language}) is a set of sequences called \textit{strings} of \textit{words}.
+		The elements of these sequences, called \textit{symbols}, are the members of a set known as an \textit{alphabet}.
+		Alphabets are typically denoted by $\Sigma$.
+		The string containing no symbols is called the \textit{empty string} and denoted by $\lambda$.\footnote{
+			Many texts use $\epsilon$ to denote the empty string.
+		}
+
+		The set $\{ \lambda \}$, containing only the empty string, is a valid language over any alphabet.
+		The empty set, the set containing no strings, is also a valid language over any alphabet.
+		Note that $\emptyset$ represents the set of no strings, and is distinct from $\{ \lambda \}$, which is the set containing only the empty string.
+
+		For simplicity, alphabets are assumed to be nonempty and finite, and words are assumed to be of finite length.
+		Languages, however, may easily be infinite.
+		Consider the alphabet $\Sigma = \{ 0, 1 \}$.
+		The set of all nonempty words on $\Sigma$, denoted $\Sigma^+$ is a valid language, and since it contains the binary representation of the natural numbers, it is clearly infinite.
+		The set of all words, empty or not, over an alphabet, is denoted $\Sigma^*$, and defined by $\Sigma^* = \{ \lambda \} \; \cup \; \Sigma^+$.
+		For any (nonempty) alphabet, $\Sigma^+$ and $\Sigma^*$ will always be infinite.
+
 
 	% section introduction_to_formal_language (end)
 
