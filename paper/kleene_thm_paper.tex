@@ -1,5 +1,3 @@
-%%% skeleton for math colloquium paper at Beloit College
-
 \documentclass{bcthesis}
 
 %%% Other packages needed by your document may be loaded here.
@@ -17,140 +15,96 @@
 \usepackage{amsfonts}
 \usepackage{tikz}
 \usepackage{standalone}
-% \usepackage{showframe}
+\usepackage{showframe}
+\usepackage{james}
 \usepackage[plainpages=false,pdfpagelabels, hidelinks]{hyperref}
 
 \usetikzlibrary{arrows, automata}
 
-%%% The following command allows tables to split between pages:
-\allowdisplaybreaks
+%%% Document Settings
+	% The following command allows tables to split between pages:
+	\allowdisplaybreaks
 
-%%% Provide additional context around errors. 
-\setcounter{errorcontextlines}{1000}
+	% Provide additional context around errors. 
+	\setcounter{errorcontextlines}{1000}
 
-%% title of your report?
-\title{A Presentation of Kleene's Theorem with Examples}
+	\setlength{\parskip}{0.5 em}
 
-%% Your name 
-\author{James McFeeters}
+	\newif\ifbuildfrontmatter
+	\buildfrontmatterfalse
 
-% Photo -- see bcthesis class line 168
 
-\advisor{Darrah Chavey}
+%%% End document settings
 
-%% Second reader's name? Ask the Colloquium Instructor who it will be.
-\reader{Name of Second Reader}
+%%% Begin information section 
+	%% title of your report?
+	\title{A Presentation of Kleene's Theorem with Examples}
 
-\thesisyear{2018}
-\thesismonth{May}
+	%% Your name 
+	\author{James McFeeters}
 
+	% Photo -- see bcthesis class line 168
+
+	\advisor{Darrah Chavey}
+
+	%% Second reader's name? Ask the Colloquium Instructor who it will be.
+	\reader{Name of Second Reader}
+
+	\thesisyear{2018}
+	\thesismonth{May}
 %%% End of information section.
 
-%%% New commands and environments.
 
-%%% You can define your own commands and environments here.  If you
-%%% have a lot of material here, you might want to consider splitting
-%%% the commands and environments into a separate ``style'' file that
-%%% you load with \usepackage.
+%%% New Environments
 
-\newcommand{\coolcommand}[1]{#1 is cool.} % Lets everyone know that
-								% the person or thing that you provide
-								% as the argument to the command is
-								% cool.
+	% Environment for finite automata construction examples
+	% Places explanatory text next to the relevant diagram
+	\newenvironment{exstep}[1]
+		{
+			\begin{minipage}{0.5 \textwidth}
+				#1
+			\end{minipage} \begin{minipage}{0.5 \paperwidth}
+		}
+		{
+			\end{minipage}\\[0.5 em]
+		}
 
-%%% You probably won't want any of the following commands, which are
-%%% here to allow various the names of commands, make examples typeset
-%%% properly, and so on.  You can, of course, use them as examples for
-%%% your own user-defined commands.
-																			   
-\newcommand{\bslash}{\symbol{'134}}%backslash
-\newcommand{\bsl}{{\texttt{\bslash}}}
-\newcommand{\com}[1]{\bsl\texttt{#1}\xspace}
-\newcommand{\file}[1]{\texttt{#1}\xspace}
 
-\newcommand{\pdftex}{PDF\tex}
-\newcommand{\pdflatex}{PDF\latex}
-\newcommand{\acronym}[1]{\textsc{#1}\xspace}
-\newcommand{\key}[1]{\textsf{\emph{#1}}\xspace}
-\newcommand{\class}[1]{\textsf{#1}\xspace}
-\newcommand{\package}[1]{\textsf{#1}\xspace}
-\newcommand{\env}[1]{\texttt{#1}\xspace}
-\newcommand{\prog}[1]{\texttt{#1}\xspace}
-\newcommand{\command}[1]{\texttt{\bsl{}#1}\xspace}
-\newcommand{\ctt}{\texttt{comp.text.tex}\xspace}
-\newcommand{\tex}{\TeX\xspace}
-\newcommand{\latex}{\LaTeX\xspace}
-\newcommand{\host}[1]{\textsf{#1}\xspace}
-																				
-\newlength{\oddsidemarginORIG}
-\newenvironment{exstep}[1]
-	{
-		\setlength{\oddsidemarginORIG}{\oddsidemargin}
-		\setlength{\oddsidemargin}{20 pt}
-		\begin{minipage}{0.5 \textwidth}
-			#1
-		\end{minipage} \begin{minipage}{0.5 \textwidth}
-	}
-	{
-		\end{minipage}\\[0.5 em]
-		\setlength{\oddsidemargin}{\oddsidemarginORIG}
-	}
+%%% End new environments 
 
 
 
+%%% New commands
 
+%%% End new commands
 
-\newcounter{cms}
-
-%%% Some theorem-like command definitions.
-
-%%% The \newtheorem command comes from the amsthm package.  That
-%%% package is loaded by the class file.
-
-\newtheorem{thm}{Theorem}[chapter]
-\newtheorem{Theo1}{Theorem}[chapter]
-\newtheorem{Theo2}{Theorem}[chapter]
-\newtheorem{Lemma}{Lemma}[chapter]
-
-%%% If you find that some words in your document are being hyphenated
-%%% incorrectly, you can specify the correct hyphenation using the
-%%% \hyphenation command.  Note that words are separated by
-%%% whitespace, as shown below.
-
-\hyphenation{ap-pen-dix wer-ther-i-an}
 
 %%% The start of the document!
 \begin{document}
 
-\setlength{\parskip}{0.5 em}
-
+\ifbuildfrontmatter
 \frontmatter
 
-\maketitle
+	\maketitle
 
-\begin{abstract}
-	Your abstract goes here.
-\end{abstract}
+	\begin{abstract}
+		Your abstract goes here.
+	\end{abstract}
 
-%%% Acknowledgments (Optional).
 
-%%% If you want to thank someone for their influence on your life or
-%%% your work, here's where you'd do it.
+	%%% If you want to thank someone for their influence on your life or your work, here's where you'd do it.
+	\begin{acknowledgments}
+		Here you should acknowledge any special help on your project, or particular influences on your life or mathematical development.
+	\end{acknowledgments}
 
-\begin{acknowledgments}
-	Here you should acknowledge any special help on your project, or particular influences on your life or mathematical development.
-\end{acknowledgments}
-
-%%% Table of Contents, List of Figures, and List of Tables.
-%%% 
-%%% If you don't have any figures or tables in your report, you can
-%%% comment out the appropriate command.
-
-\tableofcontents
-% \listoffigures
-% \listoftables
-
+	%%% Table of Contents, List of Figures, and List of Tables. 
+	% If you don't have any figures or tables in your report, you can
+	% comment out the appropriate command.
+	\tableofcontents
+	% \listoffigures
+	% \listoftables
 %%% End of the front matter.
+\fi
 
 %%% Beginnning of the main matter.
 \mainmatter
@@ -160,20 +114,9 @@
 
 	\section{Introduction to Formal Language} % (fold)
 	\label{sec:introduction_to_formal_language}
-		The foundation of a formal language is an alphabet: a nonempty and finite set of symbols typically denoted $\Sigma$.
-		A series of zero or more symbols from an alphabet $\Sigma$ is called a word or string over that alphabet.
-		We denote the string of length $0$ by $\lambda$.
-		If $\Sigma = \{ a, b \}$, then $a$, $b$, $aaab$ and $\lambda$ are all words over $\Sigma$.
-		If $x = abb$ and $y = baa$ are words over $\Sigma$, then so is $xy = abbbaa$.
-		This operation is referred to as concatenation: $xy$ is called the concatenation of $x$ and $y$. \cite[pg.~1]{salomaa}
 
+		Formal language theory is the study of sets of strings comprised of some 
 
-		The length of a word $w$ is denoted $|w|$.\cite[pg.~1]{salomaa}
-
-
-		We use $\Sigma^+$, called the positive closure of $\Sigma$ to denote the set of all nonempty words over a language $\Sigma$.
-		The Kleene closure of $\Sigma$, denoted $\Sigma^*$, is the set of all strings, including the empty string, over $\Sigma$.
-		Note that $\Sigma^* = \lambda \; \cup \; \Sigma^+$.
 	% section introduction_to_formal_language (end)
 
 	\section{Regular Expressions} % (fold)
