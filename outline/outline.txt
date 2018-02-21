@@ -1,0 +1,27 @@
+INTRODUCTION
+	Basic Concepts of Formal Language Theory
+		Def: formal language
+		Def: string
+		Def: alphabet
+		Def: The empty string
+
+		 Ex: {λ} and ∅ as languages
+
+		Def: length of a word, |w|
+		Def: concatenation
+		 Ex: λ is an idenity under concatenation, and concatenation is an associative binary operation
+
+		Def: positive closure of an alphabet
+		Def: Kleene closure of an alphabet
+		 Ex: positive closure is a semigroup under concatenation, Kleene closure is a monoid under concatenation
+
+		 Ex: positive and Kleene closures are infinite sets
+
+	Regular Expressions
+	Finite Automata
+	Finite Automato Construction Example
+
+MAIN BODY
+MATHEMATICAL NOTATION
+CONCLUSION(S)
+
