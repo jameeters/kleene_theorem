@@ -77,7 +77,7 @@
 
 
 %%% End new environments 
-	\renewcommand{\emptyset}{\ensuremath{\varnothing}\xspace}
+	\newcommand{\footcite}[2]{\footnote{\cite[pg.~{#2}]{#1}}}
 %%% New commands
 
 %%% End new commands
@@ -119,23 +119,41 @@
 	\section{Introduction to Formal Language} % (fold)
 	\label{sec:introduction_to_formal_language}
 
-		A formal language (or simply a \textit{language}) is a set of sequences called \textit{strings} of \textit{words}.
-		The elements of these sequences, called \textit{symbols}, are the members of a set known as an \textit{alphabet}.
-		Alphabets are typically denoted by $\Sigma$.
+		A \textit{formal language} is a set of finite-length sequences called \textit{strings} of \textit{words}.
+		The elements of strings are called \textit{symbols}, and are the members of a set known as an \textit{alphabet}, denoted by $\Sigma$.
+		Alphabets must be nonempty and finite.
 		The string containing no symbols is called the \textit{empty string} and denoted by $\lambda$.\footnote{
 			Many texts use $\epsilon$ to denote the empty string.
-		}
+		}\footcite{lemmings}{1-3}
 
-		The set $\{ \lambda \}$, containing only the empty string, is a valid language over any alphabet.
-		The empty set, the set containing no strings, is also a valid language over any alphabet.
-		Note that $\emptyset$ represents the set of no strings, and is distinct from $\{ \lambda \}$, which is the set containing only the empty string.
+		The set $\{ \lambda \}$, containing only the empty string, is a valid language over any alphabet, as is the empty set.
+		$\emptyset$ and $\{ \lambda \}$ represent different languages --- the former is the language which contains no strings, while the latter is the language containing only the string of no symbols.\footcite{hopcroft}{2}
 
-		For simplicity, alphabets are assumed to be nonempty and finite, and words are assumed to be of finite length.
-		Languages, however, may easily be infinite.
-		Consider the alphabet $\Sigma = \{ 0, 1 \}$.
-		The set of all nonempty words on $\Sigma$, denoted $\Sigma^+$ is a valid language, and since it contains the binary representation of the natural numbers, it is clearly infinite.
-		The set of all words, empty or not, over an alphabet, is denoted $\Sigma^*$, and defined by $\Sigma^* = \{ \lambda \} \; \cup \; \Sigma^+$.
-		For any (nonempty) alphabet, $\Sigma^+$ and $\Sigma^*$ will always be infinite.
+		Let $a = a_1 a_2 \dots a_n$ and $b = b_1 b_2 \dots b_m$ be words over some $\Sigma$. 
+		We use the notation $|a|$ to denote the \textit{length} of $a$, which is defined as the number of symbols in $a$, counting any symbol as many times as it appears.
+		The \textit{concatenation} $ab$ of $a$ and $b$ is defined by $ab = a_1 \dots a_n b_1 \dots b_m$.
+		The string $ba = b_1 \dots b_m a_1 \dots a_n$ is also a concatenation of $a$ and $b$, distinct from $ab$,
+		Clearly, $|ab| = |ba| = |a| + |b|$, and $ab$ and $ba$ are both words over the same $\Sigma$ as $a$ and $b$.
+		The empty string is an identity under concatenation: $\lambda a = a \lambda = a$.
+		Concatenation is an associative operation: $(ab)c = a(bc)$.\footcite{lemmings}{1-3}
+
+		We use the notation $a^2$ to denote $aa$: the concatenation of $a$ with itself. 
+		If follows that $a^n$ is the concatenation of $n$ copies of $a$, and that $a^0 = \lambda$.\footcite{salomaa}{1}
+
+		Let $\Sigma$ be any alphabet
+		We denote by $\Sigma^+$ the set of all finite nonempty strings of symbols from $\Sigma$. 
+		We use $\Sigma^* = \{ \lambda \} \cup \Sigma^+$ to denote the set of all finite strings, empty or nonempty, over $\Sigma$.
+		Both 
+		It is worth noting that $\Sigma^+$ is a semigroup under concatenation, and that $\Sigma^*$ is a monoid under concatenation, as some texts label these sets by their algebraic properties.\footcite{salomaa}{1}
+
+		Although we alphabets and words to be finite in size, languages are frequently infinite.
+		Consider the alphabet $\Sigma = \{ a \}$, which contains only a single symbol.
+		The language $\Sigma^+ = \{ a^n \mid n = 1, 2, 3, \dots \}$.
+		It should be clear that for any alphabet, $\Sigma^+$ and $\Sigma^*$ will always be infinite.
+
+
+
+
 
 
 	% section introduction_to_formal_language (end)
