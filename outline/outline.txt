@@ -9,7 +9,7 @@ INTRODUCTION
 
 		Def: length of a word, |w|
 		Def: concatenation
-		 Ex: λ is an idenity under concatenation, and concatenation is an associative binary operation
+		 Ex: λ is an identity under concatenation, and concatenation is an associative binary operation
 
 		Def: positive closure of an alphabet
 		Def: Kleene closure of an alphabet
@@ -19,7 +19,7 @@ INTRODUCTION
 
 	Regular Expressions
 	Finite Automata
-	Finite Automato Construction Example
+	Finite Automaton Construction Example
 
 MAIN BODY
 MATHEMATICAL NOTATION

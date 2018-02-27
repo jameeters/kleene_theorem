@@ -3,9 +3,9 @@
 %%% Other packages needed by your document may be loaded here.
 \usepackage{url}              % For formatting URLs 
 \usepackage{booktabs}         % Publication-quality tables.
-\usepackage{natbib}           % Provides some nice citation and
+\usepackage[square, numbers]{natbib}           % Provides some nice citation and
 							  % bibliography formatting commands.
-\bibpunct[:~]{(}{)}{;}{a}{,}{,~} % Set some defaults for bibliographic
+% \bibpunct[:~]{(}{)}{;}{a}{,}{,~} % Set some defaults for bibliographic
 								 % punctuation used by natbib.sty.
 \usepackage{verbatim}
 \usepackage{graphicx}
@@ -33,6 +33,7 @@
 
 	\newif\ifbuildfrontmatter
 	\buildfrontmatterfalse
+	\buildfrontmattertrue
 
 	\tikzset{
 		initial text = {},
@@ -78,6 +79,7 @@
 
 %%% End new environments 
 	\newcommand{\footcite}[2]{\footnote{\cite[pg.~{#2}]{#1}}}
+	\renewcommand{\footcite}[2]{\cite[pg.~{#2}]{#1}}
 %%% New commands
 
 %%% End new commands
@@ -116,15 +118,13 @@
 \chapter{Introduction}%
 \label{ch:introduction}
 
-	\section{Introduction to Formal Language} % (fold)
-	\label{sec:introduction_to_formal_language}
+	\section{Basic Concepts of Formal Language Theory} % (fold)
+	\label{sec:basic_concepts}
 
-		A \textit{formal language} is a set of finite-length sequences called \textit{strings} of \textit{words}.
+		A \textit{formal language} is a set of finite-length sequences called \textit{strings} or \textit{words}.
 		The elements of strings are called \textit{symbols}, and are the members of a set known as an \textit{alphabet}, denoted by $\Sigma$.
 		Alphabets must be nonempty and finite.
-		The string containing no symbols is called the \textit{empty string} and denoted by $\lambda$.\footnote{
-			Many texts use $\epsilon$ to denote the empty string.
-		}\footcite{lemmings}{1-3}
+		The string containing no symbols is called the \textit{empty string} and denoted by $\lambda$.\footcite{lemmings}{1--3}
 
 		The set $\{ \lambda \}$, containing only the empty string, is a valid language over any alphabet, as is the empty set.
 		$\emptyset$ and $\{ \lambda \}$ represent different languages --- the former is the language which contains no strings, while the latter is the language containing only the string of no symbols.\footcite{hopcroft}{2}
@@ -135,7 +135,7 @@
 		The string $ba = b_1 \dots b_m a_1 \dots a_n$ is also a concatenation of $a$ and $b$, distinct from $ab$,
 		Clearly, $|ab| = |ba| = |a| + |b|$, and $ab$ and $ba$ are both words over the same $\Sigma$ as $a$ and $b$.
 		The empty string is an identity under concatenation: $\lambda a = a \lambda = a$.
-		Concatenation is an associative operation: $(ab)c = a(bc)$.\footcite{lemmings}{1-3}
+		Concatenation is an associative operation: $(ab)c = a(bc)$.\footcite{lemmings}{1--3}
 
 		We use the notation $a^2$ to denote $aa$: the concatenation of $a$ with itself. 
 		If follows that $a^n$ is the concatenation of $n$ copies of $a$, and that $a^0 = \lambda$.\footcite{salomaa}{1}
@@ -151,12 +151,7 @@
 		The language $\Sigma^+ = \{ a^n \mid n = 1, 2, 3, \dots \}$.
 		It should be clear that for any alphabet, $\Sigma^+$ and $\Sigma^*$ will always be infinite.
 
-
-
-
-
-
-	% section introduction_to_formal_language (end)
+	% section basic_concepts (end)
 
 	\section{Regular Expressions} % (fold)
 	\label{sec:regular_expressions}
