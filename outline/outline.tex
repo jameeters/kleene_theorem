@@ -4,23 +4,33 @@
 \usepackage{amsthm}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{enumitem}
 \usepackage[usenames]{xcolor}
 
+
 \newcommand{\todo}[1]{{\textbf{todo: \color{red} {#1}}}}
+\newcommand{\note}[1]{\textit{\color{blue}{#1}}}
+\newcommand{\meo}[1]{#1}
+% \renewcommand{\meo}[1]{\iffalse #1 \fi}
 
 \newcommand{\refthm}[1]{Theorem~\ref{#1}}
+\newcommand{\refprop}[1]{Claim~\ref{#1}}
+
+\renewcommand{\qedsymbol}{}
 
 
 %% Ams Theorem setup
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
 
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
 \theoremstyle{plain}
 \newtheorem*{example}{Example}
 \newtheorem{theorem}{Theorem}
+\newtheorem{claim}{Claim}
 % \newtheorem*{kleenethm}{Kleene's Theorem}
-
-
 
 \title{Kleene's Theorem: Outline}
 \author{James McFeeters}
@@ -47,29 +57,70 @@
 		\end{definition}
 
 		\begin{definition}[Language]
-			Give a minimal definition of a language.
+			A \textit{language} over some alphabet $\Sigma$ is any set of strings over $\Sigma$.
 		\end{definition}
+
+		\begin{remark}
+			The empty set and $\{ \lambda \}$ as languages.
+		\end{remark}
 	% subsection basic_definitions (end)
 
 	\subsection{Regular Expressions} % (fold)
 	\label{sub:regular_expressions}
 		
 		\begin{definition}[Concatenation]
-			Define concatenation of strings and sets (set product) and give corresponding notation.
+			Define concatenation of symbols and words and give the corresponding notation.
+			\meo{
+				Make sure to include the notation $x^i$ and $x^0$.
+			}
 		\end{definition}
+
+		\begin{definition}[Concatenation of Sets]
+			Give the definition of the concatenation of sets (set product). 
+		\end{definition}
+
+		\begin{remark}
+			Note that concatenation is an associative binary operation, and that the set of strings over an alphabet is closed under concatenation, as is the set of languages.
+			\meo{
+				Maybe also note that length has the properties of the logarithm with regard to concatenation.
+				It's a curiosity, but not really useful information
+			}
+		\end{remark}
 
 		\begin{definition}[Positive Closure]
 			Define the positive closure of a set and give notation. 
 			Also give notation and meaning for the set of nonempty words over an alphabet.
+			\note{I'm not sure I actually need to include this.}
 		\end{definition}
 
 		\begin{definition}[Kleene Closure]
-			Define the Kleene closure of a set and give notation.
-			Also give notation and meaning for the set of empty and nonempty words over an alphabet.
+			Define the Kleene closure of a symbol, string, and set and give notation.
+			Note that $\Sigma^*$ is the set of all words over an alphabet.
 		\end{definition}
 
-		\begin{definition}[Recursive Definition]
-			Give the recursive definition of regular expressions over an alphabet.
+		\meo{
+			Add a definition of regular operations. 
+			Say that the regular operations are concatenation and Kleene closure plus union.
+
+			Then define regular languages as in the longhand, and follow it up with the definition of regular expressions as a shorthand for regular expressions (also as in the longhand).
+		}
+
+		\begin{definition}[Atomic Languages]
+			Define the atomic languages $\emptyset$, $\{ \lambda \}$, and $\{ a \}, \ \forall a \in \Sigma$.
+			This is the basis for the recursive definition of regular expressions
+		\end{definition}
+
+		\begin{definition}[Regular Expressions]
+			State that the regular operations are 
+			\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex]
+				\item Concatenation
+				\item Union
+				\item Kleene Closure
+			\end{enumerate}
+		\end{definition}
+
+		\begin{definition}[Regular Language]
+			A regular language is a set of strings obtained from the application of finitely many regular operations to atomic languages.
 		\end{definition}
 	% subsection regular_expressions (end)
 
@@ -80,67 +131,91 @@
 			Give the 5-tuple definition of a finite automaton, and explain each of the components.
 		\end{definition}
 
-		\begin{definition}[Path]
-			\todo{Change the name of this definition.}
-			Give a definition and notation for the sequence of states corresponding to some input string.
-		\end{definition}
+		\begin{remark}
+			Mention that the transition function is defined on strings as well as symbols, and show what that means.
+		\end{remark}
 
-		\begin{definition}[Acceptance]
-			\todo{Change the name of this definition.}
+		\begin{definition}(Acceptance by Finite Automaton)
 			Give a definition and notation of what it means for a FA to accept an input string.
 			Also give notation for the language of all strings accepted by a FA.
+			The language of all strings accepted by a FA is said to be represented by that FA.
+			A language that can be represented by a FA is called \textit{representable}.
 		\end{definition}
 
 		\begin{example}[Finite Automata Construction]
 			Give an illustrated step-by-step explanation of the construction of a finite automaton to recognize binary numbers divisible by three.
 		\end{example}
 
+		\begin{definition}[Deterministic and Nondeterministic Finite Automata]
+			Explain the distinction between deterministic and nondeterministic finite automata.
+		\end{definition}
+
 	% subsection finite_automata (end)
 
 % section introduction (end)
 
-\section{Main Body} % (fold)
-\label{sec:main_body}
+\section{Kleene's Theorem} % (fold)
+\label{sec:kleenes_theorem}
 
 	\begin{theorem}[Kleene's Theorem]
 		Give a statement of Kleene's Theorem to motivate the section.
 	\end{theorem}
 
-	\begin{definition}[Deterministic and Nondeterministic Finite Automata]
-		Explain the distinction between deterministic and nondeterministic finite automata.
-	\end{definition}
+	\begin{claim}
+	\label{prop:regular_languages_representable}
+		All regular languages are representable.
+	\end{claim}
 
-	\begin{theorem}
-	\label{thm:ndfa_dfa_equivalent}
+	\begin{proof}
+		Proof of \refprop{prop:regular_languages_representable}
+	\end{proof}
+
+	\begin{claim}
+	\label{prop:ndfa_dfa_equivalent}
 		A language is representable by a NDFA if and only if it is representable by a DFA.
-	\end{theorem}
+	\end{claim}
 
 	\begin{proof}
 	\label{proof:ndfa_dfa_equivalent}
-		Proof of \refthm{thm:ndfa_dfa_equivalent}.
+		Proof of \refprop{prop:ndfa_dfa_equivalent}.
 	\end{proof}
 
-	\begin{theorem}
-	\label{thm:regular_languages_representable}
-		All regular languages are representable.
-	\end{theorem}
+	\begin{claim}
+	\label{prop:representable_languages_regular}
+		All representable languages are regular.
+	\end{claim}
 
 	\begin{proof}
-		Proof of \refthm{thm:regular_languages_representable}
+		Proof of \refprop{prop:representable_languages_regular}
 	\end{proof}
-
-	\begin{theorem}
-	\label{thm:representable_languages_regular}
-		All representable languages are regular.
-	\end{theorem}
+	
 
 	This constitutes a proof of Kleene's theorem.
 
+% section kleenes_theorem (end)
 
 
+\section{Examples Illustrating Kleene's Theorem} % (fold)
+\label{sec:examples}
+
+	\begin{example}[Mod 3 Finite Automaton]
+		Constructing regular expression from the mod 3 finite automaton.
+		This will help explain the proof that all representable languages are regular.
+	\end{example}
+
+	\meo{
+		Figure out if there are any other parts of the proof that deserve an example to help explain them.
+		I will probably include pictures for regular language $\iff$ representable.
+	}
+
+% section examples (end)
+\meo{
+
+	Look into any background or motivation that might be good to include.
+	Anything about the importance of Kleene's theorem to the implementation of actual software might be good to include.
+	But I worry about including too much practical CS in what really should be a math paper.
+}
 
 
-
-% section main_body (end)
 
 \end{document}
