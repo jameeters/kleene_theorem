@@ -12,6 +12,7 @@
 \newcommand{\note}[1]{\textit{\color{blue}{#1}}}
 \newcommand{\meo}[1]{\texttt{#1}}
 \renewcommand{\meo}[1]{\iffalse #1 \fi}
+\newcommand{\bigo}{\mathcal{O}}
 
 \newcommand{\refthm}[1]{Theorem~\ref{#1}}
 \newcommand{\refprop}[1]{Claim~\ref{#1}}
@@ -32,7 +33,7 @@
 \newtheorem{claim}{Claim}
 % \newtheorem*{kleenethm}{Kleene's Theorem}
 
-\title{Kleene's Theorem: Outline}
+\title{Colloquium Paper Outline: \\[1 ex] Kleene's Theorem}
 \author{James McFeeters}
 \date{\today}
 \begin{document}
@@ -111,25 +112,25 @@
 	\begin{definition}[Regular Language]
 		Given an alphabet $\Sigma$
 		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex]
-			\item $\emptyset$ is a regular language over $\Sigma$.
-			\item $\{ \lambda \}$ is a regular language over $\Sigma$.
-			\item $\{ a \}$ is a regular language over $\Sigma$ for all $a \in \Sigma$.
+			\item $\emptyset$ is an atomic regular language over $\Sigma$.
+			\item $\{ \lambda \}$ is an atomic regular language over $\Sigma$.
+			\item $\{ a \}$ is an atomic regular language over $\Sigma$ for all $a \in \Sigma$.
 		\end{enumerate}
-		And any language obtained from these by a finite number of regular operations is a regular language over $\Sigma$.
+		And any language obtained from an atomic regular language through a finite number of regular operations is a regular language over $\Sigma$.
 	\end{definition}
 
 	We now introduce \textit{regular expressions}, a shorthand for describing regular languages.
 
 
 	\begin{definition}[Regular Expressions]
-		The atomic regular expressions over any alphabet $\Sigma$ are
+		The atomic regular expressions over any alphabet $\Sigma$ are defined as follows:
 		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex]
-			\item $\emptyset$ retains its meaning.
+			\item $\emptyset$ denotes the empty language.
 			\item $\lambda$ denotes the language $\{ \lambda \}$.
 			\item $a$ denotes the language $\{ a \}$ for all $a \in \Sigma$.
 		\end{enumerate}
 
-		If $\alpha$ and $\beta$ are regular expressions representing languages $A$ and $B$, then
+		If $\alpha$ and $\beta$ are regular expressions representing languages $A$ and $B$, then the following are also regular expressions:
 		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex]
 			\item $\alpha \beta$ denotes the language $AB$.
 			\item $\alpha + \beta$ denotes the language $A \cup B$.
@@ -180,7 +181,6 @@
 \label{sec:kleenes_theorem}
 
 	\begin{theorem}[Kleene's Theorem]
-		Give a statement of Kleene's Theorem to motivate the section:
 		A language is representable if and only if it is regular.
 	\end{theorem}
 
@@ -224,6 +224,8 @@
 	\begin{example}[Mod 3 Finite Automaton]
 		Constructing regular expression from the mod 3 finite automaton.
 		This will help explain the proof that all representable languages are regular.
+
+		This example will also illustrate how the numbering of the states of an FA in the inductive step of the proof of \refprop{prop:representable_languages_regular} impacts the resulting regular expression (although all possible results are equivalent, they may look very different).
 	\end{example}
 
 	\meo{
@@ -232,10 +234,26 @@
 	}
 
 % section examples (end)
+
+\section{Motivation} % (fold)
+\label{sec:motivation}
+	\begin{remark}
+		We have seen that any regular expression is convertible into a NDFA and that any NDFA is convertible into a DFA.
+		Although we have not mentioned it, there is also an algorithm to minimize any DFA: producing an equivalent automaton with a minimal number of states. 
+		With a minimal DFA accepting a regular language, we can use a transition matrix to search through data for strings of that language in $\bigo(N)$ time for the amount of data, and $\bigo(m^2)$ memory for the length of the regular expression.
+	\end{remark}
+
+	\begin{remark}
+		Mention the use of regular language parsing in the design of compilers and interpreters, and mention the ubiquity of \texttt{grep}.
+	\end{remark}
+% section motivation (end)
 \meo{
 	Look into any background or motivation that might be good to include.
 	Anything about the importance of Kleene's theorem to the implementation of actual software might be good to include.
 	But I worry about including too much practical CS in what really should be a math paper.
+
+	It might be cool to cover the minimization stuff if I have extra time and space---although it would add a lot of content to the paper.
+
 }
 
 
