@@ -128,24 +128,37 @@
 \mychapter{Basic Definitions}
 \label{ch:basics}
 
-	\begin{definition}[Symbol]
-			
+		\begin{definition}[Symbol]
+			The \textit{symbol} is the foundational unit of formal language theory.
+			Symbols are distinct from each other; two symbols are interchangeable if and only they are the same symbol.
+			Symbols are indivisible: a symbol may not be decomposed and represented by any other symbol or collection of other symbols.
 		\end{definition}
 
 		\begin{definition}[Alphabet]
-
+			An \textit{alphabet} is a nonempty and finite set of symbols.
+			An alphabet is typically denoted by the symbol $\Sigma$.
 		\end{definition}
 
 		\begin{definition}[String]
-			Define string, length of a string, and the empty string, and give the necessary notation.
+			A \textit{string} over an alphabet $\Sigma$ is a finite sequence of symbols of $\Sigma$.
+			If $\Sigma = \{ a, b ,c \}$, then $w = acbba$ is a string over $\Sigma$.
+			The length of a string is the number of symbols it contains (counting repetitions).
+			The length of $w$, denoted $|w|$ is $5$.
+
+			The string of length zero, which contains no symbols, is called the \textit{empty string}, and denoted $\lambda$.
+			The empty string is a valid string over any alphabet.
 		\end{definition}
 
 		\begin{definition}[Language]
-			A \textit{language} over some alphabet $\Sigma$ is any set of strings over $\Sigma$.
+			A \textit{language} over an alphabet $\Sigma$ is any set of strings over $\Sigma$.
+			The language of all possible strings over $\Sigma$ is denoted $\Sigma^*$.
+
+			The empty set ($\emptyset$) and $\{ \lambda \}$ are valid languages over any alphabet.
 		\end{definition}
 
 		\begin{remark}
-			The empty set and $\{ \lambda \}$ as languages.
+			The empty set and $\{ \lambda \}$ represent distinct languages. 
+			The empty set represents the language containing no strings at all, while $\{ \lambda \}$ represents the language containing only the empty string.
 		\end{remark}
 
 
@@ -153,10 +166,10 @@
 \label{ch:regular_expressions}
 
 	\begin{definition}[Concatenation]
-		Define concatenation of symbols and words and give the corresponding notation.
-		\meo{
-			Make sure to include the notation $x^i$ and $x^0$.
-		}
+		Let $w_1 = ac$ and $w_2 = bac$ be strings over $\Sigma$.
+		Their \textit{concatenation} $w_1 w_2$ denotes the string $acbac$, and $w_2 w_1$ denotes $bacac$.
+		For any string $w$, $\lambda w = w \lambda = w$.
+		The notation $w^3$ denotes the string $www$, and $w^0 = \lambda$.
 	\end{definition}
 
 	\begin{definition}[Concatenation of Languages]
