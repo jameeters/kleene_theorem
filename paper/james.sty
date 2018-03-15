@@ -1,6 +1,43 @@
 \usepackage{amsthm}
 \usepackage{enumitem}
 
+% Add a full headers and footers to every page for debugging
+\newif\ifallhr
+	\allhrtrue
+
+\fancypagestyle{plain}{%
+	\ifallhr
+		\fancyhf{} %% Clear all headers and footers.
+		\fancyhead[LE]{\textbf{\thepage{}}\hspace{1em}\nouppercase\leftmark}
+		\fancyhead[RO]{\nouppercase\rightmark\hspace{1em}\textbf{\thepage}}
+	\else
+		\fancyhf{} %% Clear all headers and footers.
+		% \fancyfoot[CE,CO]{\thepage}
+		\renewcommand{\headrulewidth}{0pt}
+		\renewcommand{\footrulewidth}{0pt}
+	\fi
+}
+
+\fancypagestyle{empty}{%
+	\ifallhr
+		\fancyhf{} %% Clear all headers and footers.
+		\fancyhead[LE]{\textbf{\thepage{}}\hspace{1em}\nouppercase\leftmark}
+		\fancyhead[RO]{\nouppercase\rightmark\hspace{1em}\textbf{\thepage}}
+	\else
+		\fancyhf{} %% Clear all headers and footers.
+		\renewcommand{\headrulewidth}{0pt}
+		\renewcommand{\footrulewidth}{0pt}
+	\fi
+}
+
+\fancypagestyle{front}{%
+  \fancyhf{} %% Clear all headers and footers.
+  \fancyhead[LE]{\textbf{\thepage{}}\hspace{1em}\nouppercase\leftmark}
+  \fancyhead[RO]{\nouppercase\rightmark\hspace{1em}\textbf{\thepage}}
+}
+
+
+
 % Alter the way chapters work so that I like them better
 \newcommand{\mychapter}[1]{
 	% \setcounter{chapter}{#1}
@@ -8,6 +45,8 @@
 	\setcounter{section}{0}
 	\chapter*{#1}
 	\addcontentsline{toc}{chapter}{\thechapter ~~~ #1}
+	\renewcommand{\leftmark}{#1}
+	\renewcommand{\rightmark}{#1}
 }
 
 
