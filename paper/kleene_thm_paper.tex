@@ -144,6 +144,7 @@
 			If $\Sigma = \{ a, b ,c \}$, then $w = acbba$ is a string over $\Sigma$.
 			The length of a string is the number of symbols it contains (counting repetitions).
 			The length of $w$, denoted $|w|$ is $5$.
+			Strings are also referred to as \textit{words}.
 
 			The string of length zero, which contains no symbols, is called the \textit{empty string}, and denoted $\lambda$.
 			The empty string is a valid string over any alphabet.
@@ -166,18 +167,28 @@
 \label{ch:regular_expressions}
 
 	\begin{definition}[Concatenation]
-		Let $w_1 = ac$ and $w_2 = bac$ be strings over $\Sigma$.
+		Let $w_1 = ac$ and $w_2 = bac$ be strings over some alphabet.
 		Their \textit{concatenation} $w_1 w_2$ denotes the string $acbac$, and $w_2 w_1$ denotes $bacac$.
 		For any string $w$, $\lambda w = w \lambda = w$.
 		The notation $w^3$ denotes the string $www$, and $w^0 = \lambda$.
+
+		It should be easy to see that this definition applies to symbols, which can be seen as words of length 1.
+
+		\meo{I think I could choose better example strings here.}
 	\end{definition}
 
 	\begin{definition}[Concatenation of Languages]
-		Give the definition of the concatenation (product) of two languages.
+		Let $A$ and $B$ be languages over some alphabet.
+		Their \textit{concatenation}, or \textit{product}, $AB$ id the set $\{ ab \mid a \in A, \ b \in B \}$.
 	\end{definition}
 
 	\begin{remark}
-		Note that concatenation is an associative binary operation, and that the set of strings over an alphabet is closed under concatenation, as is the set of languages.
+		Note that the set of strings over an alphabet is closed under concatenation: if $x$ and $y$ are strings over $\Sigma$, then so are $xy$ and $yx$.
+		It follows that if $A$ and $B$ are languages over $\Sigma$, then so are $AB$ and $BA$.
+		
+		Concatenation is also an associative operation.
+		Given strings $x$, $y$, and $z$, $(xy)z = x(yz)$.
+		It follows that given languages $A$, $B$, and $C$, $(AB)C = A(BC)$.
 		\meo{
 			Maybe also note that length has the properties of the logarithm with regard to concatenation.
 			It's a curiosity, but not really useful information
