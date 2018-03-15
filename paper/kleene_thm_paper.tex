@@ -43,6 +43,7 @@
 	\ifpresstime
 		\buildfrontmattertrue
 		\renewcommand{\meo}{}
+		\allhrfalse
 	\fi
 
 	\tikzset{
@@ -179,7 +180,9 @@
 
 	\begin{definition}[Concatenation of Languages]
 		Let $A$ and $B$ be languages over some alphabet.
-		Their \textit{concatenation}, or \textit{product}, $AB$ id the set $\{ ab \mid a \in A, \ b \in B \}$.
+		Their \textit{concatenation}, or \textit{product}, $AB$ is the set $\{ ab \mid a \in A, \ b \in B \}$.
+		The notation $A^2$ represents the language $AA$, and $A_i$ represents $AA^{i-1}$
+		Note that $A = A^1 = AA^0 = \{ a \lambda \mid a \in A \}$, which implies that $A^0 = \{ \lambda \}$
 	\end{definition}
 
 	\begin{remark}
@@ -189,6 +192,7 @@
 		Concatenation is also an associative operation.
 		Given strings $x$, $y$, and $z$, $(xy)z = x(yz)$.
 		It follows that given languages $A$, $B$, and $C$, $(AB)C = A(BC)$.
+
 		\meo{
 			Maybe also note that length has the properties of the logarithm with regard to concatenation.
 			It's a curiosity, but not really useful information
@@ -204,8 +208,12 @@
 	\fi
 
 	\begin{definition}[Kleene Closure]
-		Define the Kleene closure of a language and give notation.
-		Note how the definition of the Kleene closure applies to symbols and strings, and that $\Sigma^*$ is the set of all words over an alphabet.
+		Given any language $A$, the language 
+		\[
+			A^* = \bigcup_{i \geq 0} A^i
+		\]
+		is called the \textit{Kleene closure} of $A$.\footcite{lemmings}{3}
+		Note that this definition also provides the Kleene closure of symbols and words, and that the \rightmark
 	\end{definition}
 
 	\begin{definition}[Regular Operations]
