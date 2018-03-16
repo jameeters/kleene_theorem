@@ -33,7 +33,7 @@
 
 	\newif\ifbuildfrontmatter
 	\buildfrontmatterfalse
-	\buildfrontmattertrue
+	% \buildfrontmattertrue
 
 	% Use this to toggle professionalism
 	\newif\ifpresstime
@@ -47,8 +47,9 @@
 	\fi
 
 	\tikzset{
-		initial text = {},
-		every initial by arrow/.style={*->}
+		initial text = {\scriptsize{\textsc{start}}},
+		initial distance = 1 pt,
+		every initial by arrow/.style={->}
 	}
 
 
@@ -272,20 +273,39 @@
 \mychapter{Finite Automata} % (fold)
 \label{ch:finite_automata}
 
+	A finite automaton is a formal model of a machine which has a finite number of allowed configurations, called states, and accepts input symbols from some finite alphabet. 
+	Each time a symbol is input to the automaton, it may transition to a new state. 
+	The output of a finite automaton is the state of the machine after reading some input.
 
 	\begin{definition}[Finite Automaton]
-		Give the 5-tuple definition of a finite automaton, and explain each of the components.
-		Mention the abbreviation ``FA.''
+		A \textit{finite automaton} (FA) $M$ is defined by the 5-tuple $(Q, \Sigma, q_0, \delta, F)$.
+		\begin{itemize}
+			\item [] $Q$ is a finite and nonempty set of states.
+			\item [] $\Sigma$ is an alphabet of possible input symbols.
+			\item [] $q_0 \in Q$ is the state of the machine prior to any input, referred to as the \textit{initial state};
+			\item [] $\delta: (Q \times \Sigma) \mapsto Q$ is called the \textit{transition function}: It maps a starting state and an input symbol to the new state of the machine.
+			\item [] $F \subseteq Q$ is the set of \textit{final states} or \textit{accepting states} of the machine.
+		\end{itemize}
 	\end{definition}
 
 	\begin{remark}
-		Mention that the transition function is defined on strings as well as symbols, and show what that means.
+		It is convenient to extend the definition of $\delta$ to apply to strings, as well as individual symbols.
+		Let $w = w_1 w_2 \dots w_n \in \Sigma^*$.
+		By $\delta(q_1, w) = q_n$ we mean 
+		\[
+			\delta\bigg( \cdots \ \delta\Big( \ \delta(q_1, w_1), \ w_2 \Big), \cdots, w_n \bigg) = q_n.
+		\]
+		And define $\delta(q_i, \lambda) = q_i$.
+		This defines $\delta: (Q \times \Sigma^*) \mapsto Q$.
 	\end{remark}
 
 	\begin{definition}(Acceptance by Finite Automaton)
-		Give a definition and notation of what it means for a FA to accept an input string.
-		Also give notation for the language of all strings accepted by a FA.
-		Define what it means for a language to be representable.
+		Let $M = (Q, \Sigma, q_0, \delta, F)$ be a FA and let $w \in \Sigma^*$.
+		We say that $w$ is \textit{accepted} by $M$ if $\delta(q_0, w) \in F$.
+
+		We use $L(M)$ to denote the language $\{ w \in \Sigma^* \mid \delta(q_0, w) \in F \}$ of all strings accepted by $M$.
+
+		A language $A$ is called \textit{representable} if there exists some FA $M_A$ such that $A = L(M_A)$.
 	\end{definition}
 
 	\begin{example}[Finite Automata Construction]
