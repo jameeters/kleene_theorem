@@ -153,9 +153,11 @@
 
 		\begin{definition}[Language]
 			A \textit{language} over an alphabet $\Sigma$ is any set of strings over $\Sigma$.
-			The language of all possible strings over $\Sigma$ is denoted $\Sigma^*$.
+			% The language of all possible strings over $\Sigma$ is denoted $\Sigma^*$.
 
 			The empty set ($\emptyset$) and $\{ \lambda \}$ are valid languages over any alphabet.
+
+			Note that because languages are sets of strings, the conventional set operations, such as union, intersection, and complementation are defined for languages.
 		\end{definition}
 
 		\begin{remark}
@@ -166,6 +168,18 @@
 
 \mychapter{Regular Expressions} % (fold)
 \label{ch:regular_expressions}
+	
+	\begin{definition}[Atomic Regular Languages]
+		The \textit{atomic regular languages} are the basic units used to build all other regular languages.
+		They are defined for any alphabet $\Sigma$ as follows:
+		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex]
+			\item $\emptyset$ is an atomic regular language over $\Sigma$.
+			\item $\{ \lambda \}$ is an atomic regular language over $\Sigma$.
+			\item $\{ a \}$ is an atomic regular language over $\Sigma$ for all $a \in \Sigma$.
+		\end{enumerate}
+	\end{definition}
+
+	We now define some operations closely related to the family of regular languages.
 
 	\begin{definition}[Concatenation]
 		Let $w_1 = ac$ and $w_2 = bac$ be strings over some alphabet.
@@ -199,44 +213,30 @@
 		}
 	\end{remark}
 
-	\iffalse
-	\begin{definition}[Positive Closure]
-		Define the positive closure of a set and give notation. 
-		Also give notation and meaning for the set of nonempty words over an alphabet.
-		\note{I'm not sure I actually need to include this.}
-	\end{definition}
-	\fi
-
 	\begin{definition}[Kleene Closure]
 		Given any language $A$, the language 
 		\[
 			A^* = \bigcup_{i \geq 0} A^i
 		\]
 		is called the \textit{Kleene closure} of $A$.\footcite{lemmings}{3}
-		Note that this definition also provides the Kleene closure of symbols and words, and that the \rightmark
+		Note that this definition also provides the Kleene closure of symbols and words, and that the Kleene closure of a string or symbol is a language, not another string or symbol.
 	\end{definition}
 
 	\begin{definition}[Regular Operations]
-		State that the regular operations are 
+		The following are referred to as the \textit{regular operations}:
 		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex]
 			\item Concatenation
 			\item Union
-			\item Kleene Closure
+			\item Kleene closure
 		\end{enumerate}
 	\end{definition}
 
 	\begin{definition}[Regular Language]
-		Given an alphabet $\Sigma$
-		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex]
-			\item $\emptyset$ is an atomic regular language over $\Sigma$.
-			\item $\{ \lambda \}$ is an atomic regular language over $\Sigma$.
-			\item $\{ a \}$ is an atomic regular language over $\Sigma$ for all $a \in \Sigma$.
-		\end{enumerate}
-		And any language obtained from an atomic regular language through a finite number of regular operations is a regular language over $\Sigma$.
+		Given an alphabet $\Sigma$, any atomic regular language over $\Sigma$ is a regular language over $\Sigma$.
+		If $A$ and $B$ are regular languages over $\Sigma$, then $AB$, $A \cup B$, and $A^*$ are regular languages over $\Sigma$.
 	\end{definition}
 
 	We now introduce \textit{regular expressions}, a shorthand for describing regular languages.
-
 
 	\begin{definition}[Regular Expressions]
 		The atomic regular expressions over any alphabet $\Sigma$ are defined as follows:
