@@ -43,7 +43,7 @@
 	% \setcounter{chapter}{#1}
 	\stepcounter{chapter}
 	\setcounter{section}{0}
-	\chapter*{#1}
+	\chapter*{\thechapter ~~ #1}
 	\addcontentsline{toc}{chapter}{\thechapter ~~~ #1}
 	\renewcommand{\leftmark}{#1}
 	\renewcommand{\rightmark}{#1}
