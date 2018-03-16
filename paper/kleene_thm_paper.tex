@@ -239,14 +239,14 @@
 	We now introduce \textit{regular expressions}, a shorthand for describing regular languages.
 
 	\begin{definition}[Regular Expressions]
-		The atomic regular expressions over any alphabet $\Sigma$ are defined as follows:
+		The atomic regular expressions over any alphabet $\Sigma$ are defined to represent the atomic regular languages over $\Sigma$:
 		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex]
 			\item $\emptyset$ denotes the empty language.
 			\item $\lambda$ denotes the language $\{ \lambda \}$.
 			\item $a$ denotes the language $\{ a \}$ for all $a \in \Sigma$.
 		\end{enumerate}
 
-		If $\alpha$ and $\beta$ are regular expressions representing languages $A$ and $B$, then the following are also regular expressions:
+		If $\alpha$ and $\beta$ are regular expressions representing languages $A$ and $B$, respectively, then the following are also regular expressions:
 		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex]
 			\item $\alpha \beta$ denotes the language $AB$.
 			\item $\alpha + \beta$ denotes the language $A \cup B$.
@@ -255,7 +255,12 @@
 	\end{definition}
 
 	\begin{remark}
-		Note the distinction between regular languages and regular expressions: that one is a shorthand for writing the other.
+		The distinction between regular expressions and regular languages is that regular expressions are a shorthand for describing regular languages. 
+		Although regular expressions look very similar to the set notation for regular languages, they do simplify the notation, especially when describing complex languages.
+		\meo{
+			Is this a convincing reason why this is a thing worth having?
+		}
+
 	\end{remark}
 
 	\meo{
