@@ -9,8 +9,8 @@
 								 % punctuation used by natbib.sty.
 \usepackage{verbatim}
 \usepackage{graphicx}
+\usepackage{subfig} % Because subcaption does not seem to be compatible with the template.
 \usepackage{calc}
-\usepackage{subfig}
 \usepackage{textcomp}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -428,9 +428,134 @@
 	\label{prop:regular_languages_representable}
 		All regular languages are representable.
 	\end{claim}
-
 	\begin{proof}
-		Proof of \refprop{prop:regular_languages_representable}
+		We first show that the atomic regular languages are representable.
+		It is simple to construct a NDFA to accept each:
+		\begin{itemize}
+			\item [] $\emptyset$ is accepted by an automaton with one initial state, no accepting states, and no transitions, as depicted in Figure~\ref{sfig:ndfa_emptyset}.
+			\item [] $\{ \lambda \}$ is accepted by the NDFA with one state, which is both its initial state and an accepting state. See Figure~\ref{sfig:ndfa_lambda}.
+			\item [] $\{ a \}$ for all $a \in \Sigma$ is accepted by a NDFA having two states: one initial state, and one accepting state, with a transition on $a$ between them, as shown in Figure~\ref{sfig:ndfa_symbol}.
+		\end{itemize}
+
+
+		\begin{figure}[H]
+			\centering
+			\setlength{\fboxrule}{0 pt}
+			\subfloat[NDFA accepting $\emptyset$]{
+				\label{sfig:ndfa_emptyset}
+				\framebox[0.3 \textwidth]{
+					\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+						\node[initial,state] (q0)                {$q_0$};
+					\end{tikzpicture}
+				}
+			}
+			\subfloat[NDFA accepting $\{ \lambda \}$]{
+				\label{sfig:ndfa_lambda}
+				\framebox[0.3 \textwidth]{
+					\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+						\node[initial,state, accepting] (q0)                {$q_0$};
+					\end{tikzpicture}
+				}
+			}
+			\subfloat[NDFA accepting $\{ a \}$ for all $a \in \Sigma$]{
+				\label{sfig:ndfa_symbol}
+				\framebox[0.3 \textwidth]{
+					\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+						\node[initial,state]    (q0)                 {$q_0$};
+						\node[state, accepting] (q1) [right of = q0] {$q_1$};
+						\path[->](q0) edge  node {$a$} (q1);
+					\end{tikzpicture}
+				}
+			}
+			\caption{NDFAs representing the atomic regular languages}
+			\label{fig:ndfa_atomic_regular_languages}
+			% The \framebox makes the caption wider than the picture, 
+			% otherwise, subfigures (a) and (b) are too narrow and their captions look bad.
+		\end{figure}
+
+		Now we must show that if $A$ and $B$ are representable languages, then so are
+		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
+			\item $AB$
+			\item $A \cup B$
+			\item $A^*$
+		\end{enumerate}
+
+		% Commands to save me typing underscores everywhere
+		% I want these scoped to the proof.
+			\newcommand{\ma}{\ensuremath{M_A}\xspace}
+				\newcommand{\qa}{\ensuremath{Q_A}\xspace}
+				\newcommand{\siga}{\ensuremath{\Sigma_A}\xspace}
+				\newcommand{\sa}{\ensuremath{s_A}\xspace}
+				\newcommand{\dala}{\ensuremath{\delta_A}\xspace} % \del would make more sense but I automatically type 'dal' for Delta Air Lines
+				\newcommand{\fa}{\ensuremath{F_A}\xspace}
+
+			\newcommand{\mb}{\ensuremath{M_B}\xspace}
+				\newcommand{\qb}{\ensuremath{Q_B}\xspace}
+				\newcommand{\sigb}{\ensuremath{\Sigma_B}\xspace}
+				\renewcommand{\sb}{\ensuremath{s_B}\xspace}
+				\newcommand{\dalb}{\ensuremath{\delta_B}\xspace}
+				\newcommand{\fb}{\ensuremath{F_B}\xspace}
+
+			\newcommand{\mab}{\ensuremath{M_{AB}}\xspace}
+				\newcommand{\qab}{\ensuremath{Q_{AB}}\xspace}
+				\newcommand{\sigab}{\ensuremath{\Sigma_{AB}}\xspace}
+				\newcommand{\sab}{\ensuremath{s_{AB}}\xspace}
+				\newcommand{\dalab}{\ensuremath{\delta_{AB}}\xspace}
+				\newcommand{\fab}{\ensuremath{F_{AB}}\xspace}
+
+			\newcommand{\maub}{\ensuremath{M_{A \cup B}}\xspace}
+			\newcommand{\mas}{\ensuremath{M_{A^*}}\xspace}
+
+
+		Let $M_A = (Q_A, \Sigma_A, s_A, \delta_A, F_A)$ and $M_B = (Q_B, \Sigma_B, s_B, \delta_B, F_B)$ be NDFAs such that $L(\ma) = A$ and $L(\mb) = B$.
+
+		We will construct a NDFA $M_{AB} = (Q_AB, \Sigma_AB, s_AB, \delta_AB, F_AB)$ such that $L(\mab) = AB$.
+		We build \mab by adding \mb onto the end of \ma, so that a word accepted by \mab is of the form $xy$ where $x$ is accepted by \ma and $y$ is accepted by \mb.
+
+		Clearly, the alphabet of \mab must include all the symbols used by \ma and \mb, thus $\sigab = \siga \cup \sigb$.
+		
+		The states of \mab are all the states of both \ma and \mb.
+		Since the names of states are meaningless we can rename them at will, so we can assume that \qa and \qb are disjoint, and write $\qab = \qa \cup \qb$
+		The initial state of \mab is the initial state of \ma, so $\sab = \sa$.
+
+		The accepting states of \mab.
+		If $\lambda$ is accepted by \mb, then we assume that \sb is already an accepting state.
+		If $\lambda \in A \cap B$, then \sab must be an accepting state.
+		So we define
+		\[
+			\fab = 	\begin{cases}
+						\fb \cup \{ \sab \} &\text{ if } \lambda \in A \cap B \\
+						\fb &\text{otherwise}
+					\end{cases}
+		\]
+		Note that we have not dealt with the case in which $\lambda \in A$ and $\lambda \notin B$.
+		Accounting for that case requires adding transitions to \mab.
+
+		Now we must define \dalab.
+		\mab should retain all of the transitions of \ma and \mb, so for all $q_A \in \qa$ and $a \in \siga$, and for all $q_B \in \qb$ and $b \in \sigb$ we define
+		\[
+			\dalab(q_A, a) = \dala(q_A, a) \enspace \text{ and } \enspace \dalab(q_B, b) = \dalb(q_B, b).
+		\]
+		We must also add transitions so that any string accepted by \ma will take \mab from \sab to \sb.
+		So for all $q_A \in \qa$ and $a \in \siga$ such that 
+		\[
+			\dala(q_A, a) \in \fa
+		\]
+		We define
+		\[
+			\dalab(q_A, a) = \sb
+		\]
+		Finally, we must account for the case in which $\lambda \in A$.
+		In this case, \mab must be able to skip over \ma and accept strings of $B$ without any prefix.
+		So if $\lambda \in A$, we must add transitions from \sab which shadow the transitions from \sb.
+		Thus for all $b \in \sigb$ we define
+		\[
+			\dalab(\sab, b) = \dalb(\sb, b)
+		\]
+		
+
+
+
 	\end{proof}
 
 	\begin{claim}
