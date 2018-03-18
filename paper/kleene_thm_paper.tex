@@ -15,7 +15,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{tikz}
-\usepackage{standalone}
+\usepackage{float}
 % \usepackage{showframe}
 \usepackage{james}
 \usepackage[plainpages=false,pdfpagelabels, hidelinks]{hyperref}
@@ -76,24 +76,11 @@
 
 %%% New Environments
 
-	% Environment for finite automata construction examples
-	% Places explanatory text next to the relevant diagram
-	\newenvironment{exstep}[1]
-		{
-			\begin{minipage}{0.5 \textwidth}
-				#1
-			\end{minipage} \begin{minipage}{0.5 \paperwidth}
-		}
-		{
-			\end{minipage}\\[0.5 em]
-		}
-
-
 %%% End new environments 
+
+%%% New commands
 	\newcommand{\footcite}[2]{\footnote{\cite[pg.~{#2}]{#1}}}
 	\renewcommand{\footcite}[2]{\cite[pg.~{#2}]{#1}}
-%%% New commands
-
 %%% End new commands
 
 
@@ -309,78 +296,116 @@
 	\end{definition}
 
 	\begin{example}[Finite Automata Construction]
-		Give an illustrated step-by-step explanation of the construction of a finite automaton to recognize binary numbers divisible by three.
 
-		We will construct a simple finite automaton to determine if a binary string represents a number divisible by three.
-	Denote this $M_3 = (Q, q_0, \Sigma, \delta, F)$.
-	Since the inputs are to be binary strings, we know $\Sigma = \{ 0, 1 \}$.
-	We can also assume that each state of $M_3$ should represent the value of the current input modulo 3, so $Q = \{q_0, q_1, q_2\}$.
-	Now we need an initial state. 
-	We'll assume that the machine starts at $q_0$. 
-	This makes sense, because we could achieve the same result by claiming to prefix every input string with a 0, as this would not change its value.
-	Obviously, all numbers divisible by 3 will have a value of 0 modulo 3, so $F = \{q_0\}$.
+		% I'm ducking done typing ``shift-m, shift-underscore, 3''. 
+		\newcommand{\miii}{\ensuremath{M_3}\xspace}
 
-	Now the only part of $M_3$ left undefined is $\delta$, the set of state transitions.
+		In this example, we will give a step-by-step construction of a FA to recognize the language of binary numbers divisible by 3.
 
-		\begin{exstep}
-			{
-				We begin with only the initial state.
-				The input so far is $\lambda$.
-			}
-			\includestandalone{tikz/mod3_construction/step_1}
-		\end{exstep}
+		Call this automaton \miii.
+		Let $\miii = (Q, \Sigma, s, \delta, F)$.
+		Clearly we need only the symbols 0 and 1 to represent a language of binary strings, so we set $\Sigma = \{ 0, 1 \}$.
 
-		\begin{exstep}
-			{
-				With the 0 as the current state, suppose the first input symbol is 0. 
-				Then the number so far is $0_b = 0 = 0 \mod 3$, so we add the following to $\delta$: $(q_0, 0, q_0)$.
-			}
-			\includestandalone{tikz/mod3_construction/step_2}
-		\end{exstep}
+		Now we define the set of states for $\miii$.
+		Suppose $x$ is the string that has been input to $\miii$ so far.
+		It is clear that for any $x$, exactly one of the following must be true:
+		\begin{itemize}[itemsep = -1 ex, nolistsep]
+			\item [] $x = 0 \mod 3$,
+			\item [] $x = 1 \mod 3$,
+			\item [] $x = 2 \mod 3$.
+		\end{itemize}
+		So we create one state to represent each of these possible conditions, and define $Q = \{ q_0, q_1, q_2 \}$.
+		Since we want $\miii$ to accept numbers divisible by 3, we set $F = \{ q_0 \}$. 
+		And since we interpret no input as 0, set the initial state $s$ to $q_0$.
 
-		\begin{exstep}
-			{
-				Now suppose that the first input symbol is 1. 
-				Then $1_b = 1 \mod 3$, so we need to add state $q_1$ to our drawing, and add $(q_0, 1, q_1)$ to $\delta$.
-			}
-			\includestandalone{tikz/mod3_construction/step_3}
-		\end{exstep}
+		To define the transition function $\delta$ it is helpful to have a picture of the automaton we are building.
+		We draw FAs as directed graphs, with vertices representing states and edges, labeled by symbols, representing transitions.
+		A double circle around a vertex means that it represents an accepting state.
 
-		\begin{exstep}
-			{
-				Now we have all the transitions we need from $q_0$, so we move on to $q_1$.
-				We'll assume that the input so far is $1_b$.
-				Then if the next input symbol is $0$, we have $10_b = 2 = 2 \mod 3$.
-				So we add state $q_2$ to the diagram, and add $(q_1, 0, q_2)$ to $\delta$.
-			}
-			\includestandalone{tikz/mod3_construction/step_4}
-		\end{exstep}
+		Figure~\ref{fig:m3_1} shows $\miii$ as defined thus far: lacking any transitions, but otherwise complete.
 
-		\begin{exstep}
-			{
-				But if the next input is $1$, then we have $11_b = 3 = 0 \mod 3$.
-				So we add $(q_1, 1, q_0)$ to $\delta$.
-			}
-			\includestandalone{tikz/mod3_construction/step_5}
-		\end{exstep}
-		
 
-		\begin{exstep}
-			{
-			Now we have all possible transitions from $q_1$, so we move on to $q_2$.
-			Assume that the input so far is $10_b$.
-			if the next symbol is $0$, we will have $100_b = 1 \mod 3$, so we add $(q_2, 0, q_1)$ to $\delta$.
-			}
-			\includestandalone{tikz/mod3_construction/step_6}
-		\end{exstep}
-		
-		\begin{exstep}
-			{
-				But if the next input is $1$, we will have $101_b = 5 = 2 \mod 3$.
-				So we add $(q_2, 1, q_2)$ to $\delta$.
-			}
-			\includestandalone{tikz/mod3_construction/step_7}
-		\end{exstep}
+		\begin{figure}[H]
+			\centering
+			\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+				\node[initial,state,accepting] (0)                {$q_0$};
+				\node[state]                   (1) [right of = 0] {$q_1$};
+				\node[state]                   (2) [right of = 1] {$q_2$};
+			\end{tikzpicture}
+			\caption{$\miii$ without any transitions}
+			\label{fig:m3_1}
+		\end{figure}
+
+		We begin by defining transitions from $q_0$.
+		Suppose that $\miii$ is in its initial state: $q_0$.
+		If the first input symbol is 0, then the value of the input does not change and the machine should not change state.
+		So we define $\delta(q_0, 0) = q_0$.
+		But if the first symbol is 1, the value of the input is $1_b = 1 \mod 3$, so the next state should be $q_1$, and we define $\delta(q_0, 1) = q_1$.
+		Figure~\ref{fig:m3_2} shows the automaton with these transitions added.
+
+		\begin{figure}[H]
+			\centering
+			\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+				\node[initial,state,accepting] (q0)                {$q_0$};
+				\node[state]                   (q1) [right of = q0] {$q_1$};
+				\node[state]                   (q2) [right of = q1] {$q_2$};
+
+				\path[->, very thick](q0) edge [loop above] node {0} (q0);
+				\path[->, very thick](q0) edge [bend left]  node {1} (q1);
+			\end{tikzpicture}
+			\caption{$\miii$ with transitions from $q_0$ added.}
+			\label{fig:m3_2}
+		\end{figure}
+
+		Clearly, we don't need to add any more transitions from $q_0$, so we move on to $q_1$.
+		Imagine that the input so far is 1, so that $\miii$ will be in state $q_1$.
+		If the next input symbol is 0, we have $10_b = 2 = 2 \mod 3$, and the next state should be $q_2$.
+		So we define $\delta(q_1, 0) = q_2$.
+		But if the next symbol is 1, we have $11_b = 3 = 0 \mod 3$. 
+		Then the next state should be $q_0$, so we define $\delta(q_1, 1) = q_0$.
+		Figure~\ref{fig:m3_3} shows \miii with these transitions added.
+
+		\begin{figure}[H]
+			\centering
+			\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+				\node[initial,state,accepting] (q0)                {$q_0$};
+				\node[state]                   (q1) [right of = q0] {$q_1$};
+				\node[state]                   (q2) [right of = q1] {$q_2$};
+
+				\path[->](q0) edge [loop above] node {0} (q0);
+				\path[->](q0) edge [bend left]  node {1} (q1);
+				\path[->, very thick](q1) edge [bend left]  node {0} (q2);
+				\path[->, very thick](q1) edge [bend left]  node {1} (q0);
+			\end{tikzpicture}
+			\caption{\miii with transitions from $q_1$ added.}
+			\label{fig:m3_3}
+		\end{figure}
+
+		Now we can define the transitions from $q_2$. 
+		Imagine that the input so far is $10$.
+		If the next symbol is 0, we have $100_b = 4 = 1 \mod 3$, so we define $\delta(q_2, 0) = q_1$.
+		But if the next symbol is 1, we have $101_b = 5 = 2 \mod 3$, so we set $\delta(q_2, 1) = q_2$.
+
+		This completes the construction of \miii.
+		Figure~\ref{fig:m3_4} shows the finished automaton.
+
+		\begin{figure}[H]
+			\centering
+			\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+				\node[initial,state,accepting] (q0)                {$q_0$};
+				\node[state]                   (q1) [right of = q0] {$q_1$};
+				\node[state]                   (q2) [right of = q1] {$q_2$};
+
+				\path[->](q0) edge [loop above] node {0} (q0);
+				\path[->](q0) edge [bend left]  node {1} (q1);
+				\path[->](q1) edge [bend left]  node {0} (q2);
+				\path[->](q1) edge [bend left]  node {1} (q0);
+				\path[->](q2) edge [bend left]  node {0} (q1);
+				\path[->](q2) edge [loop right] node {1} (q2);
+			\end{tikzpicture}
+			\caption{\miii with all its transitions.}
+			\label{fig:m3_4}
+		\end{figure}
 	\end{example}
 
 	\begin{definition}[Deterministic and Nondeterministic Finite Automata]
