@@ -616,22 +616,78 @@
 		\]
 		Note that since \sas is an accepting state, this also gives \sas a copy of each of the transitions from \sa.
 		This completes the construction of \mas.
-
-
-
-
-
-
 	\end{proof}
 
 	\begin{claim}
 	\label{prop:ndfa_dfa_equivalent}
 		A language is representable by a NDFA if and only if it is representable by a DFA.
 	\end{claim}
-
 	\begin{proof}
 	\label{proof:ndfa_dfa_equivalent}
-		Proof of \refprop{prop:ndfa_dfa_equivalent}.
+		Since DFAs are a subclass of NDFAs, we only need to prove that any language represented by a NDFA can be represented by a DFA.
+
+		Let $M = (Q, \Sigma, q_0, \delta, F)$ be a NDFA.
+		We will construct a DFA $M'$ such that $L(M') = L(M)$.
+
+		Because $M$ is nondeterministic, any subset of its states may be active at any given time.
+		$M'$ must have one state representing each possible set of active states of $M$, so $Q'$ must be the power set (set of all subsets) of $Q$.
+		Thus each state in $Q'$ will be of the form $\{ q_1, q_2, \dots, q_n \}$ where all $q_i \in Q$.
+		The initial state of $M'$ will be the set $\{ q_0 \}$, which contains only the initial state of $M$.
+		The accepting states of $M'$ will the subsets of $Q$ that contain an accepting state of $M'$.
+
+		We have defined
+		\[
+			M' = (Q', \Sigma, \{q_0\}, \delta', F')
+		\]
+		where
+		\[
+			F' = \{ p \in Q' \mid p \cap F \neq \emptyset\}
+		\]
+
+		The only component of $M'$ left undefined is $\delta'$.
+		We define the result of each transition of $\delta'$ as a union of transitions of $\delta$.
+		For each $\{ q_1, q_2, \dots, q_n \} \in Q'$ and all $a \in \Sigma$, we define
+		\begin{align*}
+			\delta'(\{ q_1, q_2, \dots, q_n \}, a) &= \{ \delta(q_1, a),\, \delta(q_2, a),\, \dots,\, \delta(q_n, a) \} \\
+			&= \bigcup_{i=1}^n \delta(q_i, a)
+		\end{align*}
+		
+		This completes the construction of $M'$.
+
+		Now we must prove that $\delta'(\{ q_0 \}, w) = \delta(q_0, w)$ for any string $w \in \Sigma^*$.
+		We will proceed by induction on the length of the sting $w$.
+
+		Suppose that $|w| = 0$, then $w = \lambda$.
+		Then $M$ will remain in its initial state, so 
+		\[
+			\delta'(\{ q_0 \}, \lambda) = \{ q_0 \} = \{ \delta(q_0, \lambda) \}
+		\]
+
+		Now suppose that $\delta'(\{ q_0 \}, w) = \delta(q_0, w)$ for all $w \in \Sigma^*$ with $|w| \leq N$.
+		Let $w \in \Sigma^*$ be of length $N$, and let $a \in \Sigma$. 
+		Then $|wa| = N + 1$.
+		
+		We know by definition that 
+		\[
+			\delta'(\{ q_0\}, wa) = \delta'( \delta'(\{ q_0\}, w), a )
+		\]
+		and since $|w| \leq N$, we can write 
+		\[
+			\delta'(\{ q_0 \}, w) = \{ p_1, p_2, \dots, p_m \} = \delta(q_0, w).
+		\]
+		Thus
+		\begin{align*}
+			\delta'( \delta'(\{ q_0 \}, w), a ) &= \delta'(\{ p_1, p_2, \dots, p_m \}, a) \\
+			&= \bigcup_{i=1}^m \delta(p_i, a)
+		\end{align*}
+
+		Thus we know that $\delta'(\{ q_0 \}, w) = \delta(q_0, w)$ for $w$ of length $N+1$.
+
+		\meo{
+			Need to add how this implies that they accept the same language.
+			I never defined what it meant for a NDFA to accept a language at all.
+		}
+
 	\end{proof}
 
 	\begin{claim}
