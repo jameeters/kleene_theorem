@@ -486,7 +486,7 @@
 				\newcommand{\qa}{\ensuremath{Q_A}\xspace}
 				\newcommand{\siga}{\ensuremath{\Sigma_A}\xspace}
 				\newcommand{\sa}{\ensuremath{s_A}\xspace}
-				\newcommand{\dala}{\ensuremath{\delta_A}\xspace} % \del would make more sense but I automatically type 'dal' for Delta Air Lines
+				\newcommand{\dala}{\ensuremath{\delta_A}\xspace}
 				\newcommand{\fa}{\ensuremath{F_A}\xspace}
 
 			\newcommand{\mb}{\ensuremath{M_B}\xspace}
@@ -504,7 +504,18 @@
 				\newcommand{\fab}{\ensuremath{F_{AB}}\xspace}
 
 			\newcommand{\maub}{\ensuremath{M_{A \cup B}}\xspace}
+				\newcommand{\qaub}{\ensuremath{Q_{A \cup B}}\xspace}
+				\newcommand{\sigaub}{\ensuremath{\Sigma_{A \cup B}}\xspace}
+				\newcommand{\saub}{\ensuremath{s_{A \cup B}}\xspace}
+				\newcommand{\dalaub}{\ensuremath{\delta_{A \cup B}}\xspace}
+				\newcommand{\faub}{\ensuremath{F_{A \cup B}}\xspace}
+
 			\newcommand{\mas}{\ensuremath{M_{A^*}}\xspace}
+				\newcommand{\qas}{\ensuremath{Q_{A^*}}\xspace}
+				\newcommand{\sigas}{\ensuremath{\Sigma_{A^*}}\xspace}
+				\newcommand{\sas}{\ensuremath{s_{A^*}}\xspace}
+				\newcommand{\dalas}{\ensuremath{\delta_{A^*}}\xspace}
+				\newcommand{\fas}{\ensuremath{F_{A^*}}\xspace}
 
 
 		Let $M_A = (Q_A, \Sigma_A, s_A, \delta_A, F_A)$ and $M_B = (Q_B, \Sigma_B, s_B, \delta_B, F_B)$ be NDFAs such that $L(\ma) = A$ and $L(\mb) = B$.
@@ -524,7 +535,7 @@
 		So we define
 		\[
 			\fab = 	\begin{cases}
-						\fb \cup \{ \sab \} &\text{ if } \lambda \in A \cap B \\
+						\fb \cup \{ \sab \} &\text{if } \lambda \in A \cap B \\
 						\fb &\text{otherwise}
 					\end{cases}
 		\]
@@ -552,7 +563,55 @@
 		\[
 			\dalab(\sab, b) = \dalb(\sb, b)
 		\]
+		This completes the construction of \mab.
+
+		% AuB
+		Now we construct a NDFA $M_{A \cup B} = (Q_{A \cup B}, \Sigma_{A \cup B}, s_{A \cup B}, \delta_{A \cup B}, F_{A \cup B})$ such that $L(\maub) = A \cup B$.
+		We build \maub by combining \ma and \mb in parallel, so that any string accepted by either \ma or \mb will be accepted by \maub.
 		
+		Clearly we need $\sigaub = \siga \cup \sigb$.
+
+		The states of \maub are all the states of both \ma and \mb, plus a new initial state \saub, which has transitions into both \ma and \mb.
+		So we define $\qaub = \qa \cup \qb \cup \{ \saub \}$.
+
+		We want \maub to accept strings of both $A$ and $B$, so all accepting states of \ma and \mb will be accepting states of \maub.
+		If $\lambda$ is accepted by either \ma or \mb, we also need \saub to be an accepting state. 
+		Thus we define 
+		\[
+			\faub =	\begin{cases}
+						\fa \cup \fb \cup \{ \saub \} &\text{if } \lambda \in A \cup B \\
+						\fa \cup \fb &\text{otherwise}
+					\end{cases}
+		\]
+
+		We keep all the transitions of \ma and \mb, and add some new transitions to link the new initial state to the rest of the automaton.
+		For each transition from the start state of \ma or \mb, we add a transition from \saub on the same symbol to the same state.
+		That is, for all $a \in \siga$ and all $b \in \sigb$, we define
+		\[
+			\dalaub(\saub, a) = \dala(\sa, a) \enspace \text{and} \enspace \dalaub(\saub, b) = \dalb(\sb, b)
+		\]
+		This completes the construction of \maub.
+
+		% A*
+		We construct \mas by linking \ma to itself to form a circle. % Circularize!
+		Since \mas should accept strings of A repeated any number of times, we allow the accepting states of \ma to behave like initial states by adding transitions from \fa looping back into \ma.
+		To allow \mas to accept $\lambda$, we add a new initial state, which is also an accepting state.
+
+		Let $\mas = (\qas, \siga, \sas, \dalas, \fas)$.
+		Note that the alphabet of \mas is exactly the alphabet of \ma.
+
+		We define $\qas = \qa \cup \{ \sas \}$ and $\fas = \fa \cup \{ \sas \}$, where \sas is the new initial state.
+
+		We keep all the transitions of \ma, but for every transition from \sa, we add a transition to the same state on the same symbol from each state in \fas.
+		That is, for all $a \in \siga$, and $f \in \fas$ we define 
+		\[
+			\dalas(f, a) = \dala(\sa, a)
+		\]
+		Note that since \sas is an accepting state, this also gives \sas a copy of each of the transitions from \sa.
+		This completes the construction of \mas.
+
+
+
 
 
 
