@@ -409,11 +409,18 @@
 	\end{example}
 
 	\begin{definition}[Deterministic and Nondeterministic Finite Automata]
+		All finite automata as we have described them fall into the class of \textit{nondeterministic} finite automata (NDFAs).
+		Any FA with zero or more transitions from each state on a given symbol is a NDFA.
 		A FA having exactly one transition from each state for each possible input symbol is called a \textit{deterministic} finite automaton (DFA).
-		A FA that is not a DFA is called a \textit{nondeterministic} finite automaton (NDFA).
-
-		The FA $M_3$ is an example of a DFA, but the incomplete versions given during the construction of $M_3$ are nondeterministic.
 	\end{definition}
+
+	\begin{remark}
+		Because a DFA is required to have exactly one transition from each state for each possible input, only one of its states may be active at any given time.
+		It is important to note that this is not the case for NDFAs.
+		Because a NDFA may have any number of transitions from each state on a single symbol, any number of its states may be active at any given time.
+		Alternatively, a NDFA may have no transition from any state for a given input symbol, and upon reading that symbol, would have no active states.
+		\meo{I could mention lambda transitions, but I've avoided using them so far, so I don't think I need to.}
+	\end{remark}
 % chapter finite_automata (end)
 
 
