@@ -20,7 +20,7 @@
 \usepackage{james}
 \usepackage[plainpages=false,pdfpagelabels, hidelinks]{hyperref}
 
-\usetikzlibrary{arrows, automata}
+\usetikzlibrary{arrows, automata, shapes}
 
 %%% Document Settings
 	% The following command allows tables to split between pages:
@@ -49,7 +49,8 @@
 	\tikzset{
 		initial text = {\scriptsize{\textsc{start}}},
 		initial distance = 1 pt,
-		every initial by arrow/.style={->}
+		every initial by arrow/.style={->},
+		elliptic state/.style={draw,rounded rectangle}
 	}
 
 
@@ -346,7 +347,7 @@
 		\begin{figure}[H]
 			\centering
 			\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
-				\node[initial,state,accepting] (q0)                {$q_0$};
+				\node[initial,state,accepting] (q0)                 {$q_0$};
 				\node[state]                   (q1) [right of = q0] {$q_1$};
 				\node[state]                   (q2) [right of = q1] {$q_2$};
 
@@ -525,8 +526,46 @@
 				\newcommand{\fas}{\ensuremath{F_{A^*}}\xspace}
 
 
-		Let $M_A = (Q_A, \Sigma_A, s_A, \delta_A, F_A)$ and $M_B = (Q_B, \Sigma_B, s_B, \delta_B, F_B)$ be NDFAs such that $L(\ma) = A$ and $L(\mb) = B$.
+		Let 
+		\[
+			M_A = (Q_A, \Sigma_A, s_A, \delta_A, F_A) \quad \text{ and } \quad M_B = (Q_B, \Sigma_B, s_B, \delta_B, F_B)
+		\]
+		be NDFAs such that $L(\ma) = A$ and $L(\mb) = B$.
 
+		\begin{figure}[H]
+			\centering
+			\setlength{\fboxrule}{0 pt}
+			\subfloat[\ma]{
+				\label{sfig:ma}
+				\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+					\node[initial,state]    (q0)                   {\sa};
+					\node[elliptic state]   (ma)  [right of  = q0] {$\quad \ma \quad$};
+					\node[state, accepting] (fa)  [right of = ma]  {\fa};
+					\path[->](q0) edge (ma);
+					\path[->](ma) edge (fa);
+				\end{tikzpicture}
+			}\\
+			\subfloat[\mb]{
+				\label{sfig:mb}
+				\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+					\node[initial,state]    (q0)                   {\sb};
+					\node[elliptic state]   (mb)  [right of  = q0] {$\quad \mb \quad$};
+					\node[state, accepting] (fb)  [right of = ma]  {\fb};
+					\path[->](q0) edge (mb);
+					\path[->](mb) edge (fb);
+				\end{tikzpicture}
+			}
+			\caption{
+			FAs accepting $A$ and $B$.
+			The middle states represent all the states of the machine other than the initial and accepting states.
+			Note that if \ma or \mb accepts $\lambda$, its initial state must be an accepting state.
+			}
+			\label{fig:ma_and_mb}
+			% The \framebox makes the caption wider than the picture, 
+			% otherwise, subfigures (a) and (b) are too narrow and their captions look bad.
+		\end{figure}
+
+		\textbf{(i)}
 		We will construct a NDFA $M_{AB} = (Q_AB, \Sigma_AB, s_AB, \delta_AB, F_AB)$ such that $L(\mab) = AB$.
 		We build \mab by adding \mb onto the end of \ma, so that a word accepted by \mab is of the form $xy$ where $x$ is accepted by \ma and $y$ is accepted by \mb.
 
@@ -735,7 +774,7 @@
 		By our inductive hypothesis, we know that the languages $W(i, j, l)$, $W(i, k, l)$, $W(l+1, l+1, l)$, and $W(l+1, j, l)$ are all regular.
 		Thus $W(l+1, l+1, l)^*$ is regular as the Kleene closure of a regular language, and $W(i, k, l)\, W(l+1, l+1, l)^*\, W(l+1, j, l)$ is regular as a concatenation of regular languages.
 		Thus $W(i, j, l+1)$ is regular as a union of regular languages.
-		
+
 
 
 	\end{proof}
