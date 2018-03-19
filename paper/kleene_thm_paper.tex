@@ -696,7 +696,48 @@
 	\end{claim}
 
 	\begin{proof}
-		Proof of \refprop{prop:representable_languages_regular}
+		Because we have proven that every language accepted by a NDFA is accepted by a DFA, it is enough to show that any language represented by a DFA is regular.
+
+		Let $M = (Q, \Sigma, s, \delta, F)$ be a DFA, and let $Q = \{ q_1, \dots, q_n \}$ with $n \geq 1$.
+
+		Define $W(i, j, k)$ to be the language containing all words that take $M$ from $q_i$ to $q_j$ without transiting any state $q_l$ with $l > k$.
+
+		Then for $k = 0$:
+		\[
+			W(i, j, 0) = \{ a \in \Sigma \cup \{ \lambda \} \mid \delta(q_i, a) = q_j \}.
+		\]
+		That is, $W(i, j, 0)$ is the set of strings that take $M$ from $q_i$ top $q_j$ without passing through any intermediate states.
+		Clearly, every element of this set must be either a symbol of $\Sigma$ or, if and only if $i = j$, the empty string.
+		So for all $i$ and $j$, $W(i, j, 0)$ must be of one of the following forms:
+		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
+			\item $\emptyset$
+			\item $\{ \lambda \}$
+			\item $\{ \lambda, a_1, a_2, \dots, a_m \}, a_i \in \Sigma$
+			\item $\{ a_1, a_2, \dots, a_m \}$
+		\end{enumerate}
+		Clearly, each of these is a regular language: $\emptyset$ and $\{ \lambda \}$ are atomic regular languages, and it trivial to rewrite $\{ \lambda, a_1, a_2, \dots, a_m \}$ or $\{ a_1, a_2, \dots, a_m \}$ as the union of atomic regular languages.
+
+		For $k \geq 1$ we define
+		\[
+			W(i, j, k) = W(i, j, k-1) \cup W(i, k, k-1)\, W(k, k, k-1)^*\, W(k, j, k-1).
+		\]
+		That is, $W(i, j, k)$ is the union of two languages.
+		The first is the language of all strings that take $M$ from $q_i$ to $q_j$ using vertices numbered $k-1$ or less.
+		The second is the language containing all stings of the form $xyz$, where $x$ takes $M$ from $q_i$ to $q_k$, $y$ takes $M$ from $q_k$ to $q_k$ and $z$ takes $M$ from $q_k$ to $q_j$, all using only states numbered less than $k$.
+
+		Now assume that any $W(i, j, k)$ is regular for all $k \leq l$.
+		We will show that all $W(i, j, l+1)$ are regular.
+
+		For all $i$ and $j$, we know that 
+		\[
+			W(i, j, l+1) = W(i, j, l) \cup W(i, k, l)\, W(l+1, l+1, l)^*\, W(l+1, j, l).
+		\]
+		By our inductive hypothesis, we know that the languages $W(i, j, l)$, $W(i, k, l)$, $W(l+1, l+1, l)$, and $W(l+1, j, l)$ are all regular.
+		Thus $W(l+1, l+1, l)^*$ is regular as the Kleene closure of a regular language, and $W(i, k, l)\, W(l+1, l+1, l)^*\, W(l+1, j, l)$ is regular as a concatenation of regular languages.
+		Thus $W(i, j, l+1)$ is regular as a union of regular languages.
+		
+
+
 	\end{proof}
 	
 
