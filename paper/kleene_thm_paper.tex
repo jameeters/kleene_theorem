@@ -3,7 +3,7 @@
 %%% Other packages needed by your document may be loaded here.
 \usepackage{url}              % For formatting URLs 
 \usepackage{booktabs}         % Publication-quality tables.
-\usepackage[square, numbers]{natbib}           % Provides some nice citation and
+\usepackage[square]{natbib}           % Provides some nice citation and
 							  % bibliography formatting commands.
 % \bibpunct[:~]{(}{)}{;}{a}{,}{,~} % Set some defaults for bibliographic
 								 % punctuation used by natbib.sty.
@@ -71,7 +71,7 @@
 	\reader{Name of Second Reader}
 
 	\thesisyear{2018}
-	\thesismonth{May}
+	\thesismonth{April}
 %%% End of information section.
 
 
@@ -119,39 +119,38 @@
 \label{ch:basics}
 
 		\begin{definition}[Symbol]
-			The \textit{symbol} is the foundational unit of formal language theory.
-			Symbols are distinct from each other; two symbols are interchangeable if and only they are the same symbol.
-			Symbols are indivisible: a symbol may not be decomposed and represented by any other symbol or collection of other symbols.
+			The \textit{symbol} is the most basic unit of formal language theory.
+			Symbols are indivisible and atomic --- they are not a composite of other units, and cannot be represented by any combination of other symbols.\footcite{hopcroft}{1}
 		\end{definition}
 
 		\begin{definition}[Alphabet]
 			An \textit{alphabet} is a nonempty and finite set of symbols.
-			An alphabet is typically denoted by the symbol $\Sigma$.
+			An alphabet is typically denoted by the symbol $\Sigma$.\footcite{salomaa}{1}
 		\end{definition}
 
 		\begin{definition}[String]
 			A \textit{string} over an alphabet $\Sigma$ is a finite sequence of symbols of $\Sigma$.
-			If $\Sigma = \{ a, b ,c \}$, then $w = acbba$ is a string over $\Sigma$.
-			The length of a string is the number of symbols it contains (counting repetitions).
-			The length of $w$, denoted $|w|$ is $5$.
-			Strings are also referred to as \textit{words}.
+			If $\Sigma = \{ a, b ,c \}$, then $w = abbc$ is a string over $\Sigma$.
+			The length of a string is the number of symbols it contains, counting repetitions.
+			The length of $w$, denoted $|w|$, is $4$.
+			Strings are also referred to as \textit{words}.\footcite{hopcroft}{1}
 
 			The string of length zero, which contains no symbols, is called the \textit{empty string}, and denoted $\lambda$.
-			The empty string is a valid string over any alphabet.
+			The empty string is a valid string over any alphabet.\footcite{salomaa}{1}
 		\end{definition}
 
 		\begin{definition}[Language]
-			A \textit{language} over an alphabet $\Sigma$ is any set of strings over $\Sigma$.
+			A \textit{language} over an alphabet $\Sigma$ is any set of strings over $\Sigma$.\footcite{hopcroft}{2}
 			% The language of all possible strings over $\Sigma$ is denoted $\Sigma^*$.
 
-			The empty set ($\emptyset$) and $\{ \lambda \}$ are valid languages over any alphabet.
+			The empty set ($\emptyset$) and $\{ \lambda \}$ are valid languages over any alphabet.\footcite{hopcroft}{2}
 
-			Note that because languages are sets of strings, the conventional set operations, such as union, intersection, and complementation are defined for languages.
+			Because languages are sets of strings, the conventional set operations, such as union, intersection, and complementation are defined for languages.\footcite{hopcroft}{5}
 		\end{definition}
 
 		\begin{remark}
 			The empty set and $\{ \lambda \}$ represent distinct languages. 
-			The empty set represents the language containing no strings at all, while $\{ \lambda \}$ represents the language containing only the empty string.
+			The empty set represents the language containing no strings at all, while $\{ \lambda \}$ represents the language containing only the empty string.\footcite{hopcroft}{2}
 		\end{remark}
 
 
@@ -166,35 +165,35 @@
 			\item $\{ \lambda \}$ is an atomic regular language over $\Sigma$.
 			\item $\{ a \}$ is an atomic regular language over $\Sigma$ for all $a \in \Sigma$.
 		\end{enumerate}
+		\footcite{hopcroft}{28}
 	\end{definition}
 
-	We now define some operations closely related to the family of regular languages.
+	We now define the operations used to combine the atomic regular languages to form more complex regular languages.
 
 	\begin{definition}[Concatenation]
-		Let $w_1 = ac$ and $w_2 = bac$ be strings over some alphabet.
-		Their \textit{concatenation} $w_1 w_2$ denotes the string $acbac$, and $w_2 w_1$ denotes $bacac$.
+		Let $w_1 = ab$ and $w_2 = bc$ be strings over some alphabet.
+		Their \textit{concatenation} $w_1 w_2$ denotes the string $abbc$, and $w_2 w_1$ denotes $bcab$.
 		For any string $w$, $\lambda w = w \lambda = w$.
-		The notation $w^3$ denotes the string $www$, and $w^0 = \lambda$.
+		The notation $w^3$ denotes the string $www$, and $w^0 = \lambda$.\footcite{salomaa}{1}
 
-		It should be easy to see that this definition applies to symbols, which can be seen as words of length 1.
-
-		\meo{I think I could choose better example strings here.}
+		It should be easy to see how this definition applies to symbols, which can be seen as words of length 1.
 	\end{definition}
 
 	\begin{definition}[Concatenation of Languages]
 		Let $A$ and $B$ be languages over some alphabet.
-		Their \textit{concatenation}, or \textit{product}, $AB$ is the set $\{ ab \mid a \in A, \ b \in B \}$.
+		The\textit{concatenation}, or \textit{product}, $AB$ of $A$ and $B$ is the set $\{ ab \mid a \in A, \ b \in B \}$.\footcite{lemmings}{3}
+
 		The notation $A^2$ represents the language $AA$, and $A_i$ represents $AA^{i-1}$
-		Note that $A = A^1 = AA^0 = \{ a \lambda \mid a \in A \}$, which implies that $A^0 = \{ \lambda \}$
+		Note that $A = A^1 = AA^0 = \{ a \lambda \mid a \in A \}$, which implies that $A^0 = \{ \lambda \}$.\footcite{lemmings}{3}
 	\end{definition}
 
 	\begin{remark}
 		Note that the set of strings over an alphabet is closed under concatenation: if $x$ and $y$ are strings over $\Sigma$, then so are $xy$ and $yx$.
-		It follows that if $A$ and $B$ are languages over $\Sigma$, then so are $AB$ and $BA$.
+		It follows that if $A$ and $B$ are languages over $\Sigma$, then so are $AB$ and $BA$.\footcite{lemmings}{2}
 		
 		Concatenation is also an associative operation.
 		Given strings $x$, $y$, and $z$, $(xy)z = x(yz)$.
-		It follows that given languages $A$, $B$, and $C$, $(AB)C = A(BC)$.
+		It follows that for languages $A$, $B$, and $C$, $(AB)C = A(BC)$.\footcite{lemmings}{2}
 
 		\meo{
 			Maybe also note that length has the properties of the logarithm with regard to concatenation.
@@ -207,47 +206,53 @@
 		\[
 			A^* = \bigcup_{i \geq 0} A^i
 		\]
-		is called the \textit{Kleene closure} of $A$.\footcite{lemmings}{3}
-		Note that this definition also provides the Kleene closure of symbols and words, and that the Kleene closure of a string or symbol is a language, not another string or symbol.
-	\end{definition}
-
-	\begin{definition}[Regular Operations]
-		The following are referred to as the \textit{regular operations}:
-		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex]
-			\item Concatenation
-			\item Union
-			\item Kleene closure
-		\end{enumerate}
+		is called the \textit{Kleene closure} of $A$.
+		$A^*$ is the language any words of $A$ repeated zero or more times, thus $\lambda$ is in the Kleene closure of any language.\footcite{lemmings}{3}
+		\meo{Maybe note that that the star operator is referred to as the Kleene star.}
 	\end{definition}
 
 	\begin{definition}[Regular Language]
 		Given an alphabet $\Sigma$, any atomic regular language over $\Sigma$ is a regular language over $\Sigma$.
-		If $A$ and $B$ are regular languages over $\Sigma$, then $AB$, $A \cup B$, and $A^*$ are regular languages over $\Sigma$.
+		
+		If $A$ and $B$ are regular languages over $\Sigma$, then so are 
+		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
+			\item $AB$
+			\item $A \cup B$
+			\item $A^*$
+		\end{enumerate}
+		\footcite{rosen}{879}
 	\end{definition}
 
-	We now introduce \textit{regular expressions}, a shorthand for describing regular languages.
+	\begin{remark}
+		Because of their relationship to the family of regular languages, the concatenation, union, and Kleene closure are referred to as the \textit{regular operations}.\footcite{salomaa}{26}
+	\end{remark}
+
+	We now introduce \textit{regular expressions}, a shorthand used to describe regular languages.
 
 	\begin{definition}[Regular Expressions]
-		The atomic regular expressions over any alphabet $\Sigma$ are defined to represent the atomic regular languages over $\Sigma$:
-		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex]
-			\item $\emptyset$ denotes the empty language.
-			\item $\lambda$ denotes the language $\{ \lambda \}$.
-			\item $a$ denotes the language $\{ a \}$ for all $a \in \Sigma$.
+		The atomic regular expressions over an alphabet $\Sigma$ are defined to represent the atomic regular languages over $\Sigma$:
+		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
+			\item $\emptyset$ denotes the empty language
+			\item $\lambda$ denotes the language $\{ \lambda \}$
+			\item $a$ denotes the language $\{ a \}$ for all $a \in \Sigma$
 		\end{enumerate}
+		\footcite{hopcroft}{28--29}
 
 		If $\alpha$ and $\beta$ are regular expressions representing languages $A$ and $B$, respectively, then the following are also regular expressions:
-		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex]
+		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
 			\item $\alpha \beta$ denotes the language $AB$.
 			\item $\alpha + \beta$ denotes the language $A \cup B$.
 			\item $\alpha^*$ denotes the language $A^*$.
 		\end{enumerate}
+		\footcite{hopcroft}{28--29}
 	\end{definition}
 
 	\begin{remark}
-		The distinction between regular expressions and regular languages is that regular expressions are a shorthand for describing regular languages. 
-		Although regular expressions look very similar to the set notation for regular languages, they do simplify the notation, especially when describing complex languages.
+		Although regular expressions may closely resemble the the notation for regular languages, they are in fact only a shorthand used to describe regular language. 
+		Using regular expressions allows us to describe regular languages while avoiding some of the formalisms of set notation.
 		\meo{
 			Is this a convincing reason why this is a thing worth having?
+			Maybe mention that a language is regular if and only if it can be described by a regular expression.
 		}
 
 	\end{remark}
@@ -266,34 +271,39 @@
 	The output of a finite automaton is the state of the machine after reading some input.
 
 	\begin{definition}[Finite Automaton]
-		A \textit{finite automaton} (FA) $M$ is defined by the 5-tuple $(Q, \Sigma, q_0, \delta, F)$.
+		A \textit{finite automaton} (FA) $M$ is defined by the 5-tuple $(Q, \Sigma, s, \delta, F)$.
 		\begin{itemize}
 			\item [] $Q$ is a finite and nonempty set of states.
 			\item [] $\Sigma$ is an alphabet of possible input symbols.
-			\item [] $q_0 \in Q$ is the state of the machine prior to any input, referred to as the \textit{initial state};
+			\item [] $s \in Q$ is the state of the machine prior to any input, referred to as the \textit{initial state};
 			\item [] $\delta: (Q \times \Sigma) \mapsto Q$ is called the \textit{transition function}: It maps a starting state and an input symbol to the new state of the machine.
 			\item [] $F \subseteq Q$ is the set of \textit{final states} or \textit{accepting states} of the machine.
 		\end{itemize}
+		\footcite{hopcroft}{17}
 	\end{definition}
 
 	\begin{remark}
 		It is convenient to extend the definition of $\delta$ to apply to strings, as well as individual symbols.
-		Let $w = w_1 w_2 \dots w_n \in \Sigma^*$.
-		By $\delta(q_1, w) = q_n$ we mean 
+		Let $w = w_1 w_2 \dots w_n$.
+		By 
+		\[
+			\delta(q_1, w) = q_n
+		\] 
+		we mean 
 		\[
 			\delta\bigg( \cdots \ \delta\Big( \ \delta(q_1, w_1), \ w_2 \Big), \cdots, w_n \bigg) = q_n.
 		\]
-		And define $\delta(q_i, \lambda) = q_i$.
-		This defines $\delta: (Q \times \Sigma^*) \mapsto Q$.
+		We define $\delta(q_i, \lambda) = q_i$.
+		This defines $\delta: (Q \times \Sigma^*) \mapsto Q$.\footcite{hopcroft}{17}
 	\end{remark}
 
 	\begin{definition}(Acceptance by Finite Automaton)
 		Let $M = (Q, \Sigma, q_0, \delta, F)$ be a FA and let $w \in \Sigma^*$.
-		We say that $w$ is \textit{accepted} by $M$ if $\delta(q_0, w) \in F$.
+		We say that $w$ is \textit{accepted} by $M$ if $\delta(q_0, w) \in F$.\footcite{hopcroft}{18}
 
-		We use $L(M)$ to denote the language $\{ w \in \Sigma^* \mid \delta(q_0, w) \in F \}$ of all strings accepted by $M$.
+		We use $L(M)$ to denote the language $\{ w \in \Sigma^* \mid \delta(q_0, w) \in F \}$ containing all strings accepted by $M$.\footcite{hopcroft}{18}
 
-		A language $A$ is called \textit{representable} if there exists some FA $M_A$ such that $A = L(M_A)$.
+		A language $A$ is considered \textit{representable} if there exists some FA $M_A$ such that $A = L(M_A)$.\footcite{salomaa}{20}
 	\end{definition}
 
 	\begin{example}[Finite Automata Construction]
