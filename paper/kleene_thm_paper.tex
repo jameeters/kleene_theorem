@@ -437,12 +437,13 @@
 		All regular languages are representable.
 	\end{claim}
 	\begin{proof}
-		We first show that the atomic regular languages are representable.
-		It is simple to construct a NDFA to accept each:
+		We first show that the atomic regular languages are representable., then show that the results of the result of a regular operation on representable languages is representable.
+
+		It is simple to construct a NDFAs to accept the atomic regular languages:
 		\begin{itemize}
 			\item [] $\emptyset$ is accepted by an automaton with one initial state, no accepting states, and no transitions, as depicted in Figure~\ref{sfig:ndfa_emptyset}.
-			\item [] $\{ \lambda \}$ is accepted by the NDFA with one state, which is both its initial state and an accepting state. See Figure~\ref{sfig:ndfa_lambda}.
-			\item [] $\{ a \}$ for all $a \in \Sigma$ is accepted by a NDFA having two states: one initial state, and one accepting state, with a transition on $a$ between them, as shown in Figure~\ref{sfig:ndfa_symbol}.
+			\item [] $\{ \lambda \}$ is accepted by the NDFA with one state, which is both its initial state and an accepting state, as in Figure~\ref{sfig:ndfa_lambda}.
+			\item [] $\{ a \}$ for all $a \in \Sigma$ is accepted by a NDFA having two states: one initial state and one accepting state, with a transition on $a$ between them, as shown in Figure~\ref{sfig:ndfa_symbol}.
 		\end{itemize}
 
 
@@ -487,6 +488,7 @@
 			\item $A \cup B$
 			\item $A^*$
 		\end{enumerate}
+		Starting with automata representing $A$ and $B$, we will construct automata to accept the regular operations applied to $A$ and $B$.
 
 		% Commands to save me typing underscores everywhere
 		% I want these scoped to the proof.
@@ -565,19 +567,24 @@
 			% otherwise, subfigures (a) and (b) are too narrow and their captions look bad.
 		\end{figure}
 
-		\textbf{(i)}
-		We will construct a NDFA $M_{AB} = (Q_AB, \Sigma_AB, s_AB, \delta_AB, F_AB)$ such that $L(\mab) = AB$.
+		\noindent \textbf{(i)} \hspace{\parindent}
+		We will construct a NDFA 
+		\[
+			M_{AB} = (Q_AB, \Sigma_AB, s_AB, \delta_AB, F_AB)
+		\]
+		 such that $L(\mab) = AB$
 		We build \mab by adding \mb onto the end of \ma, so that a word accepted by \mab is of the form $xy$ where $x$ is accepted by \ma and $y$ is accepted by \mb.
 
 		Clearly, the alphabet of \mab must include all the symbols used by \ma and \mb, thus $\sigab = \siga \cup \sigb$.
 		
 		The states of \mab are all the states of both \ma and \mb.
-		Since the names of states are meaningless we can rename them at will, so we can assume that \qa and \qb are disjoint, and write $\qab = \qa \cup \qb$
+		Since the names of states are meaningless, we can rename them at will. 
+		Thus we can assume that \qa and \qb are disjoint, and write $\qab = \qa \cup \qb$
 		The initial state of \mab is the initial state of \ma, so $\sab = \sa$.
 
-		The accepting states of \mab.
-		If $\lambda$ is accepted by \mb, then we assume that \sb is already an accepting state.
-		If $\lambda \in A \cap B$, then \sab must be an accepting state.
+		The accepting states of \mab are the accepting states of \mb.
+		If $\lambda$ is accepted by \mb, then \sb must be an accepting state of \mb.
+		If $\lambda$ is accepted by both \ma and \mb, we must make \sab an accepting state.
 		So we define
 		\[
 			\fab = 	\begin{cases}
@@ -585,15 +592,15 @@
 						\fb &\text{otherwise}
 					\end{cases}
 		\]
-		Note that we have not dealt with the case in which $\lambda \in A$ and $\lambda \notin B$.
-		Accounting for that case requires adding transitions to \mab.
+		Note that we have not yet accounted for the case in which $\lambda \in A$ and $\lambda \notin B$ --- doing so will require adding transitions to \mab.
 
 		Now we must define \dalab.
-		\mab should retain all of the transitions of \ma and \mb, so for all $q_A \in \qa$ and $a \in \siga$, and for all $q_B \in \qb$ and $b \in \sigb$ we define
+		\mab should retain all the transitions of \ma and \mb, so for all $q_A \in \qa$ and $a \in \siga$, and for all $q_B \in \qb$ and $b \in \sigb$ we define
 		\[
 			\dalab(q_A, a) = \dala(q_A, a) \enspace \text{ and } \enspace \dalab(q_B, b) = \dalb(q_B, b).
 		\]
-		We must also add transitions so that any string accepted by \ma will take \mab from \sab to \sb.
+		We also define new transitions so that any string accepted by \ma will take \mab from \sab to \sb.
+		\meo{We do this by ...}
 		So for all $q_A \in \qa$ and $a \in \siga$ such that 
 		\[
 			\dala(q_A, a) \in \fa
@@ -604,7 +611,7 @@
 		\]
 		Finally, we must account for the case in which $\lambda \in A$.
 		In this case, \mab must be able to skip over \ma and accept strings of $B$ without any prefix.
-		So if $\lambda \in A$, we must add transitions from \sab which shadow the transitions from \sb.
+		Hence if $\lambda \in A$ we must create transitions from \sab which shadow the transitions from \sb.
 		Thus for all $b \in \sigb$ we define
 		\[
 			\dalab(\sab, b) = \dalb(\sb, b)
@@ -612,16 +619,24 @@
 		This completes the construction of \mab.
 
 		% AuB
-		Now we construct a NDFA $M_{A \cup B} = (Q_{A \cup B}, \Sigma_{A \cup B}, s_{A \cup B}, \delta_{A \cup B}, F_{A \cup B})$ such that $L(\maub) = A \cup B$.
-		We build \maub by combining \ma and \mb in parallel, so that any string accepted by either \ma or \mb will be accepted by \maub.
+		\noindent \textbf{(ii)} \hspace{\parindent}
+		Now we construct a NDFA 
+		\[
+			M_{A \cup B} = (Q_{A \cup B}, \Sigma_{A \cup B}, s_{A \cup B}, \delta_{A \cup B}, F_{A \cup B})
+		\] 
+		such that $L(\maub) = A \cup B$.
+		We build \maub by combining \ma and \mb in parallel, so that a string can will be accepted by \maub if it leads to an accepting state of either \ma or \mb.
 		
 		Clearly we need $\sigaub = \siga \cup \sigb$.
 
-		The states of \maub are all the states of both \ma and \mb, plus a new initial state \saub, which has transitions into both \ma and \mb.
-		So we define $\qaub = \qa \cup \qb \cup \{ \saub \}$.
+		The states of \maub are all the states of \ma and \mb, plus a new initial state \saub, which will have transitions into both \ma and \mb.
+		So we define 
+		\[
+			\qaub = \qa \cup \qb \cup \{ \saub \}.
+		\]
 
 		We want \maub to accept strings of both $A$ and $B$, so all accepting states of \ma and \mb will be accepting states of \maub.
-		If $\lambda$ is accepted by either \ma or \mb, we also need \saub to be an accepting state. 
+		If $\lambda$ is accepted by either \ma or \mb, we need \saub to be an accepting state. 
 		Thus we define 
 		\[
 			\faub =	\begin{cases}
@@ -630,7 +645,7 @@
 					\end{cases}
 		\]
 
-		We keep all the transitions of \ma and \mb, and add some new transitions to link the new initial state to the rest of the automaton.
+		We keep all the transitions of \ma and \mb, and add new transitions linking the new initial state to the rest of the automaton.
 		For each transition from the start state of \ma or \mb, we add a transition from \saub on the same symbol to the same state.
 		That is, for all $a \in \siga$ and all $b \in \sigb$, we define
 		\[
@@ -639,6 +654,7 @@
 		This completes the construction of \maub.
 
 		% A*
+		\noindent \textbf{(iii)} \hspace{\parindent}
 		We construct \mas by linking \ma to itself to form a circle. % Circularize!
 		Since \mas should accept strings of A repeated any number of times, we allow the accepting states of \ma to behave like initial states by adding transitions from \fa looping back into \ma.
 		To allow \mas to accept $\lambda$, we add a new initial state, which is also an accepting state.
