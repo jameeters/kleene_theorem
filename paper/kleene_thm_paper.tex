@@ -311,11 +311,11 @@
 		% I'm ducking done typing ``shift-m, shift-underscore, 3''. 
 		\newcommand{\miii}{\ensuremath{M_3}\xspace}
 
-		In this example, we will give a step-by-step construction of a FA to recognize the language of binary numbers divisible by 3.
+		To illustrate exactly how the components of a FA function, we will give a step-by-step construction of a FA to recognize the language of binary numbers divisible by 3.
 
 		Call this automaton \miii.
 		Let $\miii = (Q, \Sigma, s, \delta, F)$.
-		Clearly we need only the symbols 0 and 1 to represent a language of binary strings, so we set $\Sigma = \{ 0, 1 \}$.
+		Clearly we need only the symbols ``0'' and ``1'' to represent a language of binary strings, so we set $\Sigma = \{ 0, 1 \}$.
 
 		Now we define the set of states for $\miii$.
 		Suppose $x$ is the string that has been input to $\miii$ so far.
@@ -328,6 +328,12 @@
 		So we create one state to represent each of these possible conditions, and define $Q = \{ q_0, q_1, q_2 \}$.
 		Since we want $\miii$ to accept numbers divisible by 3, we set $F = \{ q_0 \}$. 
 		And since we interpret no input as 0, set the initial state $s$ to $q_0$.
+
+		Now we have 
+		\[
+			\miii = (Q = \{ q_0, q_1, q_2 \}, \Sigma = \{ 0, 1 \}, s = q_0, \delta, F = \{ q_0 \}).
+		\]
+		The only part of \miii remaining to be defined is $\delta$, the transition function.
 
 		To define the transition function $\delta$ it is helpful to have a picture of the automaton we are building.
 		We draw FAs as directed graphs, with vertices representing states and edges, labeled by symbols, representing transitions.
@@ -347,11 +353,13 @@
 			\label{fig:m3_1}
 		\end{figure}
 
-		We begin by defining transitions from $q_0$.
-		Suppose that $\miii$ is in its initial state: $q_0$.
-		If the first input symbol is 0, then the value of the input does not change and the machine should not change state.
+		To define transitions, we imagine starting with the FA in its initial state and entering a string one symbol at a time.
+		Each time we enter a symbol we decide what the next state of the machine should be, given the input so far, and then define a transition to produce that state.
+
+		Suppose that $\miii$ is in its initial state.
+		If the first input symbol is ``0'', then the machine should not change state.
 		So we define $\delta(q_0, 0) = q_0$.
-		But if the first symbol is 1, the value of the input is $1_b = 1 \mod 3$, so the next state should be $q_1$, and we define $\delta(q_0, 1) = q_1$.
+		If the first symbol is ``1'', the value of the input is $1$, so the next state should be $q_1$, and we define $\delta(q_0, 1) = q_1$.
 		Figure~\ref{fig:m3_2} shows the automaton with these transitions added.
 
 		\begin{figure}[H]
@@ -368,13 +376,14 @@
 			\label{fig:m3_2}
 		\end{figure}
 
-		Clearly, we don't need to add any more transitions from $q_0$, so we move on to $q_1$.
-		Imagine that the input so far is 1, so that $\miii$ will be in state $q_1$.
-		If the next input symbol is 0, we have $10_b = 2 = 2 \mod 3$, and the next state should be $q_2$.
+		Clearly, we do not need to add any more transitions from $q_0$, so we move on to $q_1$.
+		Imagine that the input so far is ``1'', so that $\miii$ will be in state $q_1$.
+		If the next symbol is ``0'', we have $10_b = 2$, and the next state should be $q_2$.
 		So we define $\delta(q_1, 0) = q_2$.
-		But if the next symbol is 1, we have $11_b = 3 = 0 \mod 3$. 
+		But if the next symbol is ``1'', we have $11_b = 3$. 
 		Then the next state should be $q_0$, so we define $\delta(q_1, 1) = q_0$.
-		Figure~\ref{fig:m3_3} shows \miii with these transitions added.
+		Figure~\ref{fig:m3_3} shows \miii with these transitions added. 
+
 
 		\begin{figure}[H]
 			\centering
@@ -393,9 +402,9 @@
 		\end{figure}
 
 		Now we can define the transitions from $q_2$. 
-		Imagine that the input so far is $10$.
-		If the next symbol is 0, we have $100_b = 4 = 1 \mod 3$, so we define $\delta(q_2, 0) = q_1$.
-		But if the next symbol is 1, we have $101_b = 5 = 2 \mod 3$, so we set $\delta(q_2, 1) = q_2$.
+		Imagine that the input so far is ``10''.
+		If the next symbol is ``0'', we have $100_b = 4 \equiv 1 \mod 3$, so we define $\delta(q_2, 0) = q_1$.
+		But if the next symbol is ``1'', we have $101_b = 5 \equiv 2 \mod 3$, so we set $\delta(q_2, 1) = q_2$.
 
 		This completes the construction of \miii.
 		Figure~\ref{fig:m3_4} shows the finished automaton.
@@ -420,16 +429,18 @@
 	\end{example}
 
 	\begin{definition}[Deterministic and Nondeterministic Finite Automata]
-		All finite automata as we have described them fall into the class of \textit{nondeterministic} finite automata (NDFAs).
-		Any FA with zero or more transitions from each state on a given symbol is a NDFA.
-		A FA having exactly one transition from each state for each possible input symbol is called a \textit{deterministic} finite automaton (DFA).
+		Finite automata are divided into two classes: nondeterministic and deterministic finite automata.
+		\begin{enumerate}[label=(\roman*)]
+			\item A \textit{nondeterministic} finite automaton (NDFA) is a FA with \textit{zero or more} transitions from each state corresponding to each symbol in $\Sigma$.
+			\item A \textit{deterministic} finite automaton (DFA) is a FA having \textit{exactly one} transition from each state corresponding to each symbol in $\Sigma$.
+		\end{enumerate}
 	\end{definition}
 
 	\begin{remark}
 		Because a DFA is required to have exactly one transition from each state for each possible input, only one of its states may be active at any given time.
-		It is important to note that this is not the case for NDFAs.
-		Because a NDFA may have any number of transitions from each state on a single symbol, any number of its states may be active at any given time.
-		Alternatively, a NDFA may have no transition from any state for a given input symbol, and upon reading that symbol, would have no active states.
+		This is not the case for NDFAs.
+		Because a NDFA may have any number of transitions from each state on a single symbol, any subset of its states may be active at any given time.
+		Alternatively, a NDFA may have no transition from any state for a given input symbol, and upon reading that symbol would have no active states.
 		\meo{I could mention lambda transitions, but I've avoided using them so far, so I don't think I need to.}
 	\end{remark}
 % chapter finite_automata (end)
