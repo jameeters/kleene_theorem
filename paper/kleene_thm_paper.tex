@@ -20,7 +20,7 @@
 \usepackage{james}
 \usepackage[plainpages=false,pdfpagelabels, hidelinks]{hyperref}
 
-\usetikzlibrary{arrows, automata, shapes, calc}
+\usetikzlibrary{arrows, automata, shapes}
 
 %%% Document Settings
 	% The following command allows tables to split between pages:
@@ -42,7 +42,7 @@
 
 	\ifpresstime
 		\buildfrontmattertrue
-		\renewcommand{\meo}{}
+		\renewcommand{\meo}[1]{}
 		\allhrfalse
 	\fi
 
@@ -94,7 +94,12 @@
 	\maketitle
 
 	\begin{abstract}
-		Your abstract goes here.
+		\meo{This is a placeholder abstract!}
+
+		This paper gives a standard proof of Kleene's theorem, with examples to help illuminate particular facets of the proof.
+		Kleene's theorem establishes the equivalence of finite automata and the class of regular languages, allowing for the implementation of fast search algorithms using regular expressions.
+
+		\meo{This is a placeholder abstract!}
 	\end{abstract}
 
 

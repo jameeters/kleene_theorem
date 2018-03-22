@@ -164,7 +164,7 @@
                     \textbf{\@author}
         \par}%
         \vskip 2em
-    \centerline{\includegraphics[width = 1 in]{images/james_actual.jpg}} % loading photo here
+    \centerline{\includegraphics[width = 1.4 in]{images/james_actual.jpg}} % loading photo here
       \vspace{\stretch{1}}
       \if@sigpage
         \vspace{\stretch{1}}
