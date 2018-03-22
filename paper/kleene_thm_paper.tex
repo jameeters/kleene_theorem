@@ -298,7 +298,7 @@
 	\end{remark}
 
 	\begin{definition}(Acceptance by Finite Automaton)
-		Let $M = (Q, \Sigma, q_0, \delta, F)$ be a FA and let $w \in \Sigma^*$.
+		Let $M = (Q, \Sigma, q_0, \delta, F)$ be an FA and let $w \in \Sigma^*$.
 		We say that $w$ is \textit{accepted} by $M$ if $\delta(q_0, w) \in F$.\footcite{hopcroft}{18}
 
 		We use $L(M)$ to denote the language $\{ w \in \Sigma^* \mid \delta(q_0, w) \in F \}$ containing all strings accepted by $M$.\footcite{hopcroft}{18}
@@ -311,7 +311,7 @@
 		% I'm ducking done typing ``shift-m, shift-underscore, 3''. 
 		\newcommand{\miii}{\ensuremath{M_3}\xspace}
 
-		To illustrate exactly how the components of a FA function, we will give a step-by-step construction of a FA to recognize the language of binary numbers divisible by 3.
+		To illustrate exactly how the components of an FA function, we will give a step-by-step construction of an FA to recognize the language of binary numbers divisible by 3.
 
 		Call this automaton \miii.
 		Let $\miii = (Q, \Sigma, s, \delta, F)$.
@@ -431,18 +431,18 @@
 	\begin{definition}[Deterministic and Nondeterministic Finite Automata]
 		Finite automata are divided into two classes: nondeterministic and deterministic finite automata.
 		\begin{enumerate}[label=(\roman*)]
-			\item A \textit{nondeterministic} finite automaton (NDFA) is a FA with \textit{zero or more} transitions from each state corresponding to each symbol in $\Sigma$.
-			\item A \textit{deterministic} finite automaton (DFA) is a FA having \textit{exactly one} transition from each state corresponding to each symbol in $\Sigma$.
+			\item A \textit{nondeterministic} finite automaton (NDFA) is an FA with \textit{zero or more} transitions from each state corresponding to each symbol in $\Sigma$.
+			\item A \textit{deterministic} finite automaton (DFA) is an FA having \textit{exactly one} transition from each state corresponding to each symbol in $\Sigma$.
 		\end{enumerate}
 	\end{definition}
 
 	\begin{remark}
 		Because a DFA is required to have exactly one transition from each state for each possible input, only one of its states may be active at any given time.
 		This is not the case for NDFAs.
-		Because a NDFA may have any number of transitions from each state on a single symbol, any subset of its states may be active at any given time.
-		Alternatively, a NDFA may have no transition from any state for a given input symbol, and upon reading that symbol would have no active states.
+		Because an NDFA may have any number of transitions from each state on a single symbol, any subset of its states may be active at any given time.
+		Alternatively, an NDFA may have no transition from any state for a given input symbol, and upon reading that symbol would have no active states.
 
-		A NDFA is considered to be in an accepting state when any of its accepting states are active.
+		an NDFA is considered to be in an accepting state when any of its accepting states are active.
 		\meo{I could mention lambda transitions, but I've avoided using them so far, so I don't think I need to.}
 	\end{remark}
 % chapter finite_automata (end)
@@ -462,11 +462,11 @@
 	\begin{proof}
 		We first show that the atomic regular languages are representable., then show that the results of the result of a regular operation on representable languages is representable.
 
-		It is simple to construct a NDFAs to accept the atomic regular languages:
+		It is simple to construct an NDFAs to accept the atomic regular languages:
 		\begin{itemize}
 			\item [] $\emptyset$ is accepted by an automaton with one initial state, no accepting states, and no transitions, as depicted in Figure~\ref{sfig:ndfa_emptyset}.
 			\item [] $\{ \lambda \}$ is accepted by the NDFA with one state, which is both its initial state and an accepting state, as in Figure~\ref{sfig:ndfa_lambda}.
-			\item [] $\{ a \}$ for all $a \in \Sigma$ is accepted by a NDFA having two states: one initial state and one accepting state, with a transition on $a$ between them, as shown in Figure~\ref{sfig:ndfa_symbol}.
+			\item [] $\{ a \}$ for all $a \in \Sigma$ is accepted by an NDFA having two states: one initial state and one accepting state, with a transition on $a$ between them, as shown in Figure~\ref{sfig:ndfa_symbol}.
 		\end{itemize}
 
 
@@ -588,7 +588,7 @@
 		\end{figure}
 
 		\noindent \textbf{(i)} \hspace{\parindent}
-		We will construct a NDFA 
+		We will construct an NDFA 
 		\[
 			M_{AB} = (Q_{AB}, \Sigma_{AB}, s_{AB}, \delta_{AB}, F_{AB})
 		\]
@@ -670,7 +670,7 @@
 
 		% AuB
 		\noindent \textbf{(ii)} \hspace{\parindent}
-		Now we construct a NDFA 
+		Now we construct an NDFA 
 		\[
 			M_{A \cup B} = (Q_{A \cup B}, \Sigma_{A \cup B}, s_{A \cup B}, \delta_{A \cup B}, F_{A \cup B})
 		\] 
@@ -794,14 +794,14 @@
 
 	\begin{claim}
 	\label{prop:ndfa_dfa_equivalent}
-		A language is representable by a NDFA if and only if it is representable by a DFA.
+		A language is representable by an NDFA if and only if it is representable by a DFA.
 	\end{claim}
 	\begin{proof}
 	\label{proof:ndfa_dfa_equivalent}
-		Since every DFA is a NDFA, every language represented by a DFA is trivially represented by a NDFA.
-		We need only prove that any language represented by a NDFA can be represented by a DFA.
+		Since every DFA is an NDFA, every language represented by a DFA is trivially represented by an NDFA.
+		We need only prove that any language represented by an NDFA can be represented by a DFA.
 
-		Let $M = (Q, \Sigma, s, \delta, F)$ be a NDFA.
+		Let $M = (Q, \Sigma, s, \delta, F)$ be an NDFA.
 		We will construct a DFA $M'$ such that $L(M') = L(M)$.
 
 		Because $M$ is nondeterministic, any subset of its states may be active at any given time.
@@ -881,7 +881,7 @@
 	\end{claim}
 
 	\begin{proof}
-		Because we have proven that every language accepted by a NDFA is accepted by a DFA, it is enough to show that any language represented by a DFA is regular.
+		Because we have proven that every language accepted by an NDFA is accepted by a DFA, it is enough to show that any language represented by a DFA is regular.
 
 		Let $M = (Q, \Sigma, s, \delta, F)$ be a DFA, and let $Q = \{ q_1, \dots, q_n \}$ with $n \geq 1$.
 
@@ -950,7 +950,7 @@
 \mychapter{Motivation} % (fold)
 \label{sec:motivation}
 	\begin{remark}
-		We have seen that any regular expression is convertible into a NDFA and that any NDFA is convertible into a DFA.
+		We have seen that any regular expression is convertible into an NDFA and that any NDFA is convertible into a DFA.
 		Although we have not mentioned it, there is also an algorithm to minimize any DFA: producing an equivalent automaton with a minimal number of states. 
 		With a minimal DFA accepting a regular language, we can use a transition matrix to search through data for strings of that language in $\bigo(N)$ time for the amount of data, and $\bigo(m^2)$ memory for the length of the regular expression.
 	\end{remark}
