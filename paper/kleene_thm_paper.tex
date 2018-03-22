@@ -557,7 +557,6 @@
 
 		\begin{figure}[H]
 			\centering
-			\setlength{\fboxrule}{0 pt}
 			\subfloat[\ma]{
 				\label{sfig:ma}
 				\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
@@ -584,23 +583,21 @@
 			Note that if \ma or \mb accepts $\lambda$, its initial state must be an accepting state.
 			}
 			\label{fig:ma_and_mb}
-			% The \framebox makes the caption wider than the picture, 
-			% otherwise, subfigures (a) and (b) are too narrow and their captions look bad.
 		\end{figure}
 
 		\noindent \textbf{(i)} \hspace{\parindent}
 		We will construct a NDFA 
 		\[
-			M_{AB} = (Q_AB, \Sigma_AB, s_AB, \delta_AB, F_AB)
+			M_{AB} = (Q_{AB}, \Sigma_{AB}, s_{AB}, \delta_{AB}, F_{AB})
 		\]
-		 such that $L(\mab) = AB$
+		such that $L(\mab) = AB$.
 		We build \mab by adding \mb onto the end of \ma, so that a word accepted by \mab is of the form $xy$ where $x$ is accepted by \ma and $y$ is accepted by \mb.
 
 		Clearly, the alphabet of \mab must include all the symbols used by \ma and \mb, thus $\sigab = \siga \cup \sigb$.
 		
 		The states of \mab are all the states of both \ma and \mb.
 		Since the names of states are meaningless, we can rename them at will. 
-		Thus we can assume that \qa and \qb are disjoint, and write $\qab = \qa \cup \qb$
+		Thus we can assume that \qa and \qb are disjoint, and write $\qab = \qa \cup \qb$.
 		The initial state of \mab is the initial state of \ma, so $\sab = \sa$.
 
 		The accepting states of \mab are the accepting states of \mb.
@@ -613,7 +610,7 @@
 						\fb &\text{otherwise}
 					\end{cases}
 		\]
-		Note that we have not yet accounted for the case in which $\lambda \in A$ and $\lambda \notin B$ --- doing so will require adding transitions to \mab.
+		We have not yet accounted for the case in which $\lambda \in A$ and $\lambda \notin B$ --- doing so will require adding transitions to \mab.
 
 		Now we must define \dalab.
 		\mab should retain all the transitions of \ma and \mb, so for all $q_A \in \qa$ and $a \in \siga$, and for all $q_B \in \qb$ and $b \in \sigb$ we define
@@ -630,6 +627,7 @@
 		\[
 			\dalab(q_A, a) = \sb
 		\]
+
 		Finally, we must account for the case in which $\lambda \in A$.
 		In this case, \mab must be able to skip over \ma and accept strings of $B$ without any prefix.
 		Hence if $\lambda \in A$ we must create transitions from \sab which shadow the transitions from \sb.
@@ -637,6 +635,34 @@
 		\[
 			\dalab(\sab, b) = \dalb(\sb, b)
 		\]
+		\begin{figure}[H]
+			\centering
+				\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=3cm]
+					\node[initial,state]    (sab)                   {\sa};
+					\node[elliptic state]   (ma)  [right of = sab]  {$\quad \ma \quad$};
+					\node[state]            (fa)  [right of = ma]   {\fa};
+
+					\node[state]            (sb)  [below of = ma, node distance = 2cm]  {\sb};
+					\node[elliptic state]   (mb)  [right of = sb]         {$\quad \mb \quad$};
+					\node[state, accepting] (fb)  [right of = mb]         {\fb};
+
+					\path[->](sab) edge (ma);
+					\path[->](ma) edge (fa);
+
+					\path[->](sb) edge (mb);
+					\path[->](mb) edge (fb);
+
+					\path[->](ma) edge  [out=0, in=180, below, distance=4cm]          (sb);
+					\path[->](sab) edge [dashed,out=0, in=180, below, distance=2cm]   (mb);
+
+					\node  (sab_label)   [below of = sab,node distance=1cm, text width=3cm] {\footnotesize{Accepting when\\$\lambda \in A \cap B$}};
+					\node  (sab_label)   [below of = sb,node distance=1cm, text width=3cm]  {\footnotesize{Accepting when\\$\lambda \in  B$}};
+				\end{tikzpicture}
+			\caption{
+				The dashed line is included only if $\lambda$ is accepted by \ma.
+			}
+			\label{fig:mab_final}
+		\end{figure}
 		This completes the construction of \mab.
 
 		% AuB
@@ -672,6 +698,36 @@
 		\[
 			\dalaub(\saub, a) = \dala(\sa, a) \enspace \text{and} \enspace \dalaub(\saub, b) = \dalb(\sb, b)
 		\]
+		\begin{figure}[H]
+			\centering
+				\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=3cm]
+					\node[initial,state]    (sab)                             {\saub};
+
+					\node[state]            (sa)  [above right of = sab]      {\sa};
+					\node[elliptic state]   (ma)  [right of = sa]             {$\quad \ma \quad$};
+					\node[state,accepting]  (fa)  [right of = ma]             {\fa};
+
+					\node[state]            (sb)  [below right of = sab]  {\sb};
+					\node[elliptic state]   (mb)  [right of = sb]         {$\quad \mb \quad$};
+					\node[state, accepting] (fb)  [right of = mb]         {\fb};
+
+					\path[->](sa) edge (ma);
+					\path[->](ma) edge (fa);
+
+					\path[->](sb) edge (mb);
+					\path[->](mb) edge (fb);
+
+					\path[->](sab) edge [out=0, in=180] (ma);
+					\path[->](sab) edge [out=0, in=180] (mb);
+
+					\node  (sab_label)   [below of = sab,node distance=1cm, text width=3cm] {\footnotesize{Accepting when\\$\lambda \in A \cup B$}};
+				\end{tikzpicture}
+			\caption{
+				The dashed line is included only if $\lambda$ is accepted by \ma.
+			}
+			\label{fig:maub_final}
+		\end{figure}
+		
 		This completes the construction of \maub.
 
 		% A*
@@ -691,6 +747,38 @@
 			\dalas(f, a) = \dala(\sa, a)
 		\]
 		Note that since \sas is an accepting state, this also gives \sas a copy of each of the transitions from \sa.
+
+		\begin{figure}[H]
+			\centering
+				\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2.5cm]
+					\node[initial,accepting,state]    (sas)                   {\sas};
+					\node[state]            (sa)  [right of = sas]            {\sa};
+					\node[elliptic state]   (ma)  [right of = sa]             {$\quad \ma \quad$};
+					\node[state,accepting]  (fa)  [right of = ma]             {\fa};
+
+					\path[->](sa) edge (ma);
+					\path[->](ma) edge (fa);
+
+					\path[->](sas) edge [out=0, in=180, above, distance=2cm] (ma);
+
+					\node (ghost_end) [below of=fa, node distance=1.2cm, inner sep=0cm] {};
+					\node (ghost_end2) [right of=ghost_end, node distance=0.2, inner sep=0cm] {};
+					\node (ghost_mid) [below of=ma, node distance=1.2cm, inner sep=0cm] {};
+					\node (ghost_mid2) [left of=ghost_mid, node distance=0.2cm,inner sep=0cm] {};
+
+					\path[-](fa) edge [out=0, in=0, below, distance = 1.5cm] (ghost_end);
+					\path[-](ghost_end2) edge [out=180, in=0] (ghost_end);
+					\path[-](ghost_end) edge [out=180, in=0] (ghost_mid);
+					\path[-](ghost_mid2) edge [out=0, in=0] (ghost_mid);
+					\path[-](ma) edge [out=180, in=180, below, distance=1.5cm] (ghost_mid);
+
+				\end{tikzpicture}
+			\caption{
+				The dashed line is included only if $\lambda$ is accepted by \ma.
+			}
+			\label{fig:mas_final}
+		\end{figure}
+
 		This completes the construction of \mas.
 	\end{proof}
 
@@ -854,7 +942,7 @@
 
 
 
-
+\iffalse
 \mychapter{Mathematical Notation}%
 \label{ch:mathematical-notation}
 
@@ -862,7 +950,7 @@ You may find it useful to the reader to provide a table of notation.
 
 \mychapter{Conclusion(s)}
 \label{ch:conclusion}
-
+\fi
 
 % chapter conclusion (end)
 
