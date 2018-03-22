@@ -900,14 +900,16 @@
 			\item $\{ \lambda, a_1, a_2, \dots, a_m \}, a_i \in \Sigma$
 			\item $\{ a_1, a_2, \dots, a_m \}$
 		\end{enumerate}
-		Clearly, each of these is a regular language: $\emptyset$ and $\{ \lambda \}$ are atomic regular languages, and it trivial to rewrite $\{ \lambda, a_1, a_2, \dots, a_m \}$ or $\{ a_1, a_2, \dots, a_m \}$ as the union of atomic regular languages.
+		Clearly, each of these is a regular language:
+		$\emptyset$ and $\{ \lambda \}$ are atomic regular languages, and it is trivial to rewrite $\{ \lambda, a_1, a_2, \dots, a_m \}$ or $\{ a_1, a_2, \dots, a_m \}$ as the union of atomic regular languages.
+		Thus $W(i, j, 0)$ is regular for all $1 \leq i, j \leq n$.
 
 		For $k \geq 1$ we define
 		\[
 			W(i, j, k) = W(i, j, k-1) \cup W(i, k, k-1)\, W(k, k, k-1)^*\, W(k, j, k-1).
 		\]
-		That is, $W(i, j, k)$ is the union of two languages.
-		The first is the language of all strings that take $M$ from $q_i$ to $q_j$ using vertices numbered $k-1$ or less.
+		That is, $W(i, j, k)$ is the union of two languages:
+		The first is the language of all strings that take $M$ from $q_i$ to $q_j$ using vertices numbered less than $k$.
 		The second is the language containing all stings of the form $xyz$, where $x$ takes $M$ from $q_i$ to $q_k$, $y$ takes $M$ from $q_k$ to $q_k$ and $z$ takes $M$ from $q_k$ to $q_j$, all using only states numbered less than $k$.
 
 		Now assume that any $W(i, j, k)$ is regular for all $k \leq l$.
@@ -915,14 +917,11 @@
 
 		For all $i$ and $j$, we know that 
 		\[
-			W(i, j, l+1) = W(i, j, l) \cup W(i, k, l)\, W(l+1, l+1, l)^*\, W(l+1, j, l).
+			W(i, j, l+1) = W(i, j, l) \ \cup \ W(i, k, l)\ W(l+1, l+1, l)^* \ W(l+1, j, l).
 		\]
 		By our inductive hypothesis, we know that the languages $W(i, j, l)$, $W(i, k, l)$, $W(l+1, l+1, l)$, and $W(l+1, j, l)$ are all regular.
 		Thus $W(l+1, l+1, l)^*$ is regular as the Kleene closure of a regular language, and $W(i, k, l)\, W(l+1, l+1, l)^*\, W(l+1, j, l)$ is regular as a concatenation of regular languages.
 		Thus $W(i, j, l+1)$ is regular as a union of regular languages.
-
-
-
 	\end{proof}
 	
 
