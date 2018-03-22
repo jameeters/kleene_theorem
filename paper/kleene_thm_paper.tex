@@ -20,7 +20,7 @@
 \usepackage{james}
 \usepackage[plainpages=false,pdfpagelabels, hidelinks]{hyperref}
 
-\usetikzlibrary{arrows, automata, shapes}
+\usetikzlibrary{arrows, automata, shapes, calc}
 
 %%% Document Settings
 	% The following command allows tables to split between pages:
@@ -723,7 +723,7 @@
 					\node  (sab_label)   [below of = sab,node distance=1cm, text width=3cm] {\footnotesize{Accepting when\\$\lambda \in A \cup B$}};
 				\end{tikzpicture}
 			\caption{
-				The dashed line is included only if $\lambda$ is accepted by \ma.
+				The transitions from \saub mimic those from \sa and \sb. 
 			}
 			\label{fig:maub_final}
 		\end{figure}
@@ -759,8 +759,14 @@
 					\path[->](sa) edge (ma);
 					\path[->](ma) edge (fa);
 
-					\path[->](sas) edge [out=0, in=180, above, distance=2cm] (ma);
+					\node (ghost_start) [above of=sa, node distance=1cm, inner sep=0cm] {};
+					\node (ghost_start2) [left of=ghost_start, node distance=0.1cm, inner sep=0cm] {};
 
+					\path[-](sas) edge [out=0, in=180, above, distance=1cm] (ghost_start);
+					\path[-](ghost_start) edge [out=0, in=180] (ghost_start2);
+					\path[->](ghost_start) edge [out=0, in=180, above, distance=1cm] (ma);
+
+					% I tried a Bezier, but I'd need more than 4 control points to get the results I want
 					\node (ghost_end) [below of=fa, node distance=1.2cm, inner sep=0cm] {};
 					\node (ghost_end2) [right of=ghost_end, node distance=0.2, inner sep=0cm] {};
 					\node (ghost_mid) [below of=ma, node distance=1.2cm, inner sep=0cm] {};
@@ -770,11 +776,11 @@
 					\path[-](ghost_end2) edge [out=180, in=0] (ghost_end);
 					\path[-](ghost_end) edge [out=180, in=0] (ghost_mid);
 					\path[-](ghost_mid2) edge [out=0, in=0] (ghost_mid);
-					\path[-](ma) edge [out=180, in=180, below, distance=1.5cm] (ghost_mid);
+					\path[<-](ma) edge [out=180, in=180, below, distance=1.5cm] (ghost_mid);
 
 				\end{tikzpicture}
 			\caption{
-				The dashed line is included only if $\lambda$ is accepted by \ma.
+				The new start state allows \mas to accept $\lambda$, while the transitions from the final states of \ma allow it to accept repeated words from $A$.
 			}
 			\label{fig:mas_final}
 		\end{figure}
