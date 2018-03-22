@@ -24,7 +24,7 @@
 
 %%% Document Settings
 	% The following command allows tables to split between pages:
-	\allowdisplaybreaks
+	% \allowdisplaybreaks
 
 	% Provide additional context around errors. 
 	\setcounter{errorcontextlines}{1000}
@@ -441,6 +441,8 @@
 		This is not the case for NDFAs.
 		Because a NDFA may have any number of transitions from each state on a single symbol, any subset of its states may be active at any given time.
 		Alternatively, a NDFA may have no transition from any state for a given input symbol, and upon reading that symbol would have no active states.
+
+		A NDFA is considered to be in an accepting state when any of its accepting states are active.
 		\meo{I could mention lambda transitions, but I've avoided using them so far, so I don't think I need to.}
 	\end{remark}
 % chapter finite_automata (end)
@@ -601,7 +603,7 @@
 		The initial state of \mab is the initial state of \ma, so $\sab = \sa$.
 
 		The accepting states of \mab are the accepting states of \mb.
-		If $\lambda$ is accepted by \mb, then \sb must be an accepting state of \mb.
+		If $\lambda$ is accepted by \mb, then \sb must be an accepting state of \mb, so that condition is accounted for
 		If $\lambda$ is accepted by both \ma and \mb, we must make \sab an accepting state.
 		So we define
 		\[
@@ -618,14 +620,15 @@
 			\dalab(q_A, a) = \dala(q_A, a) \enspace \text{ and } \enspace \dalab(q_B, b) = \dalb(q_B, b).
 		\]
 		We also define new transitions so that any string accepted by \ma will take \mab from \sab to \sb.
-		\meo{We do this by ...}
+		To do this, we add transitions to \sb that mimic the transitions to accepting states of \ma.
+		For each transition whose result is an accepting state of \ma, we add a transition with the same origin on the same symbol leading to \sb.
 		So for all $q_A \in \qa$ and $a \in \siga$ such that 
 		\[
 			\dala(q_A, a) \in \fa
 		\]
-		We define
+		we define
 		\[
-			\dalab(q_A, a) = \sb
+			\dalab(q_A, a) = \sb.
 		\]
 
 		Finally, we must account for the case in which $\lambda \in A$.
@@ -633,7 +636,7 @@
 		Hence if $\lambda \in A$ we must create transitions from \sab which shadow the transitions from \sb.
 		Thus for all $b \in \sigb$ we define
 		\[
-			\dalab(\sab, b) = \dalb(\sb, b)
+			\dalab(\sab, b) = \dalb(\sb, b).
 		\]
 		\begin{figure}[H]
 			\centering
@@ -693,11 +696,12 @@
 		\]
 
 		We keep all the transitions of \ma and \mb, and add new transitions linking the new initial state to the rest of the automaton.
-		For each transition from the start state of \ma or \mb, we add a transition from \saub on the same symbol to the same state.
+		For each transition from the start state of \ma or \mb, we add a transition from \saub on the same symbol with the same destination.
 		That is, for all $a \in \siga$ and all $b \in \sigb$, we define
 		\[
-			\dalaub(\saub, a) = \dala(\sa, a) \enspace \text{and} \enspace \dalaub(\saub, b) = \dalb(\sb, b)
+			\dalaub(\saub, a) = \dala(\sa, a) \quad \text{and} \quad \dalaub(\saub, b) = \dalb(\sb, b).
 		\]
+
 		\begin{figure}[H]
 			\centering
 				\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=3cm]
@@ -733,8 +737,8 @@
 		% A*
 		\noindent \textbf{(iii)} \hspace{\parindent}
 		We construct \mas by linking \ma to itself to form a circle. % Circularize!
-		Since \mas should accept strings of A repeated any number of times, we allow the accepting states of \ma to behave like initial states by adding transitions from \fa looping back into \ma.
-		To allow \mas to accept $\lambda$, we add a new initial state, which is also an accepting state.
+		Since \mas should accept strings of $A$ repeated any number of times, we allow the accepting states of \ma to behave like initial states by adding transitions from \fa looping back into \ma.
+		To allow \mas to accept $\lambda$, we create a new accepting state to replace \sa as initial state.
 
 		Let $\mas = (\qas, \siga, \sas, \dalas, \fas)$.
 		Note that the alphabet of \mas is exactly the alphabet of \ma.
@@ -794,69 +798,80 @@
 	\end{claim}
 	\begin{proof}
 	\label{proof:ndfa_dfa_equivalent}
-		Since DFAs are a subclass of NDFAs, we only need to prove that any language represented by a NDFA can be represented by a DFA.
+		Since every DFA is a NDFA, every language represented by a DFA is trivially represented by a NDFA.
+		We need only prove that any language represented by a NDFA can be represented by a DFA.
 
-		Let $M = (Q, \Sigma, q_0, \delta, F)$ be a NDFA.
+		Let $M = (Q, \Sigma, s, \delta, F)$ be a NDFA.
 		We will construct a DFA $M'$ such that $L(M') = L(M)$.
 
 		Because $M$ is nondeterministic, any subset of its states may be active at any given time.
-		$M'$ must have one state representing each possible set of active states of $M$, so $Q'$ must be the power set (set of all subsets) of $Q$.
-		Thus each state in $Q'$ will be of the form $\{ q_1, q_2, \dots, q_n \}$ where all $q_i \in Q$.
-		The initial state of $M'$ will be the set $\{ q_0 \}$, which contains only the initial state of $M$.
-		The accepting states of $M'$ will the subsets of $Q$ that contain an accepting state of $M'$.
+		$M'$ must have one state representing each possible set of active states of $M$, so $Q'$ must be the power set (set of all subsets, denoted $2^Q$) of $Q$.
+		Thus each state in $Q'$ will be denoted by a set of the form $\{ q_1, q_2, \dots, q_n \}$ where all $q_i \in Q$.
+		The initial state of $M'$ is the set $\{ s \}$, which contains only the initial state of $M$.
+		The accepting states of $M'$ are the subsets of $Q$ that contain an accepting state of $M'$.
 
 		We have defined
 		\[
-			M' = (Q', \Sigma, \{q_0\}, \delta', F')
+			M' = (Q', \Sigma, \{s\}, \delta', F')
 		\]
 		where
 		\[
-			F' = \{ p \in Q' \mid p \cap F \neq \emptyset\}
+			F' = \{ p \in Q' \mid p \cap F \neq \emptyset\}.
 		\]
 
-		The only component of $M'$ left undefined is $\delta'$.
-		We define the result of each transition of $\delta'$ as a union of transitions of $\delta$.
+		The only component of $M'$ remaining to be defined is $\delta'$, but it will be helpful to reexamine how we define $\delta$ before attempting to define $\delta'$.
+		We defined the transition function as a mapping 
+		\[
+			\delta : (Q \times \Sigma) \mapsto Q.
+		\]
+		But this definition becomes awkward when we allow there to be any number of transitions from a given state on a single symbol.
+		When dealing with NDFAs, it makes more sense to define
+		\[
+			\delta : (Q \times \Sigma) \mapsto 2^Q
+		\]
+		so that the result of each transformation is a set of states, rather than a single state.
+
+		Given this refinement, we can define the result of each transition of $\delta'$ as a union of transitions of $\delta$.
 		For each $\{ q_1, q_2, \dots, q_n \} \in Q'$ and all $a \in \Sigma$, we define
 		\begin{align*}
-			\delta'(\{ q_1, q_2, \dots, q_n \}, a) &= \{ \delta(q_1, a),\, \delta(q_2, a),\, \dots,\, \delta(q_n, a) \} \\
+			\delta'(\{ q_1, q_2, \dots, q_n \}, a) &= \delta(q_1, a) \cup \delta(q_2, a) \cup \dots \cup \delta(q_n, a) \} \\
 			&= \bigcup_{i=1}^n \delta(q_i, a)
 		\end{align*}
 		
 		This completes the construction of $M'$.
 
-		Now we must prove that $\delta'(\{ q_0 \}, w) = \delta(q_0, w)$ for any string $w \in \Sigma^*$.
-		We will proceed by induction on the length of the sting $w$.
-
-		Suppose that $|w| = 0$, then $w = \lambda$.
-		Then $M$ will remain in its initial state, so 
+		Now we must prove that $L(M') = L(M)$, which is equivalent to proving that the active state of $M'$ always represents exactly the set of active states of $M$, given the same input.
+		That is:
 		\[
-			\delta'(\{ q_0 \}, \lambda) = \{ q_0 \} = \{ \delta(q_0, \lambda) \}
+			\delta'(\{ s \}, w) = \delta(s, w) \text{ for any string } w \in \Sigma^*.
+		\]
+		
+		We will proceed by induction on the length of the sting $w$.
+		Suppose that $|w| = 0$.
+		Then $w = \lambda$, and $M$ will remain in its initial state, so 
+		\[
+			\delta'(\{ s \}, \lambda) = \{ s \} = \delta(s, \lambda).
 		\]
 
-		Now suppose that $\delta'(\{ q_0 \}, w) = \delta(q_0, w)$ for all $w \in \Sigma^*$ with $|w| \leq N$.
+		Now suppose that $\delta'(\{ s \}, w) = \delta(s, w)$ for all $w \in \Sigma^*$ with $|w| \leq N$.
 		Let $w \in \Sigma^*$ be of length $N$, and let $a \in \Sigma$. 
 		Then $|wa| = N + 1$.
 		
 		We know by definition that 
 		\[
-			\delta'(\{ q_0\}, wa) = \delta'( \delta'(\{ q_0\}, w), a )
+			\delta'(\{ s\}, wa) = \delta'( \delta'(\{ s\}, w), a )
 		\]
 		and since $|w| \leq N$, we can write 
 		\[
-			\delta'(\{ q_0 \}, w) = \{ p_1, p_2, \dots, p_m \} = \delta(q_0, w).
+			\delta'(\{ s \}, w) = \{ p_1, p_2, \dots, p_m \} = \delta(s, w).
 		\]
 		Thus
 		\begin{align*}
-			\delta'( \delta'(\{ q_0 \}, w), a ) &= \delta'(\{ p_1, p_2, \dots, p_m \}, a) \\
+			\delta'( \delta'(\{ s \}, w), a ) &= \delta'(\{ p_1, p_2, \dots, p_m \}, a) \\
 			&= \bigcup_{i=1}^m \delta(p_i, a)
 		\end{align*}
 
-		Thus we know that $\delta'(\{ q_0 \}, w) = \delta(q_0, w)$ for $w$ of length $N+1$.
-
-		\meo{
-			Need to add how this implies that they accept the same language.
-			I never defined what it meant for a NDFA to accept a language at all.
-		}
+		Thus we know that $\delta'(\{ s \}, w) = \delta(s, w)$ for $w$ of length $N+1$.
 
 	\end{proof}
 
