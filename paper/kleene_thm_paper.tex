@@ -83,8 +83,9 @@
 %%% End new environments 
 
 %%% New commands
-	\newcommand{\footcite}[2]{\cite[pg.~{#2}]{#1}}
-	\newcommand{\pcite}[2]{\cite[pg.~{#2}]{#1}}
+	% \pcite makes more sense, but the syntax highlighting is better on \footcite in my editor. No idea.
+	\newcommand{\footcite}[2]{\xspace\cite[pg.~{#2}]{#1}\xspace}
+	\newcommand{\pcite}[2]{\xspace\cite[pg.~{#2}]{#1}\xspace}
 %%% End new commands
 
 
@@ -132,85 +133,88 @@
 
 		\begin{definition}[Symbol]
 			The \textit{symbol} is the most basic unit of formal language theory.
-			Symbols are indivisible and atomic --- they are not a composite of other units, and cannot be represented by any combination of other symbols.\footcite{hopcroft}{1}
+			Symbols are indivisible and atomic --- they are not a composite of other units, and cannot be represented by any combination of other symbols \footcite{hopcroft}{1}.
 		\end{definition}
 
 		\begin{definition}[Alphabet]
 			An \textit{alphabet} is a nonempty and finite set of symbols.
-			An alphabet is typically denoted by the symbol $\Sigma$.\footcite{salomaa}{1}
+			An alphabet is typically denoted by the symbol $\Sigma$ \footcite{salomaa}{1}.
 		\end{definition}
 
 		\begin{definition}[String]
-			A \textit{string} over an alphabet $\Sigma$ is a finite sequence of symbols of $\Sigma$.
+			A \textit{string} or \textit{word} over an alphabet $\Sigma$ is a finite sequence of symbols of $\Sigma$.
 			If $\Sigma = \{ a, b ,c \}$, then $w = abbc$ is a string over $\Sigma$.
-			The length of a string is the number of symbols it contains, counting repetitions.
-			The length of $w$, denoted $|w|$, is $4$.
-			Strings are also referred to as \textit{words}.\footcite{hopcroft}{1}
+			The \textit{length} of a string is the number of symbols it contains, counting repetitions.
+			The length of $w$, denoted $|w|$, is $4$ \footcite{hopcroft}{1}.
 
 			The string of length zero, which contains no symbols, is called the \textit{empty string}, and denoted $\lambda$.
-			The empty string is a valid string over any alphabet.\footcite{salomaa}{1}
+			The empty string is a valid string over any alphabet \footcite{salomaa}{1}.
 		\end{definition}
 
 		\begin{definition}[Language]
-			A \textit{language} over an alphabet $\Sigma$ is any set of strings over $\Sigma$.\footcite{hopcroft}{2}
-			% The language of all possible strings over $\Sigma$ is denoted $\Sigma^*$.
+			A \textit{language} over an alphabet $\Sigma$ is any set of strings over $\Sigma$ \footcite{hopcroft}{2}.
 
-			The empty set ($\emptyset$) and $\{ \lambda \}$ are valid languages over any alphabet.\footcite{hopcroft}{2}
+			Because languages are sets of strings, the conventional set operations, such as union, intersection, and complementation are defined for languages \footcite{hopcroft}{5}.
 
-			Because languages are sets of strings, the conventional set operations, such as union, intersection, and complementation are defined for languages.\footcite{hopcroft}{5}
+			The empty set , written $\emptyset$, and $\{ \lambda \}$ are valid languages over any alphabet \footcite{hopcroft}{2}.
+
 		\end{definition}
 
 		\begin{remark}
 			The empty set and $\{ \lambda \}$ represent distinct languages. 
-			The empty set represents the language containing no strings at all, while $\{ \lambda \}$ represents the language containing only the empty string.\footcite{hopcroft}{2}
+			The empty set represents the language containing no strings at all, while $\{ \lambda \}$ represents the language containing only the empty string \footcite{hopcroft}{2}.
 		\end{remark}
 
 
 \mychapter{Regular Expressions} % (fold)
 \label{ch:regular_expressions}
 	
+	\meo{Add an introduction.}
+
 	\begin{definition}[Atomic Regular Languages]
-		The \textit{atomic regular languages} are the basic units used to build all other regular languages.
+		The \textit{atomic regular languages} are the basic units used to build regular languages.
 		They are defined for any alphabet $\Sigma$ as follows:
-		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex]
+
+		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
 			\item $\emptyset$ is an atomic regular language over $\Sigma$.
 			\item $\{ \lambda \}$ is an atomic regular language over $\Sigma$.
 			\item $\{ a \}$ is an atomic regular language over $\Sigma$ for all $a \in \Sigma$.
 		\end{enumerate}
-		\footcite{hopcroft}{28}
+		\footcite{hopcroft}{28}~ \meo{todo: something about this citation.}
 	\end{definition}
 
 	We now define the operations used to combine the atomic regular languages to form more complex regular languages.
 
 	\begin{definition}[Concatenation]
 		Let $w_1 = ab$ and $w_2 = bc$ be strings over some alphabet.
-		Their \textit{concatenation} $w_1 w_2$ denotes the string $abbc$, and $w_2 w_1$ denotes $bcab$.
+		Their \textit{concatenation}, written $w_1 w_2$ denotes the string $abbc$, and $w_2 w_1$ denotes $bcab$.
 		For any string $w$, $\lambda w = w \lambda = w$.
-		The notation $w^3$ denotes the string $www$, and $w^0 = \lambda$.\footcite{salomaa}{1}
+		The notation $w^3$ denotes the string $www$, and $w^0 = \lambda$ \footcite{salomaa}{1}.
 
-		It should be easy to see how this definition applies to symbols, which can be seen as words of length 1.
+		It should be easy to see how this definition applies to symbols, which can be seen as words of length one.
 	\end{definition}
 
 	\begin{definition}[Concatenation of Languages]
 		Let $A$ and $B$ be languages over some alphabet.
-		The\textit{concatenation}, or \textit{product}, $AB$ of $A$ and $B$ is the set $\{ ab \mid a \in A, \ b \in B \}$.\footcite{lemmings}{3}
+		The \textit{concatenation}, or \textit{product}, $AB$ of $A$ and $B$ is the set $\{ ab \mid a \in A, \ b \in B \}$ \footcite{lemmings}{3}.
 
-		The notation $A^2$ represents the language $AA$, and $A_i$ represents $AA^{i-1}$
-		Note that $A = A^1 = AA^0 = \{ a \lambda \mid a \in A \}$, which implies that $A^0 = \{ \lambda \}$.\footcite{lemmings}{3}
+		The notation $A^2$ represents the language $AA$, and $A^i$ represents $AA^{i-1}$.
+		Note that $A = A^1 = AA^0 = \{ a \lambda \mid a \in A \}$, which implies that $A^0 = \{ \lambda \}$ \footcite{lemmings}{3}.
 	\end{definition}
 
 	\begin{remark}
 		Note that the set of strings over an alphabet is closed under concatenation: if $x$ and $y$ are strings over $\Sigma$, then so are $xy$ and $yx$.
-		It follows that if $A$ and $B$ are languages over $\Sigma$, then so are $AB$ and $BA$.\footcite{lemmings}{2}
+		It follows that if $A$ and $B$ are languages over $\Sigma$, then so are $AB$ and $BA$ \footcite{lemmings}{2}.
 		
 		Concatenation is also an associative operation.
 		Given strings $x$, $y$, and $z$, $(xy)z = x(yz)$.
-		It follows that for languages $A$, $B$, and $C$, $(AB)C = A(BC)$.\footcite{lemmings}{2}
+		It follows that for languages $A$, $B$, and $C$, ${(AB)C = A(BC)}$ \footcite{lemmings}{2}.
 
 		\meo{
 			Maybe also note that length has the properties of the logarithm with regard to concatenation.
 			It's a curiosity, but not really useful information
 		}
+
 	\end{remark}
 
 	\begin{definition}[Kleene Closure]
@@ -219,8 +223,8 @@
 			A^* = \bigcup_{i \geq 0} A^i
 		\]
 		is called the \textit{Kleene closure} of $A$.
-		$A^*$ is the language any words of $A$ repeated zero or more times, thus $\lambda$ is in the Kleene closure of any language.\footcite{lemmings}{3}
-		\meo{Maybe note that that the star operator is referred to as the Kleene star.}
+		$A^*$ is the language any words of $A$ repeated zero or more times, thus $\lambda$ is in the Kleene closure of any language.
+		The Kleene closure of an alphabet is the set of all words over that alphabet \footcite{lemmings}{3}.
 	\end{definition}
 
 	\begin{definition}[Regular Language]
@@ -232,11 +236,11 @@
 			\item $A \cup B$
 			\item $A^*$
 		\end{enumerate}
-		\footcite{rosen}{879}
+		\footcite{rosen}{879}~\meo{todo: something about this citation}
 	\end{definition}
 
 	\begin{remark}
-		Because of their relationship to the family of regular languages, the concatenation, union, and Kleene closure are referred to as the \textit{regular operations}.\footcite{salomaa}{26}
+		Because of their relationship to the family of regular languages, the concatenation, union, and Kleene closure are referred to as the \textit{regular operations} \footcite{salomaa}{26}.
 	\end{remark}
 
 	We now introduce \textit{regular expressions}, a shorthand used to describe regular languages.
@@ -244,19 +248,19 @@
 	\begin{definition}[Regular Expressions]
 		The atomic regular expressions over an alphabet $\Sigma$ are defined to represent the atomic regular languages over $\Sigma$:
 		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
-			\item $\emptyset$ denotes the empty language
-			\item $\lambda$ denotes the language $\{ \lambda \}$
-			\item $a$ denotes the language $\{ a \}$ for all $a \in \Sigma$
+			\item $\emptyset$ denotes the empty language;
+			\item $\lambda$ denotes the language $\{ \lambda \}$;
+			\item $a$ denotes the language $\{ a \}$ for all $a \in \Sigma$.
 		\end{enumerate}
-		\footcite{hopcroft}{28--29}
+		\footcite{hopcroft}{28--29}~\meo{todo: something about this citation}
 
 		If $\alpha$ and $\beta$ are regular expressions representing languages $A$ and $B$, respectively, then the following are also regular expressions:
 		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
-			\item $\alpha \beta$ denotes the language $AB$.
-			\item $\alpha + \beta$ denotes the language $A \cup B$.
+			\item $\alpha \beta$ denotes the language $AB$;
+			\item $\alpha + \beta$ denotes the language $A \cup B$;
 			\item $\alpha^*$ denotes the language $A^*$.
 		\end{enumerate}
-		\footcite{hopcroft}{28--29}
+		\footcite{hopcroft}{28--29}~\meo{todo: something about this citation}
 	\end{definition}
 
 	\begin{remark}
@@ -280,19 +284,19 @@
 \label{ch:finite_automata}
 
 	A finite automaton is a formal model of a machine which has a finite number of allowed configurations, called states, and accepts input symbols from some finite alphabet. 
-	Each time a symbol is input to the automaton, it may transition to a new state. 
-	The output of a finite automaton is the state of the machine after reading some input.
+	Each time a symbol is input to the automaton, it may change state. 
+	The output of a finite automaton is given by the state of the machine after reading some input \footcite{hopcroft}{13}.
 
 	\begin{definition}[Finite Automaton]
-		A \textit{finite automaton} (FA) $M$ is defined by the 5-tuple $(Q, \Sigma, s, \delta, F)$.
+		A \textit{finite automaton} (FA) $M$ is defined by the 5-tuple $(Q, \Sigma, s, \delta, F)$, where:
 		\begin{itemize}
-			\item [] $Q$ is a finite and nonempty set of states.
-			\item [] $\Sigma$ is an alphabet of possible input symbols.
+			\item [] $Q$ is a finite and nonempty set of states;
+			\item [] $\Sigma$ is an alphabet of possible input symbols;
 			\item [] $s \in Q$ is the state of the machine prior to any input, referred to as the \textit{initial state};
-			\item [] $\delta: (Q \times \Sigma) \mapsto Q$ is called the \textit{transition function}: It maps a starting state and an input symbol to the new state of the machine.
+			\item [] $\delta: (Q \times \Sigma) \mapsto Q$ is called the \textit{transition function}: It maps a starting state and an input symbol to the new state of the machine;
 			\item [] $F \subseteq Q$ is the set of \textit{final states} or \textit{accepting states} of the machine.
 		\end{itemize}
-		\footcite{hopcroft}{17}
+		\footcite{hopcroft}{17}~\meo{todo: something about this citation}
 	\end{definition}
 
 	\begin{remark}
@@ -307,16 +311,16 @@
 			\delta\bigg( \cdots \ \delta\Big( \ \delta(q_1, w_1), \ w_2 \Big), \cdots, w_n \bigg) = q_n.
 		\]
 		We define $\delta(q_i, \lambda) = q_i$.
-		This defines $\delta: (Q \times \Sigma^*) \mapsto Q$.\footcite{hopcroft}{17}
+		This defines $\delta: (Q \times \Sigma^*) \mapsto Q$ \footcite{hopcroft}{17}.
 	\end{remark}
 
 	\begin{definition}(Acceptance by Finite Automaton)
-		Let $M = (Q, \Sigma, q_0, \delta, F)$ be an FA and let $w \in \Sigma^*$.
-		We say that $w$ is \textit{accepted} by $M$ if $\delta(q_0, w) \in F$.\footcite{hopcroft}{18}
+		Let $M = (Q, \Sigma, s, \delta, F)$ be an FA and let $w \in \Sigma^*$.
+		We say that $w$ is \textit{accepted} by $M$ if $\delta(s, w) \in F$ \footcite{hopcroft}{18}.
 
-		We use $L(M)$ to denote the language $\{ w \in \Sigma^* \mid \delta(q_0, w) \in F \}$ containing all strings accepted by $M$.\footcite{hopcroft}{18}
+		We use $L(M)$ to denote the language $\{ w \in \Sigma^* \mid \delta(s, w) \in F \}$ containing all strings accepted by $M$ \footcite{hopcroft}{18}.
 
-		A language $A$ is considered \textit{representable} if there exists some FA $M_A$ such that $A = L(M_A)$.\footcite{salomaa}{20}
+		A language $A$ is considered \textit{representable} if there exists some FA $M_A$ such that $A = L(M_A)$ \footcite{salomaa}{20}.
 	\end{definition}
 
 	\begin{example}[Finite Automata Construction]
@@ -333,25 +337,24 @@
 		Now we define the set of states for $\miii$.
 		Suppose $x$ is the string that has been input to $\miii$ so far.
 		It is clear that for any $x$, exactly one of the following must be true:
-		\begin{itemize}[itemsep = -1 ex, nolistsep]
-			\item [] $x = 0 \mod 3$,
-			\item [] $x = 1 \mod 3$,
-			\item [] $x = 2 \mod 3$.
-		\end{itemize}
+		\begin{enumerate}[label = (\roman*), itemsep = -1 ex, nolistsep]
+			\item $x = 0 \mod 3$;
+			\item $x = 1 \mod 3$;
+			\item $x = 2 \mod 3$.
+		\end{enumerate}
 		So we create one state to represent each of these possible conditions, and define $Q = \{ q_0, q_1, q_2 \}$.
 		Since we want $\miii$ to accept numbers divisible by 3, we set $F = \{ q_0 \}$. 
 		And since we interpret no input as 0, set the initial state $s$ to $q_0$.
 
 		Now we have 
 		\[
-			\miii = (Q = \{ q_0, q_1, q_2 \}, \Sigma = \{ 0, 1 \}, s = q_0, \delta, F = \{ q_0 \}).
+			\miii = (Q = \{ q_0, q_1, q_2 \},\ \Sigma = \{ 0, 1 \},\ s = q_0,\ \delta,\ F = \{ q_0 \}).
 		\]
 		The only part of \miii remaining to be defined is $\delta$, the transition function.
 
-		To define the transition function $\delta$ it is helpful to have a picture of the automaton we are building.
+		To define the transition function it is helpful to have a picture of the automaton we are building.
 		We draw FAs as directed graphs, with vertices representing states and edges, labeled by symbols, representing transitions.
 		A double circle around a vertex means that it represents an accepting state.
-
 		Figure~\ref{fig:m3_1} shows $\miii$ as defined thus far: lacking any transitions, but otherwise complete.
 
 
@@ -442,7 +445,7 @@
 	\end{example}
 
 	\begin{definition}[Deterministic and Nondeterministic Finite Automata]
-		Finite automata are divided into two classes: nondeterministic and deterministic finite automata.
+		Finite automata are divided into two classes: nondeterministic and deterministic finite automata \footcite{hopcroft}{19}.
 		\begin{enumerate}[label=(\roman*)]
 			\item A \textit{nondeterministic} finite automaton (NDFA) is an FA with \textit{zero or more} transitions from each state corresponding to each symbol in $\Sigma$.
 			\item A \textit{deterministic} finite automaton (DFA) is an FA having \textit{exactly one} transition from each state corresponding to each symbol in $\Sigma$.
@@ -455,7 +458,7 @@
 		Because an NDFA may have any number of transitions from each state on a single symbol, any subset of its states may be active at any given time.
 		Alternatively, an NDFA may have no transition from any state for a given input symbol, and upon reading that symbol would have no active states.
 
-		an NDFA is considered to be in an accepting state when any of its accepting states are active.
+		An NDFA is considered to be in an accepting state when any of its accepting states are active.
 		\meo{I could mention lambda transitions, but I've avoided using them so far, so I don't think I need to.}
 	\end{remark}
 % chapter finite_automata (end)
@@ -470,10 +473,10 @@
 
 	\begin{claim}
 	\label{prop:regular_languages_representable}
-		All regular languages are representable.
+		All regular languages are representable by an NDFA.
 	\end{claim}
 	\begin{proof}
-		We first show that the atomic regular languages are representable., then show that the results of the result of a regular operation on representable languages is representable.
+		We first show that the atomic regular languages are representable., then show that the results of the result of a regular operation on representable languages is representable. The constructions used are adapted from Rosen \footcite{rosen}{880--881}.
 
 		It is simple to construct an NDFAs to accept the atomic regular languages:
 		\begin{itemize}
@@ -549,12 +552,12 @@
 				\newcommand{\dalab}{\ensuremath{\delta_{AB}}\xspace}
 				\newcommand{\fab}{\ensuremath{F_{AB}}\xspace}
 
-			\newcommand{\maub}{\ensuremath{M_{A \cup B}}\xspace}
-				\newcommand{\qaub}{\ensuremath{Q_{A \cup B}}\xspace}
-				\newcommand{\sigaub}{\ensuremath{\Sigma_{A \cup B}}\xspace}
-				\newcommand{\saub}{\ensuremath{s_{A \cup B}}\xspace}
-				\newcommand{\dalaub}{\ensuremath{\delta_{A \cup B}}\xspace}
-				\newcommand{\faub}{\ensuremath{F_{A \cup B}}\xspace}
+			\newcommand{\maub}{\ensuremath{M_{\cup}}\xspace}
+				\newcommand{\qaub}{\ensuremath{Q_{\cup}}\xspace}
+				\newcommand{\sigaub}{\ensuremath{\Sigma_{\cup}}\xspace}
+				\newcommand{\saub}{\ensuremath{s_{\cup}}\xspace}
+				\newcommand{\dalaub}{\ensuremath{\delta_{\cup}}\xspace}
+				\newcommand{\faub}{\ensuremath{F_{\cup}}\xspace}
 
 			\newcommand{\mas}{\ensuremath{M_{A^*}}\xspace}
 				\newcommand{\qas}{\ensuremath{Q_{A^*}}\xspace}
@@ -593,9 +596,12 @@
 				\end{tikzpicture}
 			}
 			\caption{
-			FAs accepting $A$ and $B$.
-			The middle states represent all the states of the machine other than the initial and accepting states.
-			Note that if \ma or \mb accepts $\lambda$, its initial state must be an accepting state.
+				NDFAs accepting $A$ and $B$.
+				The middle states represent all the states of the machine other than the initial and accepting states.
+				Note that if \ma or \mb accepts $\lambda$, its initial state must be an accepting state.
+				These drawings are simplified and meant to represent NDFAs in general.
+				They do not show every possible transition and state.
+				The leftmost vertices represent the set of accepting states, and the middle vertices represent all the states that are neither initial states nor accepting states.
 			}
 			\label{fig:ma_and_mb}
 		\end{figure}
@@ -612,12 +618,12 @@
 		
 		The states of \mab are all the states of both \ma and \mb.
 		Since the names of states are meaningless, we can rename them at will. 
-		Thus we can assume that \qa and \qb are disjoint, and write $\qab = \qa \cup \qb$.
+		This allows us to assume that \qa and \qb are disjoint, and write $\qab = \qa \cup \qb$.
 		The initial state of \mab is the initial state of \ma, so $\sab = \sa$.
 
 		The accepting states of \mab are the accepting states of \mb.
-		If $\lambda$ is accepted by \mb, then \sb must be an accepting state of \mb, so that condition is accounted for
-		If $\lambda$ is accepted by both \ma and \mb, we must make \sab an accepting state.
+		If $\lambda$ is accepted by \mb, then \sb must be an accepting state of \mb, so that condition is accounted for.
+		If $\lambda$ is accepted by both \ma and \mb, then $\lambda \in AB$, and \sab must be an accepting state.
 		So we define
 		\[
 			\fab = 	\begin{cases}
@@ -625,7 +631,8 @@
 						\fb &\text{otherwise}
 					\end{cases}
 		\]
-		We have not yet accounted for the case in which $\lambda \in A$ and $\lambda \notin B$ --- doing so will require adding transitions to \mab.
+		We have not yet accounted for the case in which $\lambda \in A$ and $\lambda \notin B$.
+		Doing so requires adding transitions to \mab.
 
 		Now we must define \dalab.
 		\mab should retain all the transitions of \ma and \mb, so for all $q_A \in \qa$ and $a \in \siga$, and for all $q_B \in \qb$ and $b \in \sigb$ we define
@@ -643,6 +650,7 @@
 		\[
 			\dalab(q_A, a) = \sb.
 		\]
+		These additions are represented in Figure~\ref{fig:mab_final} by the transition from \ma to \sb.
 
 		Finally, we must account for the case in which $\lambda \in A$.
 		In this case, \mab must be able to skip over \ma and accept strings of $B$ without any prefix.
@@ -651,6 +659,7 @@
 		\[
 			\dalab(\sab, b) = \dalb(\sb, b).
 		\]
+		These transitions are represented in Figure~\ref{fig:mab_final} by the dotted line from \sa to \mb.
 		\begin{figure}[H]
 			\centering
 				\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=3cm]
@@ -685,7 +694,8 @@
 		\noindent \textbf{(ii)} \hspace{\parindent}
 		Now we construct an NDFA 
 		\[
-			M_{A \cup B} = (Q_{A \cup B}, \Sigma_{A \cup B}, s_{A \cup B}, \delta_{A \cup B}, F_{A \cup B})
+			% I'm well aware that this notation is weird, but I thnink it looks better than the alternative.
+			\maub = (\qaub, \sigaub, \saub, \dalaub, \faub)
 		\] 
 		such that $L(\maub) = A \cup B$.
 		We build \maub by combining \ma and \mb in parallel, so that a string can will be accepted by \maub if it leads to an accepting state of either \ma or \mb.
@@ -724,9 +734,9 @@
 					\node[elliptic state]   (ma)  [right of = sa]             {$\quad \ma \quad$};
 					\node[state,accepting]  (fa)  [right of = ma]             {\fa};
 
-					\node[state]            (sb)  [below right of = sab]  {\sb};
-					\node[elliptic state]   (mb)  [right of = sb]         {$\quad \mb \quad$};
-					\node[state, accepting] (fb)  [right of = mb]         {\fb};
+					\node[state]            (sb)  [below right of = sab]      {\sb};
+					\node[elliptic state]   (mb)  [right of = sb]             {$\quad \mb \quad$};
+					\node[state, accepting] (fb)  [right of = mb]             {\fb};
 
 					\path[->](sa) edge (ma);
 					\path[->](ma) edge (fa);
@@ -734,8 +744,8 @@
 					\path[->](sb) edge (mb);
 					\path[->](mb) edge (fb);
 
-					\path[->](sab) edge [out=0, in=180] (ma);
-					\path[->](sab) edge [out=0, in=180] (mb);
+					\path[->](sab) edge [out=0, in=180, distance = 2 cm] (ma);
+					\path[->](sab) edge [out=0, in=180, distance = 2 cm] (mb);
 
 					\node  (sab_label)   [below of = sab,node distance=1cm, text width=3cm] {\footnotesize{Accepting when\\$\lambda \in A \cup B$}};
 				\end{tikzpicture}
@@ -776,28 +786,28 @@
 					\path[->](sa) edge (ma);
 					\path[->](ma) edge (fa);
 
-					\node (ghost_start) [above of=sa, node distance=1cm, inner sep=0cm] {};
-					\node (ghost_start2) [left of=ghost_start, node distance=0.1cm, inner sep=0cm] {};
+					\node (ghost_start)  [above of = sa,         node distance = 1 cm,   inner sep = 0 cm] {};
+					\node (ghost_start2) [left of  =ghost_start, node distance = 0.1 cm, inner sep = 0 cm] {};
 
-					\path[-](sas) edge [out=0, in=180, above, distance=1cm] (ghost_start);
-					\path[-](ghost_start) edge [out=0, in=180] (ghost_start2);
-					\path[->](ghost_start) edge [out=0, in=180, above, distance=1cm] (ma);
+					\path[-] (sas)          edge [out=0, in=180, above, distance = 1 cm] (ghost_start);
+					\path[-] (ghost_start)  edge [out=0, in=180]                         (ghost_start2);
+					\path[->](ghost_start)  edge [out=0, in=180, above, distance = 1 cm] (ma);
 
 					% I tried a Bezier, but I'd need more than 4 control points to get the results I want
-					\node (ghost_end) [below of=fa, node distance=1.2cm, inner sep=0cm] {};
-					\node (ghost_end2) [right of=ghost_end, node distance=0.2, inner sep=0cm] {};
-					\node (ghost_mid) [below of=ma, node distance=1.2cm, inner sep=0cm] {};
-					\node (ghost_mid2) [left of=ghost_mid, node distance=0.2cm,inner sep=0cm] {};
+					\node (ghost_end)  [below of = fa,        node distance = 1.2 cm, inner sep = 0 cm] {};
+					\node (ghost_end2) [right of = ghost_end, node distance = 0.2 pt, inner sep = 0 cm] {};
+					\node (ghost_mid)  [below of = ma,        node distance = 1.2 cm, inner sep = 0 cm] {};
+					\node (ghost_mid2) [left of  = ghost_mid, node distance = 0.2 cm, inner sep = 0 cm] {};
 
-					\path[-](fa) edge [out=0, in=0, below, distance = 1.5cm] (ghost_end);
-					\path[-](ghost_end2) edge [out=180, in=0] (ghost_end);
-					\path[-](ghost_end) edge [out=180, in=0] (ghost_mid);
-					\path[-](ghost_mid2) edge [out=0, in=0] (ghost_mid);
-					\path[<-](ma) edge [out=180, in=180, below, distance=1.5cm] (ghost_mid);
+					\path[-]  (fa)         edge [out=0,   in=0,   below, distance = 1.5 cm] (ghost_end);
+					\path[-]  (ghost_end2) edge [out=180, in=0]                             (ghost_end);
+					\path[-]  (ghost_end)  edge [out=180, in=0]                             (ghost_mid);
+					\path[-]  (ghost_mid2) edge [out=0,   in=0]                             (ghost_mid);
+					\path[<-] (ma)         edge [out=180, in=180, below, distance = 1.5 cm] (ghost_mid);
 
 				\end{tikzpicture}
 			\caption{
-				The new start state allows \mas to accept $\lambda$, while the transitions from the final states of \ma allow it to accept repeated words from $A$.
+				The new initial state allows \mas to accept $\lambda$, while the transitions from the final states of \ma allow it to accept repeated words from $A$.
 			}
 			\label{fig:mas_final}
 		\end{figure}
@@ -811,6 +821,7 @@
 	\end{claim}
 	\begin{proof}
 	\label{proof:ndfa_dfa_equivalent}
+		(Adapted from Hopcroft and Ullman \footcite{hopcroft}{22}.)
 		Since every DFA is an NDFA, every language represented by a DFA is trivially represented by an NDFA.
 		We need only prove that any language represented by an NDFA can be represented by a DFA.
 
@@ -894,23 +905,24 @@
 	\end{claim}
 
 	\begin{proof}
+		(Adapted from Salomaa \footcite{salomaa}{29}.)
 		Because we have proven that every language accepted by an NDFA is accepted by a DFA, it is enough to show that any language represented by a DFA is regular.
 
 		Let $M = (Q, \Sigma, s, \delta, F)$ be a DFA, and let $Q = \{ q_1, \dots, q_n \}$ with $n \geq 1$.
 
-		Define $W(i, j, k)$ to be the language containing all words that take $M$ from $q_i$ to $q_j$ without transiting any state $q_l$ with $l > k$.
+		Define $W_k(i, j)$ to be the language containing all words that take $M$ from $q_i$ to $q_j$ without transiting any state $q_l$ with $l > k$.
 
 		Then for $k = 0$:
 		\[
-			W(i, j, 0) = \{ a \in \Sigma \cup \{ \lambda \} \mid \delta(q_i, a) = q_j \}.
+			W_0(i, j) = \{ a \in \Sigma \cup \{ \lambda \} \mid \delta(q_i, a) = q_j \}.
 		\]
-		That is, $W(i, j, 0)$ is the set of strings that take $M$ from $q_i$ top $q_j$ without passing through any intermediate states.
+		That is, $W_0(i, j)$ is the set of strings that take $M$ from $q_i$ top $q_j$ without passing through any intermediate states.
 		Clearly, every element of this set must be either a symbol of $\Sigma$ or, if and only if $i = j$, the empty string.
-		So for all $i$ and $j$, $W(i, j, 0)$ must be of one of the following forms:
+		So for all $i$ and $j$, $W_0(i, j)$ must be of one of the following forms:
 		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
 			\item $\emptyset$
 			\item $\{ \lambda \}$
-			\item $\{ \lambda, a_1, a_2, \dots, a_m \}, a_i \in \Sigma$
+			\item $\{ \lambda, a_1, a_2, \dots, a_m \},\ a_i \in \Sigma$
 			\item $\{ a_1, a_2, \dots, a_m \}$
 		\end{enumerate}
 		Clearly, each of these is a regular language:
@@ -919,22 +931,40 @@
 
 		For $k \geq 1$ we define
 		\[
-			W(i, j, k) = W(i, j, k-1) \cup W(i, k, k-1)\, W(k, k, k-1)^*\, W(k, j, k-1).
+			W_k(i, j) = W_{k-1}(i, j) \cup W_{k-1}(i, k)\, W_{k-1}(k, k)^*\, W_{k-1}(k, j).
 		\]
-		That is, $W(i, j, k)$ is the union of two languages:
+		That is, $W_k(i, j)$ is the union of two languages:
 		The first is the language of all strings that take $M$ from $q_i$ to $q_j$ using vertices numbered less than $k$.
 		The second is the language containing all stings of the form $xyz$, where $x$ takes $M$ from $q_i$ to $q_k$, $y$ takes $M$ from $q_k$ to $q_k$ and $z$ takes $M$ from $q_k$ to $q_j$, all using only states numbered less than $k$.
 
-		Now assume that any $W(i, j, k)$ is regular for all $k \leq l$.
-		We will show that all $W(i, j, l+1)$ are regular.
+		Now assume that any $W_k(i, j)$ is regular for all $k \leq l$.
+		We will show that all $W_{l+1}(i, j)$ are regular.
 
 		For all $i$ and $j$, we know that 
 		\[
-			W(i, j, l+1) = W(i, j, l) \ \cup \ W(i, k, l)\ W(l+1, l+1, l)^* \ W(l+1, j, l).
+			W_{l+1}(i, j) = W_l(i, j) \ \cup \ W_l(i, k)\ W_l(l+1, l+1)^* \ W_l(l+1, j).
 		\]
-		By our inductive hypothesis, we know that the languages $W(i, j, l)$, $W(i, k, l)$, $W(l+1, l+1, l)$, and $W(l+1, j, l)$ are all regular.
-		Thus $W(l+1, l+1, l)^*$ is regular as the Kleene closure of a regular language, and $W(i, k, l)\, W(l+1, l+1, l)^*\, W(l+1, j, l)$ is regular as a concatenation of regular languages.
-		Thus $W(i, j, l+1)$ is regular as a union of regular languages.
+		By our inductive hypothesis, we know that the languages 
+		\begin{enumerate}[label = (\roman*), itemsep = -0.3 ex, nolistsep]
+			\item $W_l(i, j)$
+			\item $W_l(i, k)$
+			\item $W_l(l+1, l+1)$
+			\item $W_l(l+1, j)$
+		\end{enumerate}
+		are all regular.
+		Thus $W_l(l+1, l+1)^*$ is regular as the Kleene closure of a regular language, and 
+		\[
+			W_l(i, k)\, W_l(l+1, l+1)^*\, W_l(l+1, j)
+		\] 
+		is regular as a concatenation of regular languages.
+		Thus $W_{l+1}(i, j)$ is regular as a union of regular languages.
+
+		Suppose that $q_1$ is the initial state of $M$.
+		Then the language accepted by $M$ is given by
+		\[
+			\bigcup_{q_j \in F} W_n(1, j).
+		\]
+		This must be regular as a union of regular languages.
 	\end{proof}
 	
 
