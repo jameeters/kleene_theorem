@@ -3,7 +3,7 @@
 %%% Other packages needed by your document may be loaded here.
 \usepackage{url}              % For formatting URLs 
 \usepackage{booktabs}         % Publication-quality tables.
-\usepackage[square]{natbib}           % Provides some nice citation and
+\usepackage[square, numbers]{natbib}           % Provides some nice citation and
 							  % bibliography formatting commands.
 % \bibpunct[:~]{(}{)}{;}{a}{,}{,~} % Set some defaults for bibliographic
 								 % punctuation used by natbib.sty.
@@ -14,6 +14,7 @@
 \usepackage{textcomp}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{bm}
 \usepackage{tikz}
 \usepackage{float}
 % \usepackage{showframe}
@@ -35,10 +36,12 @@
 	\buildfrontmatterfalse
 	% \buildfrontmattertrue
 
+	\allhrfalse
+
 	% Use this to toggle professionalism
 	\newif\ifpresstime
 	\presstimefalse
-	\presstimetrue
+	% \presstimetrue
 
 	\ifpresstime
 		\buildfrontmattertrue
@@ -80,8 +83,8 @@
 %%% End new environments 
 
 %%% New commands
-	\newcommand{\footcite}[2]{\footnote{\cite[pg.~{#2}]{#1}}}
-	\renewcommand{\footcite}[2]{\cite[pg.~{#2}]{#1}}
+	\newcommand{\footcite}[2]{\cite[pg.~{#2}]{#1}}
+	\newcommand{\pcite}[2]{\cite[pg.~{#2}]{#1}}
 %%% End new commands
 
 
@@ -96,8 +99,12 @@
 	\begin{abstract}
 		\meo{This is a placeholder abstract!}
 
-		This paper gives a standard proof of Kleene's theorem, with examples to help illuminate particular facets of the proof.
-		Kleene's theorem establishes the equivalence of finite automata and the class of regular languages, allowing for the implementation of fast search algorithms using regular expressions.
+		This paper provides a proof of Kleene's Theorem accompanied by definitions and examples for newcomers to formal language theory.
+
+		Kleene's theorem is a result from formal language theory that provides the mathematical foundation for ubiquitous regular expression search programs.
+		Regular expression string matching can be found in a wide variety of software, from compilers to word processors. 
+		The speed and power of regular expression string matching are direct results of the relationship between the regular languages and finite automata established by this theorem.
+		
 
 		\meo{This is a placeholder abstract!}
 	\end{abstract}
@@ -254,6 +261,7 @@
 
 	\begin{remark}
 		Although regular expressions may closely resemble the the notation for regular languages, they are in fact only a shorthand used to describe regular language. 
+		That is, although $\alpha \beta + \gamma \beta$ and $(\alpha + \gamma) \beta$ describe the same language, we would not consider them to be the same regular expression.
 		Using regular expressions allows us to describe regular languages while avoiding some of the formalisms of set notation.
 		\meo{
 			Is this a convincing reason why this is a thing worth having?
@@ -939,10 +947,54 @@
 \label{sec:examples}
 
 	\begin{example}[Mod 3 Finite Automaton]
-		Constructing regular expression from the mod 3 finite automaton.
-		This will help explain the proof that all representable languages are regular.
+		To understand the proof of \refprop{prop:representable_languages_regular} it is helpful to see the induction applied to an actual automaton.
+		For this example it is easier to deal in regular expressions than in set notation, so we define $R_k(i, j)$ to be the regular expression defined to represent the language $W_k (i, j)$.
 
-		This example will also illustrate how the numbering of the states of an FA in the inductive step of the proof of \refprop{prop:representable_languages_regular} impacts the resulting regular expression (although all possible results are equivalent, they may look very different).
+		Consider the FA $M_3$, as shown in Figure~\ref{fig:m3_4}.
+		To follow along with the proof of \refprop{prop:representable_languages_regular}, we must define a numbering of the states of $M_3$ that begins at one, rather than 0.
+		For now, we use the numbering
+		\begin{align*}
+			q_0 &\to 3, \\
+			q_1 &\to 1, \\
+			q_2 &\to 2.
+		\end{align*}
+		
+
+		With this numbering in place, we begin by examining $R_0(i, j)$ for all $i, j$.
+		If we place the values in a $3 \times 3$ we obtain:
+		\[
+			R_0 (i, j) = 
+			\begin{bmatrix}
+				\lambda 	& 0				& 1 			\\
+				0 			& \lambda + 1 	& \emptyset		\\
+				1 			& \emptyset 	& \lambda + 0 	\\
+			\end{bmatrix}.
+		\]
+
+		Now we combine the entires in this matrix to construct $\mathbf{R^1}$.
+		Note the changes in bold. 
+		The combined expressions quickly grow in size, so these have been simplified wherever possible:
+		\[
+			R_1 (i, j) = 
+			\begin{bmatrix}
+				\lambda 	& 0							& 1 						\\
+				0 			& \lambda+1+\bm{00} 	& \bm{01}				\\
+				1 			& \bm{10} 				& \lambda+0+\bm{11} 	\\
+			\end{bmatrix}.
+		\]
+
+		
+		\[
+			R_2 (i, j) = 
+			\begin{bmatrix}
+				\lambda + \bm{0(\lambda+1+00)^*0} 	& 0+\bm{0(\lambda+1+00)^*}	& 1+\bm{0(\lambda+1+00)^*01}		\\
+				0+\bm{(\lambda+1+00)^*0} 			& (\lambda+1+00)^{\bm{*}} 	& \bm{(\lambda+1+00)^*}01			\\
+				1+\bm{(10(\lambda+1+00)^*0)} 		& 10\bm{(\lambda+1+00)^*} 	& \bm{10}(\lambda+1+00)^{\bm{*}}\bm{01} 	\\
+			\end{bmatrix}.
+		\]
+
+		Beyond this, the matrix would be too large to fit in the width of a page.
+
 	\end{example}
 
 	\meo{
@@ -954,11 +1006,76 @@
 
 \mychapter{Motivation} % (fold)
 \label{sec:motivation}
-	\begin{remark}
-		We have seen that any regular expression is convertible into an NDFA and that any NDFA is convertible into a DFA.
-		Although we have not mentioned it, there is also an algorithm to minimize any DFA: producing an equivalent automaton with a minimal number of states. 
-		With a minimal DFA accepting a regular language, we can use a transition matrix to search through data for strings of that language in $\bigo(N)$ time for the amount of data, and $\bigo(m^2)$ memory for the length of the regular expression.
-	\end{remark}
+
+	The primary application of Kleene's theorem is in the use of FAs for string matching.
+	This section will provide a brief overview of the mathematical results that make this application possible, followed by a few examples of the importance of fast string matching made possible by Kleene's theorem.
+
+	The application of Kleene's theorem relies on the ability to construct a minimal DFA representing any regular expression.
+	Our proof of Kleene's theorem includes the first two results underpinning this ability, the construction of an NDFA from a regular expression and the conversion of an NDFA into a DFA. 
+	\refprop{prop:regular_languages_representable} gives a simple procedure that can produce an NDFA to represent any regular language, and although we did not use regular expressions in that construction, the difference is one of notation.
+	\ref{prop:ndfa_dfa_equivalent} gives us an algorithm that to convert the resulting NDFA into a DFA.
+	The final building block is outside the scope of this paper, but can be found in Hopcroft and Ullman \pcite{hopcroft}{67--70}. 
+
+	\begin{theorem}
+	\label{thm:minimal_dfa}
+		For any DFA $M$, there exists a unique DFA $M'$ such that $L(M') = L(M)$ and no DFA with fewer states than $M'$ represents $L(M)$
+	\end{theorem}
+
+	Together with \refprop{prop:regular_languages_representable} and \refprop{prop:ndfa_dfa_equivalent}, Theorem~\ref{thm:minimal_dfa} establishes that we can there is a minimal DFA representing any regular language.
+
+	Now we introduce the concept of a matrix representation of a DFA.
+
+	\begin{definition}[Matrix of a DFA]
+		Let $M = (Q, \Sigma, s, \delta, F)$ be a DFA with $n$ states $q_1, q_2, \dots, q_n$ and an alphabet of $m$ symbols $\sigma_1, \sigma_2, \dots, \sigma_n$.
+		We may represent $M$ by the $n \times m$ matrix $\mathbf{M}$ given by 
+		\[
+			\mathbf{M}_{ij} = \delta(q_i, \sigma_j).
+		\]
+	\end{definition}
+
+	\begin{example}
+
+		\begin{figure}[H]
+			\setlength{\fboxrule}{0 pt}
+			\centering
+			\subfloat[$M_3$ as previously constructed.]{
+			\label{sfig:m3_for_matrix}
+				\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=1.6cm]
+					\node[initial,state,accepting] (q0)                {$q_0$};
+					\node[state]                   (q1) [right of = q0] {$q_1$};
+					\node[state]                   (q2) [right of = q1] {$q_2$};
+
+					\path[->](q0) edge [loop above] node {0} (q0);
+					\path[->](q0) edge [bend left]  node {1} (q1);
+					\path[->](q1) edge [bend left]  node {0} (q2);
+					\path[->](q1) edge [bend left]  node {1} (q0);
+					\path[->](q2) edge [bend left]  node {0} (q1);
+					\path[->](q2) edge [loop right] node {1} (q2);
+				\end{tikzpicture}
+			} \\
+			\subfloat[The matrix representing $M_3$]{
+			\label{sfig:m3_matrix}
+				\framebox[0.5 \textwidth]{
+				\begin{tabular}{c c c}
+									& $\mathbf{0}$ 	& $\mathbf{1}$ \\
+					$\mathbf{q_0}$	& $q_0$			& $q_1$ \\
+					$\mathbf{q_1}$	& $q_2$			& $q_0$ \\
+					$\mathbf{q_2}$	& $q_1$			& $q_2$ \\
+				\end{tabular}
+				}
+			}
+			\caption{
+				$M_3$ and its matrix representation.
+			}
+			\label{fig:m3_and_matrix}
+		\end{figure}
+
+		
+	\end{example}
+
+	
+
+
 
 	\begin{remark}
 		Mention the use of regular language parsing in the design of compilers and interpreters, and mention the ubiquity of \texttt{grep}.
