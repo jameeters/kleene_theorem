@@ -195,8 +195,11 @@
 	\end{definition}
 
 	\begin{definition}[Concatenation of Languages]
-		Let $A$ and $B$ be languages over some alphabet.
-		The \textit{concatenation}, or \textit{product}, $AB$ of $A$ and $B$ is the set $\{ ab \mid a \in A, \ b \in B \}$ \footcite{lemmings}{3}.
+		If $A$ and $B$ are languages over some alphabet, then the set
+		\[
+			AB = \{ ab \mid a \in A, \ b \in B \}
+		\]
+		is called the \textit{concatenation}, or \textit{product} of $A$ and $B$ \footcite{lemmings}{3}.
 
 		The notation $A^2$ represents the language $AA$, and $A^i$ represents $AA^{i-1}$.
 		Note that $A = A^1 = AA^0 = \{ a \lambda \mid a \in A \}$, which implies that $A^0 = \{ \lambda \}$ \footcite{lemmings}{3}.
@@ -301,31 +304,31 @@
 
 	\begin{remark}
 		It is convenient to extend the definition of $\delta$ to apply to strings, as well as individual symbols.
-		Let $w = w_1 w_2 \dots w_n$.
+		Let $w \in \Sigma^*$, and let $a \in \Sigma$.
 		By 
 		\[
-			\delta(q_1, w) = q_n
+			\Delta(q_1, wa) = q_n
 		\] 
 		we mean 
 		\[
-			\delta\bigg( \cdots \ \delta\Big( \ \delta(q_1, w_1), \ w_2 \Big), \cdots, w_n \bigg) = q_n.
+			\delta( \Delta(q_1, w), a) = q_n.
 		\]
 		We define $\delta(q_i, \lambda) = q_i$.
-		This defines $\delta: (Q \times \Sigma^*) \mapsto Q$ \footcite{hopcroft}{17}.
+		This defines $\Delta: (Q \times \Sigma^*) \mapsto Q$ \footcite{hopcroft}{17}.
 	\end{remark}
 
 	\begin{definition}(Acceptance by Finite Automaton)
 		Let $M = (Q, \Sigma, s, \delta, F)$ be an FA and let $w \in \Sigma^*$.
-		We say that $w$ is \textit{accepted} by $M$ if $\delta(s, w) \in F$ \footcite{hopcroft}{18}.
+		We say that $w$ is \textit{accepted} by $M$ if $\Delta(s, w) \in F$ \footcite{hopcroft}{18}.
 
-		We use $L(M)$ to denote the language $\{ w \in \Sigma^* \mid \delta(s, w) \in F \}$ containing all strings accepted by $M$ \footcite{hopcroft}{18}.
+		We use $L(M)$ to denote the language $\{ w \in \Sigma^* \mid \Delta(s, w) \in F \}$ containing all strings accepted by $M$ \footcite{hopcroft}{18}.
 
 		A language $A$ is considered \textit{representable} if there exists some FA $M_A$ such that $A = L(M_A)$ \footcite{salomaa}{20}.
 	\end{definition}
 
 	\begin{example}[Finite Automata Construction]
 
-		% I'm ducking done typing ``shift-m, shift-underscore, 3''. 
+		% I'm done typing this out. 
 		\newcommand{\miii}{\ensuremath{M_3}\xspace}
 
 		To illustrate exactly how the components of an FA function, we will give a step-by-step construction of an FA to recognize the language of binary numbers divisible by 3.
@@ -404,12 +407,12 @@
 		\begin{figure}[H]
 			\centering
 			\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
-				\node[initial,state,accepting] (q0)                {$q_0$};
+				\node[initial,state,accepting] (q0)                 {$q_0$};
 				\node[state]                   (q1) [right of = q0] {$q_1$};
 				\node[state]                   (q2) [right of = q1] {$q_2$};
 
-				\path[->](q0) edge [loop above] node {0} (q0);
-				\path[->](q0) edge [bend left]  node {1} (q1);
+				\path[->]            (q0) edge [loop above] node {0} (q0);
+				\path[->]            (q0) edge [bend left]  node {1} (q1);
 				\path[->, very thick](q1) edge [bend left]  node {0} (q2);
 				\path[->, very thick](q1) edge [bend left]  node {1} (q0);
 			\end{tikzpicture}
@@ -432,12 +435,12 @@
 				\node[state]                   (q1) [right of = q0] {$q_1$};
 				\node[state]                   (q2) [right of = q1] {$q_2$};
 
-				\path[->](q0) edge [loop above] node {0} (q0);
-				\path[->](q0) edge [bend left]  node {1} (q1);
-				\path[->](q1) edge [bend left]  node {0} (q2);
-				\path[->](q1) edge [bend left]  node {1} (q0);
-				\path[->](q2) edge [bend left]  node {0} (q1);
-				\path[->](q2) edge [loop right] node {1} (q2);
+				\path[->]            (q0) edge [loop above] node {0} (q0);
+				\path[->]            (q0) edge [bend left]  node {1} (q1);
+				\path[->]            (q1) edge [bend left]  node {0} (q2);
+				\path[->]            (q1) edge [bend left]  node {1} (q0);
+				\path[->, very thick](q2) edge [bend left]  node {0} (q1);
+				\path[->, very thick](q2) edge [loop right] node {1} (q2);
 			\end{tikzpicture}
 			\caption{\miii with all its transitions.}
 			\label{fig:m3_4}
@@ -457,9 +460,39 @@
 		This is not the case for NDFAs.
 		Because an NDFA may have any number of transitions from each state on a single symbol, any subset of its states may be active at any given time.
 		Alternatively, an NDFA may have no transition from any state for a given input symbol, and upon reading that symbol would have no active states.
-
 		An NDFA is considered to be in an accepting state when any of its accepting states are active.
+
+		This complication makes our definition of the transition function awkward to apply to NDFAs.
+		For an NDFA, we define the following refinement:
+		\[
+			\delta : (Q \times \Sigma) \mapsto 2^Q
+		\]
+		where $2^Q$ is the power set (set of all subsets) of $Q$.
+		This defines the result of a transition to be a set of states, rather than a single state, so rather than
+		\[
+			\delta(q_0, a) = q_1
+		\]
+		we write
+		\[
+			q_1 \in \delta(q_0, a).
+		\]
+		This refinement offers a more consistent approach to transitions in NDFAs.
+
+		It is also convenient when dealing with any automata to be able to compare transition functions.
+		Suppose that $\delta$ and $\delta'$ are transitions functions defined on the same states and alphabet.
+		By
+		\[
+			\delta \subseteq \delta'
+		\]
+		we mean that
+		\[
+			\delta(q, a) \subseteq \delta'(q, a)
+		\]
+		for all $q \in Q$ and $a \in \Sigma$.
+
 		\meo{I could mention lambda transitions, but I've avoided using them so far, so I don't think I need to.}
+
+
 	\end{remark}
 % chapter finite_automata (end)
 
@@ -567,6 +600,8 @@
 				\newcommand{\fas}{\ensuremath{F_{A^*}}\xspace}
 
 
+
+
 		Let 
 		\[
 			M_A = (Q_A, \Sigma_A, s_A, \delta_A, F_A) \quad \text{ and } \quad M_B = (Q_B, \Sigma_B, s_B, \delta_B, F_B)
@@ -637,18 +672,18 @@
 		Now we must define \dalab.
 		\mab should retain all the transitions of \ma and \mb, so for all $q_A \in \qa$ and $a \in \siga$, and for all $q_B \in \qb$ and $b \in \sigb$ we define
 		\[
-			\dalab(q_A, a) = \dala(q_A, a) \enspace \text{ and } \enspace \dalab(q_B, b) = \dalb(q_B, b).
+			\dala(q_A, a) \subseteq \dalab(q_A, a) \enspace \text{ and } \enspace \dalb(q_B, b) \subseteq \dalab(q_B, b).
 		\]
 		We also define new transitions so that any string accepted by \ma will take \mab from \sab to \sb.
 		To do this, we add transitions to \sb that mimic the transitions to accepting states of \ma.
 		For each transition whose result is an accepting state of \ma, we add a transition with the same origin on the same symbol leading to \sb.
 		So for all $q_A \in \qa$ and $a \in \siga$ such that 
 		\[
-			\dala(q_A, a) \in \fa
+			\dala(q_A, a) \subseteq \fa
 		\]
 		we define
 		\[
-			\dalab(q_A, a) = \sb.
+			\sb \in \dalab(q_A, a).
 		\]
 		These additions are represented in Figure~\ref{fig:mab_final} by the transition from \ma to \sb.
 
@@ -657,7 +692,7 @@
 		Hence if $\lambda \in A$ we must create transitions from \sab which shadow the transitions from \sb.
 		Thus for all $b \in \sigb$ we define
 		\[
-			\dalab(\sab, b) = \dalb(\sb, b).
+			\dalb(\sb, b) \subseteq \dalab(\sab, b).
 		\]
 		These transitions are represented in Figure~\ref{fig:mab_final} by the dotted line from \sa to \mb.
 		\begin{figure}[H]
@@ -684,6 +719,7 @@
 					\node  (sab_label)   [below of = sb,node distance=1cm, text width=3cm]  {\footnotesize{Accepting when\\$\lambda \in  B$}};
 				\end{tikzpicture}
 			\caption{
+				The completed automaton \mab.
 				The dashed line is included only if $\lambda$ is accepted by \ma.
 			}
 			\label{fig:mab_final}
@@ -718,12 +754,13 @@
 					\end{cases}
 		\]
 
-		We keep all the transitions of \ma and \mb, and add new transitions linking the new initial state to the rest of the automaton.
-		For each transition from the start state of \ma or \mb, we add a transition from \saub on the same symbol with the same destination.
+		We keep all the transitions of \ma and \mb, setting $\dalaub \subseteq \dala \cup \dalb$, and add new transitions linking the new initial state to the rest of the automaton.
+		For each transition from the initial state of \ma or \mb, we add a transition from \saub on the same symbol with the same destination.
 		That is, for all $a \in \siga$ and all $b \in \sigb$, we define
 		\[
-			\dalaub(\saub, a) = \dala(\sa, a) \quad \text{and} \quad \dalaub(\saub, b) = \dalb(\sb, b).
+			\dala(\sa, a) \subseteq \dalaub(\saub, a) \quad \text{and} \quad \dalb(\sb, b) \subseteq \dalaub(\saub, b).
 		\]
+		These are the transitions originating at \saub in Figure~\ref{fig:maub_final}.
 
 		\begin{figure}[H]
 			\centering
@@ -750,6 +787,7 @@
 					\node  (sab_label)   [below of = sab,node distance=1cm, text width=3cm] {\footnotesize{Accepting when\\$\lambda \in A \cup B$}};
 				\end{tikzpicture}
 			\caption{
+				The automaton \maub.
 				The transitions from \saub mimic those from \sa and \sb. 
 			}
 			\label{fig:maub_final}
@@ -759,7 +797,7 @@
 
 		% A*
 		\noindent \textbf{(iii)} \hspace{\parindent}
-		We construct \mas by linking \ma to itself to form a circle. % Circularize!
+		We construct \mas to accept $A^*$ by linking \ma to itself to form a circle. % Circularize!
 		Since \mas should accept strings of $A$ repeated any number of times, we allow the accepting states of \ma to behave like initial states by adding transitions from \fa looping back into \ma.
 		To allow \mas to accept $\lambda$, we create a new accepting state to replace \sa as initial state.
 
@@ -768,10 +806,10 @@
 
 		We define $\qas = \qa \cup \{ \sas \}$ and $\fas = \fa \cup \{ \sas \}$, where \sas is the new initial state.
 
-		We keep all the transitions of \ma, but for every transition from \sa, we add a transition to the same state on the same symbol from each state in \fas.
-		That is, for all $a \in \siga$, and $f \in \fas$ we define 
+		We keep all the transitions of \ma, and for every transition from \sa, we add a transition to the same state on the same symbol from each state in \fas.
+		That is, for all $a \in \siga$ and $f \in \fas$ we define 
 		\[
-			\dalas(f, a) = \dala(\sa, a)
+			\dala(\sa, a) \subseteq \dalas(f, a) 
 		\]
 		Note that since \sas is an accepting state, this also gives \sas a copy of each of the transitions from \sa.
 
@@ -807,12 +845,14 @@
 
 				\end{tikzpicture}
 			\caption{
+				The completed form of \mas.
 				The new initial state allows \mas to accept $\lambda$, while the transitions from the final states of \ma allow it to accept repeated words from $A$.
 			}
 			\label{fig:mas_final}
 		\end{figure}
 
 		This completes the construction of \mas.
+		We can now construct an NDFA to accept any regular language.
 	\end{proof}
 
 	\begin{claim}
@@ -829,7 +869,7 @@
 		We will construct a DFA $M'$ such that $L(M') = L(M)$.
 
 		Because $M$ is nondeterministic, any subset of its states may be active at any given time.
-		$M'$ must have one state representing each possible set of active states of $M$, so $Q'$ must be the power set (set of all subsets, denoted $2^Q$) of $Q$.
+		$M'$ must have one state representing each possible set of active states of $M$, so $Q'$ must be the power set of $Q$.
 		Thus each state in $Q'$ will be denoted by a set of the form $\{ q_1, q_2, \dots, q_n \}$ where all $q_i \in Q$.
 		The initial state of $M'$ is the set $\{ s \}$, which contains only the initial state of $M$.
 		The accepting states of $M'$ are the subsets of $Q$ that contain an accepting state of $M'$.
@@ -843,19 +883,8 @@
 			F' = \{ p \in Q' \mid p \cap F \neq \emptyset\}.
 		\]
 
-		The only component of $M'$ remaining to be defined is $\delta'$, but it will be helpful to reexamine how we define $\delta$ before attempting to define $\delta'$.
-		We defined the transition function as a mapping 
-		\[
-			\delta : (Q \times \Sigma) \mapsto Q.
-		\]
-		But this definition becomes awkward when we allow there to be any number of transitions from a given state on a single symbol.
-		When dealing with NDFAs, it makes more sense to define
-		\[
-			\delta : (Q \times \Sigma) \mapsto 2^Q
-		\]
-		so that the result of each transformation is a set of states, rather than a single state.
-
-		Given this refinement, we can define the result of each transition of $\delta'$ as a union of transitions of $\delta$.
+		The only component of $M'$ remaining to be defined is the transition function.
+		We define the result of each transition of $\delta'$ as a union of transitions of $\delta$.
 		For each $\{ q_1, q_2, \dots, q_n \} \in Q'$ and all $a \in \Sigma$, we define
 		\begin{align*}
 			\delta'(\{ q_1, q_2, \dots, q_n \}, a) &= \delta(q_1, a) \cup \delta(q_2, a) \cup \dots \cup \delta(q_n, a) \} \\
@@ -867,7 +896,7 @@
 		Now we must prove that $L(M') = L(M)$, which is equivalent to proving that the active state of $M'$ always represents exactly the set of active states of $M$, given the same input.
 		That is:
 		\[
-			\delta'(\{ s \}, w) = \delta(s, w) \text{ for any string } w \in \Sigma^*.
+			\Delta'(\{ s \}, w) = \Delta(s, w) \text{ for any string } w \in \Sigma^*.
 		\]
 		
 		We will proceed by induction on the length of the sting $w$.
@@ -877,25 +906,25 @@
 			\delta'(\{ s \}, \lambda) = \{ s \} = \delta(s, \lambda).
 		\]
 
-		Now suppose that $\delta'(\{ s \}, w) = \delta(s, w)$ for all $w \in \Sigma^*$ with $|w| \leq N$.
+		Now suppose that $\Delta'(\{ s \}, w) = \Delta(s, w)$ for all $w \in \Sigma^*$ with $|w| \leq N$.
 		Let $w \in \Sigma^*$ be of length $N$, and let $a \in \Sigma$. 
 		Then $|wa| = N + 1$.
 		
 		We know by definition that 
 		\[
-			\delta'(\{ s\}, wa) = \delta'( \delta'(\{ s\}, w), a )
+			\Delta'(\{ s\}, wa) = \delta'( \Delta'(\{ s\}, w), a )
 		\]
 		and since $|w| \leq N$, we can write 
 		\[
-			\delta'(\{ s \}, w) = \{ p_1, p_2, \dots, p_m \} = \delta(s, w).
+			\Delta'(\{ s \}, w) = \{ p_1, p_2, \dots, p_m \} = \Delta(s, w).
 		\]
 		Thus
 		\begin{align*}
-			\delta'( \delta'(\{ s \}, w), a ) &= \delta'(\{ p_1, p_2, \dots, p_m \}, a) \\
+			\delta'( \Delta'(\{ s \}, w), a ) &= \delta'(\{ p_1, p_2, \dots, p_m \}, a) \\
 			&= \bigcup_{i=1}^m \delta(p_i, a)
 		\end{align*}
 
-		Thus we know that $\delta'(\{ s \}, w) = \delta(s, w)$ for $w$ of length $N+1$.
+		Thus we know that $\Delta'(\{ s \}, w) = \Delta(s, w)$ for $w$ of length $N+1$.
 
 	\end{proof}
 
@@ -922,7 +951,7 @@
 		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
 			\item $\emptyset$
 			\item $\{ \lambda \}$
-			\item $\{ \lambda, a_1, a_2, \dots, a_m \},\ a_i \in \Sigma$
+			\item $\{ \lambda, a_1, a_2, \dots, a_m \}, \ a_i \in \Sigma$
 			\item $\{ a_1, a_2, \dots, a_m \}$
 		\end{enumerate}
 		Clearly, each of these is a regular language:
@@ -991,17 +1020,17 @@
 		
 
 		With this numbering in place, we begin by examining $R_0(i, j)$ for all $i, j$.
-		If we place the values in a $3 \times 3$ we obtain:
+		If we place the values in a $3 \times 3$ matrix, we obtain:
 		\[
 			R_0 (i, j) = 
 			\begin{bmatrix}
 				\lambda 	& 0				& 1 			\\
 				0 			& \lambda + 1 	& \emptyset		\\
 				1 			& \emptyset 	& \lambda + 0 	\\
-			\end{bmatrix}.
+			\end{bmatrix}
 		\]
 
-		Now we combine the entires in this matrix to construct $\mathbf{R^1}$.
+		Now we combine the entires in this matrix to construct the matrix for $R_1(i, j)$.
 		Note the changes in bold. 
 		The combined expressions quickly grow in size, so these have been simplified wherever possible:
 		\[
@@ -1010,7 +1039,7 @@
 				\lambda 	& 0							& 1 						\\
 				0 			& \lambda+1+\bm{00} 	& \bm{01}				\\
 				1 			& \bm{10} 				& \lambda+0+\bm{11} 	\\
-			\end{bmatrix}.
+			\end{bmatrix}
 		\]
 
 		
@@ -1020,10 +1049,10 @@
 				\lambda + \bm{0(\lambda+1+00)^*0} 	& 0+\bm{0(\lambda+1+00)^*}	& 1+\bm{0(\lambda+1+00)^*01}		\\
 				0+\bm{(\lambda+1+00)^*0} 			& (\lambda+1+00)^{\bm{*}} 	& \bm{(\lambda+1+00)^*}01			\\
 				1+\bm{(10(\lambda+1+00)^*0)} 		& 10\bm{(\lambda+1+00)^*} 	& \bm{10}(\lambda+1+00)^{\bm{*}}\bm{01} 	\\
-			\end{bmatrix}.
+			\end{bmatrix}
 		\]
+		% Beyond this, the matrix would be too large to fit in the width of a page.
 
-		Beyond this, the matrix would be too large to fit in the width of a page.
 
 	\end{example}
 
