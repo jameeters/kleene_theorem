@@ -14,6 +14,7 @@
 \usepackage{textcomp}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{mathtools}
 \usepackage{bm}
 \usepackage{tikz}
 \usepackage{float}
@@ -41,7 +42,7 @@
 	% Use this to toggle professionalism
 	\newif\ifpresstime
 	\presstimefalse
-	% \presstimetrue
+	\presstimetrue
 
 	\ifpresstime
 		\buildfrontmattertrue
@@ -74,7 +75,7 @@
 	\reader{Name of Second Reader}
 
 	\thesisyear{2018}
-	\thesismonth{April}
+	\thesismonth{March}
 %%% End of information section.
 
 
@@ -327,6 +328,7 @@
 	\end{definition}
 
 	\begin{example}[Finite Automata Construction]
+	\label{ex:m3_construction}
 
 		% I'm done typing this out. 
 		\newcommand{\miii}{\ensuremath{M_3}\xspace}
@@ -1009,7 +1011,7 @@
 		To understand the proof of \refprop{prop:representable_languages_regular} it is helpful to see the induction applied to an actual automaton.
 		For this example it is easier to deal in regular expressions than in set notation, so we define $R_k(i, j)$ to be the regular expression defined to represent the language $W_k (i, j)$.
 
-		Consider the FA $M_3$, as shown in Figure~\ref{fig:m3_4}.
+		Consider the FA $M_3$, as defined on page~\pageref{ex:m3_construction}.
 		To follow along with the proof of \refprop{prop:representable_languages_regular}, we must define a numbering of the states of $M_3$ that begins at one, rather than 0.
 		For now, we use the numbering
 		\begin{align*}
@@ -1017,41 +1019,179 @@
 			q_1 &\to 1, \\
 			q_2 &\to 2.
 		\end{align*}
+		This gives us the automaton shown in Figure~\ref{fig:m3_numbered_312}
 		
+		\begin{figure}[H]
+			\centering
+			\begin{tikzpicture}[>=stealth',shorten >= 1 pt, auto, node distance = 2 cm]
+				\node[initial,state,accepting] (q0)                 {$q_3$};
+				\node[state]                   (q1) [right of = q0] {$q_1$};
+				\node[state]                   (q2) [right of = q1] {$q_2$};
+
+				\path[->](q0) edge [loop above] node {0} (q0);
+				\path[->](q0) edge [bend left]  node {1} (q1);
+				\path[->](q1) edge [bend left]  node {0} (q2);
+				\path[->](q1) edge [bend left]  node {1} (q0);
+				\path[->](q2) edge [bend left]  node {0} (q1);
+				\path[->](q2) edge [loop right] node {1} (q2);
+			\end{tikzpicture}
+			\caption{
+				The DFA $M_3$ with a new numbering.
+			}
+			\label{fig:m3_numbered_312}
+		\end{figure}
 
 		With this numbering in place, we begin by examining $R_0(i, j)$ for all $i, j$.
 		If we place the values in a $3 \times 3$ matrix, we obtain:
 		\[
 			R_0 (i, j) = 
-			\begin{bmatrix}
+			\begin{bmatrix*}[l]
 				\lambda 	& 0				& 1 			\\
 				0 			& \lambda + 1 	& \emptyset		\\
 				1 			& \emptyset 	& \lambda + 0 	\\
-			\end{bmatrix}
+			\end{bmatrix*}
 		\]
 
+		This matrix simply shows the symbols attached to direct transitions from one state to another.
 		Now we combine the entires in this matrix to construct the matrix for $R_1(i, j)$.
 		Note the changes in bold. 
 		The combined expressions quickly grow in size, so these have been simplified wherever possible:
 		\[
 			R_1 (i, j) = 
-			\begin{bmatrix}
+			\begin{bmatrix*}[l]
 				\lambda 	& 0							& 1 						\\
 				0 			& \lambda+1+\bm{00} 	& \bm{01}				\\
 				1 			& \bm{10} 				& \lambda+0+\bm{11} 	\\
-			\end{bmatrix}
+			\end{bmatrix*}
+		\]
+
+		The entries in this matrix are the strings that take $M_3$ from state $i$ to state $j$, either directly or by passing through only state $1$ in between.
+		For example, it is possible to get from $q_3$ to $q_2$ and vice-versa via $q_1$.
+		Combining these entires, we obtain the following matrix for $R_2(i, j)$:
+		\[
+			R_2 (i, j) = 
+			\begin{bmatrix*}[l]
+				\lambda + \bm{0(1+00)^*0} 	& 0+\bm{0(1+00)^*}		& 1+\bm{0(1+00)^*01}		\\
+				0+\bm{(1+00)^*0} 			& \bm{(}1+00\bm{)^{*}} 	& \bm{(1+00)^*}01			\\
+				1+\bm{(10(1+00)^*0)} 		& 10\bm{(1+00)^*} 		& (\lambda+0+11)+\bm{10(1+00)^*01} 	\\
+			\end{bmatrix*}
+		\]
+		% Beyond this, the matrix would be too large to fit in the width of a page.
+		This matrix gives all the strings attached to paths from $q_i$ to $q_j$ that do not pass through $q_3$.
+		Let us dissect one entry in this matrix, the expression $R_2(3, 1)$:
+		\[
+			1+(10(1+00)^*0).
+		\]
+		We can see that the expression describes the union of two languages.
+		The first language is quite simple: the string ``1'' labels a direct transition from $q_3$ to $q_1$.
+		Since we are not considering paths that transit $q_3$, we can surmise that the second part of the expression describes paths from $q_3$ to $q_1$ via $q_2$.
+
+		Now let us consider the second language, described by $10 (1+00)^* 0$.
+		Clearly, all strings in this language begin ``10'', which labels a path from $q_3$ to $q_2$ via $q_1$.
+		Next, we have either $\lambda$, or a string made up of ``1'' and ``00'' repeated any number of times.
+		We can see that ``1'' will lead from $q_2$ back to itself, and that ``00'' will lead to $q_1$ and back to $q_2$.
+		Finally, all strings in this language must end in ``0'', which will lead from $q_2$ to $q_1$.
+		So the regular expression $10 (1+00)^* 0$ describes all strings that lead from $q_3$ to $q_2$, then then lead back to $q_2$, then lead to $q_1$.
+
+		Now let us consider a different numbering on the same automaton:
+		\begin{align*}
+			q_0 &\to 2, \\
+			q_1 &\to 3, \\
+			q_2 &\to 1.
+		\end{align*}
+		This is a fairly counter-intuitive numbering --- unlike our previous numbering, it gives each state a number that has nothing to do with the value of the current input modulus 3.
+		\meo{The careful reader might already be able to tell why this numbering will produce interesting results.}
+		This yields the automaton shown in Figure~\ref{fig:m3_numbered_231}
+
+		\begin{figure}[H]
+			\centering
+			\begin{tikzpicture}[>=stealth',shorten >= 1 pt, auto, node distance = 2 cm]
+				\node[initial,state,accepting] (q0)                 {$q_2$};
+				\node[state]                   (q1) [right of = q0] {$q_3$};
+				\node[state]                   (q2) [right of = q1] {$q_1$};
+
+				\path[->](q0) edge [loop above] node {0} (q0);
+				\path[->](q0) edge [bend left]  node {1} (q1);
+				\path[->](q1) edge [bend left]  node {0} (q2);
+				\path[->](q1) edge [bend left]  node {1} (q0);
+				\path[->](q2) edge [bend left]  node {0} (q1);
+				\path[->](q2) edge [loop right] node {1} (q2);
+			\end{tikzpicture}
+			\caption{
+				The DFA $M_3$ with the counter-intuitive numbering.
+			}
+			\label{fig:m3_numbered_231}
+		\end{figure}
+
+		We will denote the regular expressions associated with this numbering by $R'_k(i, j)$.
+		Wherever there is ambiguity, we will mark symbols in the same way.
+		\[
+			R'_0 (i, j) = 
+			\begin{bmatrix*}[l]
+				\lambda + 1	& \emptyset		& 0 			\\
+				\emptyset 	& \lambda + 0 	& 1				\\
+				0 			& 1 			& \lambda 		\\
+			\end{bmatrix*}
 		\]
 
 		
+
 		\[
-			R_2 (i, j) = 
-			\begin{bmatrix}
-				\lambda + \bm{0(\lambda+1+00)^*0} 	& 0+\bm{0(\lambda+1+00)^*}	& 1+\bm{0(\lambda+1+00)^*01}		\\
-				0+\bm{(\lambda+1+00)^*0} 			& (\lambda+1+00)^{\bm{*}} 	& \bm{(\lambda+1+00)^*}01			\\
-				1+\bm{(10(\lambda+1+00)^*0)} 		& 10\bm{(\lambda+1+00)^*} 	& \bm{10}(\lambda+1+00)^{\bm{*}}\bm{01} 	\\
-			\end{bmatrix}
+			R'_1 (i, j) = 
+			\begin{bmatrix*}[l]
+				\bm{1^*}	& \emptyset		& \bm{1^*}0 					\\
+				\emptyset 	& \lambda + 0 	& 1								\\
+				0\bm{1^*} 	& 1 			& \lambda+\bm{(0 1^* 0)} 		\\
+			\end{bmatrix*}
 		\]
-		% Beyond this, the matrix would be too large to fit in the width of a page.
+
+		\[
+			R'_2 (i, j) = 
+			\begin{bmatrix*}[l]
+				1^*			& \emptyset		& 1^*0 										\\
+				\emptyset 	& \bm{0*}		& \bm{0^*}1									\\
+				01^* 		& 1\bm{0^*} 	& \lambda + 01^*0 + \bm{1 0^* 1} 			\\
+			\end{bmatrix*}
+		\]
+		Since the state in the center of the machine, which links the other two states, is now numbered $3$, we see that there are still no paths available from $q'_2$ to $q'_1$ or vice-versa in the matrix of $R'_2(i, j)$.
+		Contrast with $R_1 (i, j)$, in which it is possible to find a path from any state to any other, despite the transitions used being restricted transiting a smaller set of states.
+
+		We previously examined
+		\[
+			R_2(3, 1) = 1 + (10 (1 + 00)^* 0).
+		\]
+		Since states $1$ and $3$ in the previous numbering are equivalent to states $2'$ and $3'$ respectively, in our current numbering, let us examine
+		\[
+			R'_2(2', 3') = 0*1.
+		\]
+		This is clearly a very different expression.
+		By Figure~\ref{fig:m3_numbered_231} we see that $0^*$ leads from $q'_2$ back to itself, and ``1'' labels a direct transition from $q'_2$ to $q'_3$.
+
+		Recall that the language represented by a DFA having $n$ states is given by 
+		\[
+			\bigcup_{q_j \in F} W_n(s, q_j).
+		\]
+		The only accepting state of $M_3$ is also its initial state, so let us compare the regular expressions for the language accepted by $M_3$ as generated by our two numberings:
+		\begin{align*}
+			R_3(3, 3) &= (0+11+(10 \, (1+00)^* \, 01))^* \\
+			\text{and} \\
+			R'_3(2, 2) &= 0^* + (0^*1 \, ((01^*0) + (10^*1))^* \, 10^*).
+		\end{align*}
+
+		These two expressions must represent the same language, despite appearing very different.
+		To confirm that this is the case let us examine each in detail.
+
+		Observe that the first expression describes the Kleene closure of a union of three languages.
+		The first two of these are ``0'' and ``11''.
+		Consulting Figure~\ref{fig:m3_numbered_312}, it should be apparent how these denote paths from $q_3$ back to $q_3$.
+		The third language is described by $10 (1+00)* 01$.
+		This gives all the strings that lead from $q_3$ to $q_2$, return to $q_2$ any number of times, then lead back to $q_3$.
+
+		The union of these three languages gives us the language of strings that lead $M_3$ from $q_3$ back to $q_3$, whether directly or by transiting the other states of the machine. 
+		Thus the Kleene closure of this union gives us the language of all such strings repeated any number of times.
+
+		[I'm going to add more to this.]
+
 
 
 	\end{example}
@@ -1073,7 +1213,7 @@
 	Our proof of Kleene's theorem includes the first two results underpinning this ability, the construction of an NDFA from a regular expression and the conversion of an NDFA into a DFA. 
 	\refprop{prop:regular_languages_representable} gives a simple procedure that can produce an NDFA to represent any regular language, and although we did not use regular expressions in that construction, the difference is one of notation.
 	\ref{prop:ndfa_dfa_equivalent} gives us an algorithm that to convert the resulting NDFA into a DFA.
-	The final building block is outside the scope of this paper, but can be found in Hopcroft and Ullman \pcite{hopcroft}{67--70}. 
+	The final building block is outside the scope of this paper, but can be found in Hopcroft and Ullman \footcite{hopcroft}{67--70}. 
 
 	\begin{theorem}
 	\label{thm:minimal_dfa}
