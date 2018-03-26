@@ -72,7 +72,7 @@
 	\advisor{Darrah Chavey}
 
 	%% Second reader's name? Ask the Colloquium Instructor who it will be.
-	\reader{Patrice Leff\"ube}
+	\reader{Placeholder Name}
 
 	\thesisyear{2018}
 	\thesismonth{March}
@@ -99,16 +99,8 @@
 	\maketitle
 
 	\begin{abstract}
-		\meo{This is a placeholder abstract!}
-
-		This paper provides a proof of Kleene's Theorem accompanied by definitions and examples for newcomers to formal language theory.
-
-		Kleene's theorem is a result from formal language theory that provides the mathematical foundation for ubiquitous regular expression search programs.
-		Regular expression string matching can be found in a wide variety of software, from compilers to word processors. 
-		The speed and power of regular expression string matching are direct results of the relationship between the regular languages and finite automata established by this theorem.
-		
-
-		\meo{This is a placeholder abstract!}
+		This paper offers a proof of Kleene's theorem, accompanied by the necessary background in formal language theory, as well as detailed examples illustrating key points. 
+		There is also a brief discussion of the importance and application of Kleene's theorem in practice.		
 	\end{abstract}
 
 
@@ -129,7 +121,6 @@
 
 %%% Beginnning of the main matter.
 \mainmatter
-
 \mychapter{Introduction}
 \label{ch:basics}
 
@@ -291,7 +282,7 @@
 			Although regular expressions may closely resemble the the notation for regular languages, they are in fact only a shorthand used to describe regular language. 
 			That is, although $\alpha \beta + \gamma \beta$ and $(\alpha + \gamma) \beta$ describe the same language, we would not consider them to be the same regular expression.
 			Using regular expressions allows us to describe regular languages while avoiding some of the formalisms of set notation.
-			Additionally, regular expressions are a ubiquitous tool in computer science as well as in the software industry.
+			Additionally, regular expressions are a ubiquitous tool in computer science as well as in the software industry \footcite{grep}{1}.
 			\meo{
 				Maybe mention that a language is regular if and only if it can be described by a regular expression.
 			}
@@ -478,7 +469,6 @@
 	\section{Deterministic and Nondeterministic Automata} % (fold)
 	\label{sec:DFA_NDFA}
 	
-
 		\begin{definition}[Deterministic and Nondeterministic Finite Automata]
 			Finite automata are divided into two classes: nondeterministic and deterministic finite automata \footcite{hopcroft}{19}.
 			\begin{enumerate}[label=(\roman*)]
@@ -1259,33 +1249,35 @@
 \mychapter{Motivation} % (fold)
 \label{sec:motivation}
 
-	The primary application of Kleene's theorem is in the use of FAs for string matching.
-	This section will provide a brief overview of the mathematical results that make this application possible, followed by a few examples of the importance of fast string matching made possible by Kleene's theorem.
+	The relationship between regular languages and DFAs established by Kleene's theorem plays a significant role in the ubiquity of regular expression-based software tools. 
+	In this chapter, we will discuss some of the formalisms used to leverage Kleene's theorem in practice and provide examples to demonstrate the power and utility of regular expressions.
 
-	The application of Kleene's theorem relies on the ability to construct a minimal DFA representing any regular expression.
-	Our proof of Kleene's theorem includes the first two results underpinning this ability, the construction of an NDFA from a regular expression and the conversion of an NDFA into a DFA. 
-	\refprop{prop:regular_languages_representable} gives a simple procedure that can produce an NDFA to represent any regular language, and although we did not use regular expressions in that construction, the difference is one of notation.
-	\ref{prop:ndfa_dfa_equivalent} gives us an algorithm that to convert the resulting NDFA into a DFA.
-	The final building block is outside the scope of this paper, but can be found in Hopcroft and Ullman \footcite{hopcroft}{67--70}. 
+	\section{Formalisms} % (fold)
+	\label{sec:formalisms}
+		This will be a brief overview of the formal underpinnings of regular expression (regexp) based tools.
 
-	\begin{theorem}
-	\label{thm:minimal_dfa}
-		For any DFA $M$, there exists a unique DFA $M'$ such that $L(M') = L(M)$ and no DFA with fewer states than $M'$ represents $L(M)$
-	\end{theorem}
+		The most common type of regexp-based utility allows the user to enter a regular expression and search through some body of text for strings from the language described by the regular expression.
+		The naive approach to this use-case is to convert the regular expression into a DFA, then input the text to the DFA and output the strings accepted by the DFA.
+		
+		This approach relies on the ability to convert a regular expression into a DFA, and then use that DFA to efficiently control the search.
+		The proof of \refprop{prop:regular_languages_representable} on page \pageref{prop:regular_languages_representable} takes a first step towards an algorithm to convert a regular expression into an NDFA, and \refprop{prop:ndfa_dfa_equivalent} on page \pageref{prop:ndfa_dfa_equivalent} shows that the resulting NDFA could be converted into a DFA.
+		The resulting machine, however, would likely have more states than desirable.
+		Thus, this approach also relies on the existence of a minimal DFA (one having a minimal number of states) to represent any regular language, as well as the existence of an algorithm to minimize a DFA.
+		We will not prove these results, but formal statements and proofs may be found in Hopcroft and Ullman \footcite{hopcroft}{65--71}.
 
-	Together with \refprop{prop:regular_languages_representable} and \refprop{prop:ndfa_dfa_equivalent}, Theorem~\ref{thm:minimal_dfa} establishes that we can there is a minimal DFA representing any regular language.
+		Assuming that we have a minimal DFA based on some regular expression, we must be able to use it to control the search through a body of text.
+		That means minimizing the number of operations necessary to find the next state of the machine each time an input symbol is read.
+		To this end, we now introduce the matrix representation of a DFA.
 
-	Now we introduce the concept of a matrix representation of a DFA.
+		\begin{definition}[Matrix of a DFA]
+			Let $M = (Q, \Sigma, s, \delta, F)$ be a DFA with $n$ states $q_1, q_2, \dots, q_n$ and an alphabet of $m$ symbols $\sigma_1, \sigma_2, \dots, \sigma_n$.
+			We may represent $M$ by the $n \times m$ matrix $\mathbf{M}$ given by 
+			\[
+				\mathbf{M}_{ij} = \delta(q_i, \sigma_j).
+			\]
+		\end{definition}
 
-	\begin{definition}[Matrix of a DFA]
-		Let $M = (Q, \Sigma, s, \delta, F)$ be a DFA with $n$ states $q_1, q_2, \dots, q_n$ and an alphabet of $m$ symbols $\sigma_1, \sigma_2, \dots, \sigma_n$.
-		We may represent $M$ by the $n \times m$ matrix $\mathbf{M}$ given by 
-		\[
-			\mathbf{M}_{ij} = \delta(q_i, \sigma_j).
-		\]
-	\end{definition}
-
-	\begin{example}
+		Consider the $M_3$ DFA and its matrix, as depicted in Figure~\ref{fig:m3_and_matrix}.
 
 		\begin{figure}[H]
 			\setlength{\fboxrule}{0 pt}
@@ -1322,16 +1314,49 @@
 			\label{fig:m3_and_matrix}
 		\end{figure}
 
-		
-	\end{example}
+		The matrix representation of a DFA allows the result of all transitions to be precomputed and stored, so that finding the next state for each input symbol is as simple as accessing the correct entry in an array.
+		This operation takes constant ($\bigo(1)$) time.
+		If there are $N$ symbols in some body of text, then our program will demand $N$ of these $\bigo(1)$ operations, which means that it will take $\bigo(N)$ time.
+		This means that our program can produce all its output while reading through the body of text only once.
+		This pre-computation may itself impose a significant performance penalty, but in practice this can be avoided \footcite{grep}{2--3}.
+	% section formalisms (end)
 
-	
+	\section{Examples} % (fold)
+	\label{sec:applications_examples}
+		Probably the best known example of a regular expression based tool is the \texttt{grep} (Global Regular Expression Print) utility available near-universally on Unix-based computers \footcite{grep}{1}.
+		This utility is almost exactly the program described above, it allows the user to specify a regular expression and some body of text, and outputs all the lines of the text containing a string matching the regular expression provided.
+		Similar functionality is included in the standard libraries of most programming languages.
+		Many word processors and text editors, even those designed for non-technical users, include a regular expression search functionality.
 
+		Regular expressions are also used in the compilers and interpreters of programming languages.
+		Many syntactical rules, such as what constitutes a valid variable name, are typically simple enough that a regular expression can be used to check that a variable name is valid \footcite{hopcroft}{45 -- 46}.
 
+		The regular expressions used by tools in practice are considerably more complex than those we have defined.
+		Table~\ref{tab:grep_regexps} gives some examples of the syntax used by \texttt{grep}:
 
-	\begin{remark}
-		Mention the use of regular language parsing in the design of compilers and interpreters, and mention the ubiquity of \texttt{grep}.
-	\end{remark}
+		\begin{figure}[H]
+			\begin{tabular}{r l}
+				\textbf{Expression} 	& \textbf{Meaning} \\
+				\hline
+				$.$ 					& Any character \\
+				$a$ 					& The letter $a$ \\
+				$a?$ 					& $a$ once or zero times \\
+				$a*$ 					& $a$ zero or more times \\
+				$a+$ 					& $a$ one or more times \\
+				$a \{ n, m \}$ 			& $a$ between $n$ and $m$ times \\
+				$[\char`^{} abc]$ 		& any character except $a$, $b$, or $c$ \\
+				$(a | b)$ 				& either $a$ or $b$ \\
+			\end{tabular}
+			\caption{
+				A sampling of the regular expression syntax used by \texttt{grep} \cite{man_grep}.
+				These examples are fairly standard across regexp-based utilities.
+			}
+			\label{tab:grep_regexps}
+		\end{figure}
+
+		Note that all of the expressions shown in Table~\ref{tab:grep_regexps} could be expressed our simple regular expression syntax, although in most cases the result would be a painfully large expression.
+		In addition to these expressions, \texttt{grep} provides some extensions to regular expressions that actually allow for the description of non-regular languages, but these features are less standardized and less frequently used than the core regexp facilities.
+	% section examples (end)
 % chapter motivation (end)
 
 
