@@ -130,9 +130,18 @@
 %%% Beginnning of the main matter.
 \mainmatter
 
-\mychapter{Basic Definitions}
+\mychapter{Introduction}
 \label{ch:basics}
 
+	Formal language theory is a branch of mathematics that studies the structural properties of languages, whether natural or artificial.
+	In computer science, formal language theory provides a framework for the design and processing of programming languages, as well as for the classification of problems by complexity.
+
+	Kleene's theorem establishes the equivalence of computational models known as finite automata and a family of languages called the regular languages.
+
+	Before beginning our discussion of Kleene's theorem, we will give an introduction to the basic concepts of formal language theory necessary to an understanding of Kleene's theorem.
+
+	\section{Basic Definitions} % (fold)
+	\label{sec:basic_definitions}
 		\begin{definition}[Symbol]
 			The \textit{symbol} is the most basic unit of formal language theory.
 			Symbols are indivisible and atomic --- they are not a composite of other units, and cannot be represented by any combination of other symbols \footcite{hopcroft}{1}.
@@ -159,131 +168,141 @@
 			Because languages are sets of strings, the conventional set operations, such as union, intersection, and complementation are defined for languages \footcite{hopcroft}{5}.
 
 			The empty set , written $\emptyset$, and $\{ \lambda \}$ are valid languages over any alphabet \footcite{hopcroft}{2}.
-
 		\end{definition}
 
 		\begin{remark}
 			The empty set and $\{ \lambda \}$ represent distinct languages. 
 			The empty set represents the language containing no strings at all, while $\{ \lambda \}$ represents the language containing only the empty string \footcite{hopcroft}{2}.
 		\end{remark}
+	% section basic_definitions (end)
+% chapter intoduction (end)
 
-
-\mychapter{Regular Expressions} % (fold)
-\label{ch:regular_expressions}
+\mychapter{Regular Languages and Regular Expressions} % (fold)
+\label{ch:regular_languages_and_expressions}
 	
-	\meo{Add an introduction.}
+	This section introduces the family of regular languages, as defined from a set-theoretic perspective.
+	We also introduce the widely-used system of notation known as regular expressions.
 
-	\begin{definition}[Atomic Regular Languages]
-		The \textit{atomic regular languages} are the basic units used to build regular languages.
-		They are defined for any alphabet $\Sigma$ as follows:
+	\section{Regular Languages} % (fold)
+	\label{sec:regular_languages}
 
-		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
-			\item $\emptyset$ is an atomic regular language over $\Sigma$.
-			\item $\{ \lambda \}$ is an atomic regular language over $\Sigma$.
-			\item $\{ a \}$ is an atomic regular language over $\Sigma$ for any $a \in \Sigma$.
-		\end{enumerate}
-		\footcite{hopcroft}{28}~ \meo{todo: something about this citation.}
-	\end{definition}
+		\begin{definition}[Atomic Regular Languages]
+			The \textit{atomic regular languages} are the basic units used to build regular languages.
+			They are defined for any alphabet $\Sigma$ as follows:
 
-	We now define the operations used to combine the atomic regular languages to form more complex regular languages.
+			\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
+				\item $\emptyset$ is an atomic regular language over $\Sigma$.
+				\item $\{ \lambda \}$ is an atomic regular language over $\Sigma$.
+				\item $\{ a \}$ is an atomic regular language over $\Sigma$ for any $a \in \Sigma$.
+			\end{enumerate}
+			\footcite{hopcroft}{28}~ \meo{todo: something about this citation.}
+		\end{definition}
 
-	\begin{definition}[Concatenation]
-		Let $w_1 = ab$ and $w_2 = bc$ be strings over some alphabet.
-		Their \textit{concatenation}, written $w_1 w_2$ denotes the string $abbc$, and $w_2 w_1$ denotes $bcab$.
-		For any string $w$, $\lambda w = w \lambda = w$.
-		The notation $w^3$ denotes the string $www$, and $w^0 = \lambda$ \footcite{salomaa}{1}.
+		We now define the operations used to combine the atomic regular languages to form more complex regular languages.
 
-		It should be easy to see how this definition applies to symbols, which can be seen as words of length one.
-	\end{definition}
+		\begin{definition}[Concatenation]
+			Let $w_1 = ab$ and $w_2 = bc$ be strings over some alphabet.
+			Their \textit{concatenation}, written $w_1 w_2$ denotes the string $abbc$, and $w_2 w_1$ denotes $bcab$.
+			For any string $w$, $\lambda w = w \lambda = w$.
+			The notation $w^3$ denotes the string $www$, and $w^0 = \lambda$ \footcite{salomaa}{1}.
 
-	\begin{definition}[Concatenation of Languages]
-		If $A$ and $B$ are languages over some alphabet, then the set
-		\[
-			AB = \{ ab \mid a \in A, \ b \in B \}
-		\]
-		is called the \textit{concatenation}, or \textit{product} of $A$ and $B$ \footcite{lemmings}{3}.
+			It should be easy to see how this definition applies to symbols, which can be seen as words of length one.
+		\end{definition}
 
-		The notation $A^2$ represents the language $AA$, and $A^i$ represents $AA^{i-1}$.
-		Note that $A = A^1 = AA^0 = \{ a \lambda \mid a \in A \}$, which implies that $A^0 = \{ \lambda \}$ \footcite{lemmings}{3}.
-	\end{definition}
+		\begin{definition}[Concatenation of Languages]
+			If $A$ and $B$ are languages over some alphabet, then the set
+			\[
+				AB = \{ ab \mid a \in A, \ b \in B \}
+			\]
+			is called the \textit{concatenation}, or \textit{product} of $A$ and $B$ \footcite{lemmings}{3}.
 
-	\begin{remark}
-		Note that the set of strings over an alphabet is closed under concatenation: if $x$ and $y$ are strings over $\Sigma$, then so are $xy$ and $yx$.
-		It follows that if $A$ and $B$ are languages over $\Sigma$, then so are $AB$ and $BA$ \footcite{lemmings}{2}.
-		
-		Concatenation is also an associative operation.
-		Given strings $x$, $y$, and $z$, $(xy)z = x(yz)$.
-		It follows that for languages $A$, $B$, and $C$, ${(AB)C = A(BC)}$ \footcite{lemmings}{2}.
+			The notation $A^2$ represents the language $AA$, and $A^i$ represents $AA^{i-1}$.
+			Note that $A = A^1 = AA^0 = \{ a \lambda \mid a \in A \}$, which implies that $A^0 = \{ \lambda \}$ \footcite{lemmings}{3}.
+		\end{definition}
+
+		\begin{remark}
+			Note that the set of strings over an alphabet is closed under concatenation: if $x$ and $y$ are strings over $\Sigma$, then so are $xy$ and $yx$.
+			It follows that if $A$ and $B$ are languages over $\Sigma$, then so are $AB$ and $BA$ \footcite{lemmings}{2}.
+			
+			Concatenation is also an associative operation.
+			Given strings $x$, $y$, and $z$, $(xy)z = x(yz)$.
+			It follows that for languages $A$, $B$, and $C$, ${(AB)C = A(BC)}$ \footcite{lemmings}{2}.
+
+			\meo{
+				Maybe also note that length has the properties of the logarithm with regard to concatenation.
+				It's a curiosity, but not really useful information
+			}
+
+		\end{remark}
+
+		\begin{definition}[Kleene Closure]
+			Given any language $A$, the language 
+			\[
+				A^* = \bigcup_{i \geq 0} A^i
+			\]
+			is called the \textit{Kleene closure} of $A$.
+			$A^*$ is the language containing any words of $A$ repeated zero or more times, thus $\lambda$ is in the Kleene closure of any language.
+			The Kleene closure of an alphabet is the set of all words over that alphabet \footcite{lemmings}{3}.
+		\end{definition}
+
+		\begin{definition}[Regular Language]
+			Given an alphabet $\Sigma$, any atomic regular language over $\Sigma$ is a regular language over $\Sigma$.
+			
+			If $A$ and $B$ are regular languages over $\Sigma$, then so are 
+			\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
+				\item $AB$
+				\item $A \cup B$
+				\item $A^*$
+			\end{enumerate}
+			\footcite{rosen}{879}~\meo{todo: something about this citation}
+		\end{definition}
+
+		\begin{remark}
+			Because of their relationship to the family of regular languages, the concatenation, union, and Kleene closure are referred to as the \textit{regular operations} \footcite{salomaa}{26}.
+		\end{remark}
+	% section regular_languages (end)
+
+	\clearpage
+
+	\section{Regular Expressions} % (fold)
+	\label{sec:regular_expressions}
+
+		We now introduce \textit{regular expressions}, a shorthand used to describe regular languages.
+
+		\begin{definition}[Regular Expressions]
+			The atomic regular expressions over an alphabet $\Sigma$ are defined to represent the atomic regular languages over $\Sigma$:
+			\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
+				\item $\emptyset$ denotes the empty language;
+				\item $\lambda$ denotes the language $\{ \lambda \}$;
+				\item $a$ denotes the language $\{ a \}$ for any $a \in \Sigma$.
+			\end{enumerate}
+			\footcite{hopcroft}{28--29}~\meo{todo: something about this citation}
+
+			If $\alpha$ and $\beta$ are regular expressions representing languages $A$ and $B$, respectively, then the following are also regular expressions:
+			\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
+				\item $\alpha \beta$ denotes the language $AB$;
+				\item $\alpha + \beta$ denotes the language $A \cup B$;
+				\item $\alpha^*$ denotes the language $A^*$.
+			\end{enumerate}
+			\footcite{hopcroft}{28--29}~\meo{todo: something about this citation}
+		\end{definition}
+
+		\begin{remark}
+			Although regular expressions may closely resemble the the notation for regular languages, they are in fact only a shorthand used to describe regular language. 
+			That is, although $\alpha \beta + \gamma \beta$ and $(\alpha + \gamma) \beta$ describe the same language, we would not consider them to be the same regular expression.
+			Using regular expressions allows us to describe regular languages while avoiding some of the formalisms of set notation.
+			Additionally, regular expressions are a ubiquitous tool in computer science as well as in the software industry.
+			\meo{
+				Maybe mention that a language is regular if and only if it can be described by a regular expression.
+			}
+		\end{remark}
+
 
 		\meo{
-			Maybe also note that length has the properties of the logarithm with regard to concatenation.
-			It's a curiosity, but not really useful information
+			I could mention here that regular expressions are an example of a grammar, shockingly belonging to the class of regular grammars.
 		}
-
-	\end{remark}
-
-	\begin{definition}[Kleene Closure]
-		Given any language $A$, the language 
-		\[
-			A^* = \bigcup_{i \geq 0} A^i
-		\]
-		is called the \textit{Kleene closure} of $A$.
-		$A^*$ is the language containing any words of $A$ repeated zero or more times, thus $\lambda$ is in the Kleene closure of any language.
-		The Kleene closure of an alphabet is the set of all words over that alphabet \footcite{lemmings}{3}.
-	\end{definition}
-
-	\begin{definition}[Regular Language]
-		Given an alphabet $\Sigma$, any atomic regular language over $\Sigma$ is a regular language over $\Sigma$.
-		
-		If $A$ and $B$ are regular languages over $\Sigma$, then so are 
-		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
-			\item $AB$
-			\item $A \cup B$
-			\item $A^*$
-		\end{enumerate}
-		\footcite{rosen}{879}~\meo{todo: something about this citation}
-	\end{definition}
-
-	\begin{remark}
-		Because of their relationship to the family of regular languages, the concatenation, union, and Kleene closure are referred to as the \textit{regular operations} \footcite{salomaa}{26}.
-	\end{remark}
-
-	We now introduce \textit{regular expressions}, a shorthand used to describe regular languages.
-
-	\begin{definition}[Regular Expressions]
-		The atomic regular expressions over an alphabet $\Sigma$ are defined to represent the atomic regular languages over $\Sigma$:
-		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
-			\item $\emptyset$ denotes the empty language;
-			\item $\lambda$ denotes the language $\{ \lambda \}$;
-			\item $a$ denotes the language $\{ a \}$ for any $a \in \Sigma$.
-		\end{enumerate}
-		\footcite{hopcroft}{28--29}~\meo{todo: something about this citation}
-
-		If $\alpha$ and $\beta$ are regular expressions representing languages $A$ and $B$, respectively, then the following are also regular expressions:
-		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
-			\item $\alpha \beta$ denotes the language $AB$;
-			\item $\alpha + \beta$ denotes the language $A \cup B$;
-			\item $\alpha^*$ denotes the language $A^*$.
-		\end{enumerate}
-		\footcite{hopcroft}{28--29}~\meo{todo: something about this citation}
-	\end{definition}
-
-	\begin{remark}
-		Although regular expressions may closely resemble the the notation for regular languages, they are in fact only a shorthand used to describe regular language. 
-		That is, although $\alpha \beta + \gamma \beta$ and $(\alpha + \gamma) \beta$ describe the same language, we would not consider them to be the same regular expression.
-		Using regular expressions allows us to describe regular languages while avoiding some of the formalisms of set notation.
-		\meo{
-			Is this a convincing reason why this is a thing worth having?
-			Maybe mention that a language is regular if and only if it can be described by a regular expression.
-		}
-
-	\end{remark}
-
-	\meo{
-		I could mention here that regular expressions are an example of a grammar, shockingly belonging to the class of regular grammars.
-	}
-
-% chapter regular_expressions (end)
+	% section regular_expressions (end)
+% chapter regular_languages_and_expressions (end)
 
 \mychapter{Finite Automata} % (fold)
 \label{ch:finite_automata}
@@ -293,44 +312,49 @@
 	The output of a finite automaton is defined by the state of the machine after reading some input \footcite{hopcroft}{13}.
 	We will deal with finite automata producing binary output --- they either ``accept'' an input, or fail to do so.
 
-	\begin{definition}[Finite Automaton]
-		A \textit{finite automaton} (FA) $M$ is defined by the 5-tuple $(Q, \Sigma, s, \delta, F)$, where:
-		\begin{itemize}
-			\item [] $Q$ is a finite and nonempty set of states;
-			\item [] $\Sigma$ is an alphabet of possible input symbols;
-			\item [] $s \in Q$ is the state of the machine prior to any input, referred to as the \textit{initial state};
-			\item [] $\delta: (Q \times \Sigma) \mapsto Q$ is called the \textit{transition function}: It maps a starting state and an input symbol to the new state of the machine;
-			\item [] $F \subseteq Q$ is the set of \textit{final states} or \textit{accepting states} of the machine.
-		\end{itemize}
-		\footcite{hopcroft}{17}~\meo{todo: something about this citation}
-	\end{definition}
+	\section{Definitions} % (fold)
+	\label{sec:fa_definitions}
 
-	\begin{remark}
-		It is convenient to extend the definition of $\delta$ to apply to strings, as well as individual symbols.
-		Let $w \in \Sigma^*$, and let $a \in \Sigma$.
-		By 
-		\[
-			\Delta(q_1, wa) = q_n
-		\] 
-		we mean 
-		\[
-			\delta( \Delta(q_1, w), a) = q_n.
-		\]
-		We define $\delta(q_i, \lambda) = q_i$.
-		This defines $\Delta: (Q \times \Sigma^*) \mapsto Q$ \footcite{hopcroft}{17}.
-	\end{remark}
+		\begin{definition}[Finite Automaton]
+			A \textit{finite automaton} (FA) $M$ is defined by the 5-tuple $(Q, \Sigma, s, \delta, F)$, where:
+			\begin{itemize}
+				\item [] $Q$ is a finite and nonempty set of states;
+				\item [] $\Sigma$ is an alphabet of possible input symbols;
+				\item [] $s \in Q$ is the state of the machine prior to any input, referred to as the \textit{initial state};
+				\item [] $\delta: (Q \times \Sigma) \mapsto Q$ is called the \textit{transition function}: It maps a starting state and an input symbol to the new state of the machine;
+				\item [] $F \subseteq Q$ is the set of \textit{final states} or \textit{accepting states} of the machine.
+			\end{itemize}
+			\footcite{hopcroft}{17}~\meo{todo: something about this citation}
+		\end{definition}
 
-	\begin{definition}(Acceptance by Finite Automaton)
-		Let $M = (Q, \Sigma, s, \delta, F)$ be an FA and let $w \in \Sigma^*$.
-		We say that $w$ is \textit{accepted} by $M$ if $\Delta(s, w) \in F$ \footcite{hopcroft}{18}.
+		\begin{remark}
+			It is convenient to extend the definition of $\delta$ to apply to strings, as well as individual symbols.
+			Let $w \in \Sigma^*$, and let $a \in \Sigma$.
+			By 
+			\[
+				\Delta(q_1, wa) = q_n
+			\] 
+			we mean 
+			\[
+				\delta( \Delta(q_1, w), a) = q_n.
+			\]
+			We define $\delta(q_i, \lambda) = q_i$.
+			This defines $\Delta: (Q \times \Sigma^*) \mapsto Q$ \footcite{hopcroft}{17}.
+		\end{remark}
 
-		We use $L(M)$ to denote the language $\{ w \in \Sigma^* \mid \Delta(s, w) \in F \}$ containing all strings accepted by $M$ \footcite{hopcroft}{18}.
+		\begin{definition}(Acceptance by Finite Automaton)
+			Let $M = (Q, \Sigma, s, \delta, F)$ be an FA and let $w \in \Sigma^*$.
+			We say that $w$ is \textit{accepted} by $M$ if $\Delta(s, w) \in F$ \footcite{hopcroft}{18}.
 
-		A language $A$ is considered \textit{representable} if there exists some FA $M_A$ such that $A = L(M_A)$ \footcite{salomaa}{20}.
-	\end{definition}
+			We use $L(M)$ to denote the language $\{ w \in \Sigma^* \mid \Delta(s, w) \in F \}$ containing all strings accepted by $M$ \footcite{hopcroft}{18}.
 
-	\begin{example}[Finite Automata Construction]
-	\label{ex:m3_construction}
+			A language $A$ is considered \textit{representable} if there exists some FA $M_A$ such that $A = L(M_A)$ \footcite{salomaa}{20}.
+		\end{definition}
+	% section fa_definitions (end)
+
+	\section{Example: Finite Automata Construction} % (fold)
+	\label{sec:ex:m3_construction}
+	
 
 		% I'm done typing this out. 
 		\newcommand{\miii}{\ensuremath{M_3}\xspace}
@@ -449,55 +473,59 @@
 			\caption{\miii with all its transitions.}
 			\label{fig:m3_4}
 		\end{figure}
-	\end{example}
+	% section example_finite_automata_construction (end)
 
-	\begin{definition}[Deterministic and Nondeterministic Finite Automata]
-		Finite automata are divided into two classes: nondeterministic and deterministic finite automata \footcite{hopcroft}{19}.
-		\begin{enumerate}[label=(\roman*)]
-			\item A \textit{nondeterministic} finite automaton (NDFA) is an FA with \textit{zero or more} transitions from each state corresponding to each symbol in $\Sigma$.
-			\item A \textit{deterministic} finite automaton (DFA) is an FA having \textit{exactly one} transition from each state corresponding to each symbol in $\Sigma$.
-		\end{enumerate}
-	\end{definition}
+	\section{Deterministic and Nondeterministic Automata} % (fold)
+	\label{sec:DFA_NDFA}
+	
 
-	\begin{remark}
-		Because a DFA is required to have exactly one transition from each state for each possible input, only one of its states may be active at any given time.
-		This is not the case for NDFAs.
-		Because an NDFA may have any number of transitions from each state on a single symbol, any subset of its states may be active at any given time.
-		Alternatively, an NDFA may have no transition from any state for a given input symbol, and upon reading that symbol would have no active states.
-		An NDFA is considered to be in an accepting state when any of its accepting states are active.
+		\begin{definition}[Deterministic and Nondeterministic Finite Automata]
+			Finite automata are divided into two classes: nondeterministic and deterministic finite automata \footcite{hopcroft}{19}.
+			\begin{enumerate}[label=(\roman*)]
+				\item A \textit{nondeterministic} finite automaton (NDFA) is an FA with \textit{zero or more} transitions from each state corresponding to each symbol in $\Sigma$.
+				\item A \textit{deterministic} finite automaton (DFA) is an FA having \textit{exactly one} transition from each state corresponding to each symbol in $\Sigma$.
+			\end{enumerate}
+		\end{definition}
 
-		This complication makes our definition of the transition function awkward to apply to NDFAs.
-		For an NDFA, we define the following refinement:
-		\[
-			\delta : (Q \times \Sigma) \mapsto 2^Q
-		\]
-		where $2^Q$ is the power set (set of all subsets) of $Q$.
-		This defines the result of a transition to be a set of states, rather than a single state, so rather than
-		\[
-			\delta(q_0, a) = q_1
-		\]
-		we write
-		\[
-			q_1 \in \delta(q_0, a).
-		\]
-		This refinement offers a more consistent approach to transitions in NDFAs.
+		\begin{remark}
+			Because a DFA is required to have exactly one transition from each state for each possible input, only one of its states may be active at any given time.
+			This is not the case for NDFAs.
+			Because an NDFA may have any number of transitions from each state on a single symbol, any subset of its states may be active at any given time.
+			Alternatively, an NDFA may have no transition from any state for a given input symbol, and upon reading that symbol would have no active states.
+			An NDFA is considered to be in an accepting state when any of its accepting states are active.
 
-		It is also convenient when dealing with any automata to be able to compare transition functions.
-		Suppose that $\delta$ and $\delta'$ are transitions functions defined on the same states and alphabet.
-		By
-		\[
-			\delta \subseteq \delta'
-		\]
-		we mean that
-		\[
-			\delta(q, a) \subseteq \delta'(q, a)
-		\]
-		for all $q \in Q$ and $a \in \Sigma$.
+			This complication makes our definition of the transition function awkward to apply to NDFAs.
+			For an NDFA, we define the following refinement:
+			\[
+				\delta : (Q \times \Sigma) \mapsto 2^Q
+			\]
+			where $2^Q$ is the power set (set of all subsets) of $Q$.
+			This defines the result of a transition to be a set of states, rather than a single state, so rather than
+			\[
+				\delta(q_0, a) = q_1
+			\]
+			we write
+			\[
+				q_1 \in \delta(q_0, a).
+			\]
+			This refinement offers a more consistent approach to transitions in NDFAs.
 
-		\meo{I could mention lambda transitions, but I've avoided using them so far, so I don't think I need to.}
+			It is also convenient when dealing with any automata to be able to compare transition functions.
+			Suppose that $\delta$ and $\delta'$ are transitions functions defined on the same states and alphabet.
+			By
+			\[
+				\delta \subseteq \delta'
+			\]
+			we mean that
+			\[
+				\delta(q, a) \subseteq \delta'(q, a)
+			\]
+			for all $q \in Q$ and $a \in \Sigma$.
 
+			\meo{I could mention lambda transitions, but I've avoided using them so far, so I don't think I need to.}
 
-	\end{remark}
+		\end{remark}
+	% section DFA_NDFA (end)
 % chapter finite_automata (end)
 
 
@@ -961,7 +989,7 @@
 
 		For $k \geq 1$ we define
 		\[
-			W_k(i, j) = W_{k-1}(i, j) \cup W_{k-1}(i, k)\, W_{k-1}(k, k)^*\, W_{k-1}(k, j).
+			W_k(i, j) = W_{k-1}(i, j) \cup W_{k-1}(i, k) \ W_{k-1}(k, k)^* \ W_{k-1}(k, j).
 		\]
 		That is, $W_k(i, j)$ is the union of two languages:
 		The first is the language of all strings that take $M$ from $q_i$ to $q_j$ using vertices numbered less than $k$.
@@ -1006,11 +1034,19 @@
 \mychapter{Examples Illustrating Kleene's Theorem} % (fold)
 \label{sec:examples}
 
-	\begin{example}[Mod 3 Finite Automaton]
+	\section{Mod 3 Finite Automaton} % (fold)
+	\label{sec:mod_3_finite_automaton}
+	
 		To understand the proof of \refprop{prop:representable_languages_regular} it is helpful to see the induction applied to an actual automaton.
-		For this example it is easier to deal in regular expressions than in set notation, so we define $R_k(i, j)$ to be the regular expression defined to represent the language $W_k (i, j)$.
+		For this example it is easier to deal in regular expressions than in set notation, so we define $R_k(i, j)$ to be the regular expression representing the language $W_k (i, j)$:
+		\begin{align*}
+			R_0(i, j) &= a_1 + a_2 + \cdots \text{ for all } \{ a_m \in \Sigma \cup \{ \lambda \} \mid \delta(q_i, a_m) = q_j \} \\
+			\text{and}\\
+			R_{k+1}(i, j) &= R_k(i, j) + \big( R_k(i, k) \ (R_k(k+1, k+1))^* \ R_k(k, j) \big)
+		\end{align*}
+		
 
-		Consider the FA $M_3$, as defined on page~\pageref{ex:m3_construction}.
+		Consider the FA $M_3$, as defined in section~\ref{sec:ex:m3_construction}.
 		To follow along with the proof of \refprop{prop:representable_languages_regular}, we must define a numbering of the states of $M_3$ that begins at one, rather than 0.
 		For now, we use the numbering
 		\begin{align*}
@@ -1189,16 +1225,34 @@
 		The union of these three languages gives us the language of strings that lead $M_3$ from $q_3$ back to $q_3$, whether directly or by transiting the other states of the machine. 
 		Thus the Kleene closure of this union gives us the language of all such strings repeated any number of times.
 
-		[I'm going to add more to this.]
+		Now we turn our attention to $R'_3(2, 2)$.
+		We can see that it denotes the union of two languages: one described by $0^*$ and one described by 
+		\begin{equation}
+		\label{eq:r3_22}
+			0^*1 ((01^*0) + (10^*1))^* 10^*
+		\end{equation}
+		The first language is clearly the set of strings $\{ \lambda, 0, 00, 000, \dots \}$, which takes $q'_2$ to $q'_2$ without any intermediate vertices.
+		Then if the entire expression gives the language accepted by $M_3$, then \ref{eq:r3_22} must describe the strings that take $q'_2$ to $q'_2$ passing through any intermediate states.
+		To confirm this hypothesis, let us examine this expression piece-by-piece.
 
+		The expression \ref{eq:r3_22} begins with $0^*1$ --- it is easy to see that this describes all the strings that lead from $q'_2$ to $q'_3$.
+		Next, we have $((01^*0) + (10^*1))$. 
+		Consulting Figure~\ref{fig:m3_numbered_231}, we can see that $01^*0$ describes all the strings that depart $q'_3$ and return via $q'_2$.
+		Similarly, $10^*1$ describes all the strings that return to $q'_3$ via $q'_2$.
+		Finally the \ref{eq:r3_22} ends $10^*$, which, as the mirror image of $0^*1$, denotes all the strings that lead from $q'_3$ to $q'_2$ and never enter another state.
+		Concatenating all of these languages yields the set of strings that leave $q'_2$ and return through $q'_3$ and $q'_1$.
+		Thus, as the union of this expression and $0^*$, \ref{eq:r3_22} denotes all the paths through $M_3$ that begin and end at $q'_2$.
 
+		So we can see that our two expressions $R_3(3,3)$ and $R'_3(2, 2)$, however different they may appear, describe the same language.
 
-	\end{example}
 
 	\meo{
 		Figure out if there are any other parts of the proof that deserve an example to help explain them.
 		I will probably include pictures for regular language $\iff$ representable in the initial proof.
+		It would be nice to include a power set construction, but it would also end up being pretty long.
 	}
+	% section mod_3_finite_automaton (end)
+
 
 % chapter examples (end)
 
