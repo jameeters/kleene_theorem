@@ -72,7 +72,7 @@
 	\advisor{Darrah Chavey}
 
 	%% Second reader's name? Ask the Colloquium Instructor who it will be.
-	\reader{Name of Second Reader}
+	\reader{Patrice Leff\"ube}
 
 	\thesisyear{2018}
 	\thesismonth{March}
@@ -114,7 +114,8 @@
 
 	%%% If you want to thank someone for their influence on your life or your work, here's where you'd do it.
 	\begin{acknowledgments}
-		Here you should acknowledge any special help on your project, or particular influences on your life or mathematical development.
+		I thank Darrah Chavey for his capable advising and for introducing me to the topic.
+		I thank Cameron Kuchta for proofreading my paper, and Simon Tomlinson for proofreading my paper and assisting me in writing the program used to produce examples.
 	\end{acknowledgments}
 
 	%%% Table of Contents, List of Figures, and List of Tables. 
@@ -179,7 +180,7 @@
 		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
 			\item $\emptyset$ is an atomic regular language over $\Sigma$.
 			\item $\{ \lambda \}$ is an atomic regular language over $\Sigma$.
-			\item $\{ a \}$ is an atomic regular language over $\Sigma$ for all $a \in \Sigma$.
+			\item $\{ a \}$ is an atomic regular language over $\Sigma$ for any $a \in \Sigma$.
 		\end{enumerate}
 		\footcite{hopcroft}{28}~ \meo{todo: something about this citation.}
 	\end{definition}
@@ -227,7 +228,7 @@
 			A^* = \bigcup_{i \geq 0} A^i
 		\]
 		is called the \textit{Kleene closure} of $A$.
-		$A^*$ is the language any words of $A$ repeated zero or more times, thus $\lambda$ is in the Kleene closure of any language.
+		$A^*$ is the language containing any words of $A$ repeated zero or more times, thus $\lambda$ is in the Kleene closure of any language.
 		The Kleene closure of an alphabet is the set of all words over that alphabet \footcite{lemmings}{3}.
 	\end{definition}
 
@@ -254,7 +255,7 @@
 		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
 			\item $\emptyset$ denotes the empty language;
 			\item $\lambda$ denotes the language $\{ \lambda \}$;
-			\item $a$ denotes the language $\{ a \}$ for all $a \in \Sigma$.
+			\item $a$ denotes the language $\{ a \}$ for any $a \in \Sigma$.
 		\end{enumerate}
 		\footcite{hopcroft}{28--29}~\meo{todo: something about this citation}
 
@@ -289,7 +290,8 @@
 
 	A finite automaton is a formal model of a machine which has a finite number of allowed configurations, called states, and accepts input symbols from some finite alphabet. 
 	Each time a symbol is input to the automaton, it may change state. 
-	The output of a finite automaton is given by the state of the machine after reading some input \footcite{hopcroft}{13}.
+	The output of a finite automaton is defined by the state of the machine after reading some input \footcite{hopcroft}{13}.
+	We will deal with finite automata producing binary output --- they either ``accept'' an input, or fail to do so.
 
 	\begin{definition}[Finite Automaton]
 		A \textit{finite automaton} (FA) $M$ is defined by the 5-tuple $(Q, \Sigma, s, \delta, F)$, where:
@@ -349,7 +351,7 @@
 		\end{enumerate}
 		So we create one state to represent each of these possible conditions, and define $Q = \{ q_0, q_1, q_2 \}$.
 		Since we want $\miii$ to accept numbers divisible by 3, we set $F = \{ q_0 \}$. 
-		And since we interpret no input as 0, set the initial state $s$ to $q_0$.
+		And since we interpret the lack of input as 0, set the initial state $s$ to $q_0$.
 
 		Now we have 
 		\[
@@ -511,7 +513,7 @@
 		All regular languages are representable by an NDFA.
 	\end{claim}
 	\begin{proof}
-		We first show that the atomic regular languages are representable., then show that the results of the result of a regular operation on representable languages is representable. The constructions used are adapted from Rosen \footcite{rosen}{880--881}.
+		We first show that the atomic regular languages are representable, then show that the result of any regular operation on representable languages is representable. The constructions used are adapted from Rosen \footcite{rosen}{880--881}.
 
 		It is simple to construct an NDFAs to accept the atomic regular languages:
 		\begin{itemize}
@@ -634,11 +636,8 @@
 			}
 			\caption{
 				NDFAs accepting $A$ and $B$.
-				The middle states represent all the states of the machine other than the initial and accepting states.
-				Note that if \ma or \mb accepts $\lambda$, its initial state must be an accepting state.
-				These drawings are simplified and meant to represent NDFAs in general.
-				They do not show every possible transition and state.
 				The leftmost vertices represent the set of accepting states, and the middle vertices represent all the states that are neither initial states nor accepting states.
+				Note that if \ma or \mb accepts $\lambda$, its initial state must be an accepting state.
 			}
 			\label{fig:ma_and_mb}
 		\end{figure}
@@ -664,7 +663,7 @@
 		So we define
 		\[
 			\fab = 	\begin{cases}
-						\fb \cup \{ \sab \} &\text{if } \lambda \in A \cap B \\
+						\fb \cup \{ \sab = \sa \} &\text{if } \lambda \in A \cap B \\
 						\fb &\text{otherwise}
 					\end{cases}
 		\]
@@ -676,7 +675,7 @@
 		\[
 			\dala(q_A, a) \subseteq \dalab(q_A, a) \enspace \text{ and } \enspace \dalb(q_B, b) \subseteq \dalab(q_B, b).
 		\]
-		We also define new transitions so that any string accepted by \ma will take \mab from \sab to \sb.
+		We also define new transitions so that any string accepted by \ma will take \mab from \sa to \sb.
 		To do this, we add transitions to \sb that mimic the transitions to accepting states of \ma.
 		For each transition whose result is an accepting state of \ma, we add a transition with the same origin on the same symbol leading to \sb.
 		So for all $q_A \in \qa$ and $a \in \siga$ such that 
@@ -691,10 +690,10 @@
 
 		Finally, we must account for the case in which $\lambda \in A$.
 		In this case, \mab must be able to skip over \ma and accept strings of $B$ without any prefix.
-		Hence if $\lambda \in A$ we must create transitions from \sab which shadow the transitions from \sb.
+		Hence if $\lambda \in A$ we must create transitions from \sa which shadow the transitions from \sb.
 		Thus for all $b \in \sigb$ we define
 		\[
-			\dalb(\sb, b) \subseteq \dalab(\sab, b).
+			\dalb(\sb, b) \subseteq \dalab(\sa, b).
 		\]
 		These transitions are represented in Figure~\ref{fig:mab_final} by the dotted line from \sa to \mb.
 		\begin{figure}[H]
@@ -736,7 +735,7 @@
 			\maub = (\qaub, \sigaub, \saub, \dalaub, \faub)
 		\] 
 		such that $L(\maub) = A \cup B$.
-		We build \maub by combining \ma and \mb in parallel, so that a string can will be accepted by \maub if it leads to an accepting state of either \ma or \mb.
+		We build \maub by combining \ma and \mb in parallel, so that a string will be accepted by \maub if it leads to an accepting state of either \ma or \mb.
 		
 		Clearly we need $\sigaub = \siga \cup \sigb$.
 
@@ -801,7 +800,7 @@
 		\noindent \textbf{(iii)} \hspace{\parindent}
 		We construct \mas to accept $A^*$ by linking \ma to itself to form a circle. % Circularize!
 		Since \mas should accept strings of $A$ repeated any number of times, we allow the accepting states of \ma to behave like initial states by adding transitions from \fa looping back into \ma.
-		To allow \mas to accept $\lambda$, we create a new accepting state to replace \sa as initial state.
+		To allow \mas to accept $\lambda$, we create a new accepting, \sas, state to replace \sa as initial state.
 
 		Let $\mas = (\qas, \siga, \sas, \dalas, \fas)$.
 		Note that the alphabet of \mas is exactly the alphabet of \ma.
@@ -947,7 +946,7 @@
 		\[
 			W_0(i, j) = \{ a \in \Sigma \cup \{ \lambda \} \mid \delta(q_i, a) = q_j \}.
 		\]
-		That is, $W_0(i, j)$ is the set of strings that take $M$ from $q_i$ top $q_j$ without passing through any intermediate states.
+		That is, $W_0(i, j)$ is the set of strings that take $M$ from $q_i$ to $q_j$ without passing through any intermediate states.
 		Clearly, every element of this set must be either a symbol of $\Sigma$ or, if and only if $i = j$, the empty string.
 		So for all $i$ and $j$, $W_0(i, j)$ must be of one of the following forms:
 		\begin{enumerate}[label=(\roman*), itemsep = -0.3 ex, nolistsep]
@@ -1053,7 +1052,7 @@
 		\]
 
 		This matrix simply shows the symbols attached to direct transitions from one state to another.
-		Now we combine the entires in this matrix to construct the matrix for $R_1(i, j)$.
+		Now we combine the entries in this matrix to construct the matrix for $R_1(i, j)$.
 		Note the changes in bold. 
 		The combined expressions quickly grow in size, so these have been simplified wherever possible:
 		\[
@@ -1065,7 +1064,7 @@
 			\end{bmatrix*}
 		\]
 
-		The entries in this matrix are the strings that take $M_3$ from state $i$ to state $j$, either directly or by passing through only state $1$ in between.
+		The entries in this matrix are the strings that take $M_3$ from state $i$ to state $j$, either directly or by passing through only state $q_1$ in between.
 		For example, it is possible to get from $q_3$ to $q_2$ and vice-versa via $q_1$.
 		Combining these entires, we obtain the following matrix for $R_2(i, j)$:
 		\[
@@ -1091,7 +1090,7 @@
 		Next, we have either $\lambda$, or a string made up of ``1'' and ``00'' repeated any number of times.
 		We can see that ``1'' will lead from $q_2$ back to itself, and that ``00'' will lead to $q_1$ and back to $q_2$.
 		Finally, all strings in this language must end in ``0'', which will lead from $q_2$ to $q_1$.
-		So the regular expression $10 (1+00)^* 0$ describes all strings that lead from $q_3$ to $q_2$, then then lead back to $q_2$, then lead to $q_1$.
+		So the regular expression $10 (1+00)^* 0$ describes all strings that lead from $q_3$ to $q_2$, then back to $q_2$, and finally lead to $q_1$.
 
 		Now let us consider a different numbering on the same automaton:
 		\begin{align*}
@@ -1160,9 +1159,9 @@
 		\[
 			R_2(3, 1) = 1 + (10 (1 + 00)^* 0).
 		\]
-		Since states $1$ and $3$ in the previous numbering are equivalent to states $2'$ and $3'$ respectively, in our current numbering, let us examine
+		Since states $1$ and $3$ in the previous numbering are equivalent to states $2'$ and $3'$, respectively, in our current numbering, let us examine
 		\[
-			R'_2(2', 3') = 0*1.
+			R'_2(2', 3') = 0^*1.
 		\]
 		This is clearly a very different expression.
 		By Figure~\ref{fig:m3_numbered_231} we see that $0^*$ leads from $q'_2$ back to itself, and ``1'' labels a direct transition from $q'_2$ to $q'_3$.
@@ -1184,7 +1183,7 @@
 		Observe that the first expression describes the Kleene closure of a union of three languages.
 		The first two of these are ``0'' and ``11''.
 		Consulting Figure~\ref{fig:m3_numbered_312}, it should be apparent how these denote paths from $q_3$ back to $q_3$.
-		The third language is described by $10 (1+00)* 01$.
+		The third language is described by $10 (1+00)^* 01$.
 		This gives all the strings that lead from $q_3$ to $q_2$, return to $q_2$ any number of times, then lead back to $q_3$.
 
 		The union of these three languages gives us the language of strings that lead $M_3$ from $q_3$ back to $q_3$, whether directly or by transiting the other states of the machine. 
