@@ -1,0 +1,102 @@
+\documentclass[12pt, twoside, letterpaper]{article}
+\usepackage[margin = 1 in]{geometry}
+
+% Lets me copy-paste from beamer without having to find and replace.
+\newcommand{\note}[2][a]{\begin{itemize}#2\end{itemize}}
+
+\begin{document}
+
+We start off with the basic definitions of formal language theory.
+\begin{itemize}
+	\item Symbol
+	\begin{itemize}
+		\item The most basic unit of formal language theory
+		\item like letters or numerals
+		\item Nothing you can break them down into and nothing you can combine to make them.
+	\end{itemize}
+
+	\item Alphabet
+	\begin{itemize}
+		\item A set of symbols
+		\item the Latin alphabet
+		\item 0 and 1 for binary numbers
+		\item Alphabets are nonempty and finite
+		\item When we need a symbol, we use sigma to represent an alphabet
+	\end{itemize}
+\end{itemize}
+
+We use symbols from an alphabet to form strings
+
+\begin{itemize}
+	\item Strings
+	\begin{itemize}
+		\item Aka words
+		\item sequences of symbols
+		\item ``over an alphabet'' means made of symbols from that alphabet
+		\item We assume finite length, but not nonempty:
+		\item the empty string 
+		\begin{itemize}
+			\item the string of length 0: notation on the slide.
+			\item contains no symbols
+			\item considered a string over any alphabet
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+\begin{itemize}
+	\item Languages
+	\begin{itemize}
+		\item sets of strings
+		\item Any set of strings over an alphabet is a language over that alphabet.
+		\item The empty set is the language that contains no strings, considered a language over any alphabet.
+	\end{itemize}
+	\item A language could be any set of strings --- you could specify all its members
+	\item We are interested in languages formed according to some rules, so that you can describe the language without listing all its members.
+
+\clearpage
+
+\end{itemize}
+
+\begin{itemize}
+	\item The regular languages are formed using three set operations
+	\item The first is union --- everyone should be familiar.
+	\item Concatenation
+	\begin{itemize}
+		\item Strings
+		\begin{itemize}
+			\item just the second string bolted onto the end of the first
+			\item you can concatenate ``light'' and ``bulb'' to get lightbulb \\ or ``bulb'' and ``light'' to get ``bulblight''
+		\end{itemize}
+		\item Languages
+		\begin{itemize}
+			\item The concatenation of two languages is their set product
+			\item The set of all strings formed by concatenating some word of the first language with some word of the second language.
+		\end{itemize}
+	\end{itemize}
+	\item Before we move on, I want to go over a few properties of concatenation, for both words and languages.
+	\item Empty string
+	\begin{itemize}
+		\item The concatenation of any word with the empty string is itself.
+		\item the product of a language and the set of just the empty string is the original language
+	\end{itemize}
+
+	\item Associative
+	\begin{itemize}
+		\item Concatenation is an associative operation on strings, which means that it is associative on languages as well.
+	\end{itemize}
+
+	\item Exponential notation
+	\begin{itemize}
+		\item We use exponential notation to represent a string or language concatenated with itself
+		\item A string or language to the zero is the empty string
+	\end{itemize}
+\end{itemize}
+
+With that notation out of the way, the last operation should make more sense.
+\begin{itemize}
+	\item Kleene closure
+	\begin{itemize}
+		\item 
+	\end{itemize}
+\end{itemize}
+
+\end{document}
