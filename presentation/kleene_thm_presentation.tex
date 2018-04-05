@@ -28,13 +28,13 @@
 
 \newif\ifpresstime
 	\presstimefalse
-	% \presstimetrue
+	\presstimetrue
 
 \mode<presentation>{
 	\setbeameroption{hide notes}
 }
 \mode<handout>{
-	\setbeameroption{show notes}
+	\setbeameroption{show only notes}
 	\pgfpagesuselayout{2 on 1}[letterpaper, border shrink=5mm]
 
 }
@@ -92,8 +92,6 @@
 		\item Language
 		\begin{itemize}
 			\pause
-			\item $\Sigma^*$: all words over $\Sigma$.
-			\pause
 			\item $\emptyset$
 		\end{itemize}
 	\end{itemize}
@@ -103,7 +101,7 @@
 	Can't be decomposed into anything and nothing can be combined into a symbol.
 
 	\textbf{Alphabet:} A restricted set of symbols.
-	Like the Latin alphabet for English or 0 and 1 for binary.
+	0 and 1 for binary.
 	We always assume that alphabets are nonempty and finite.
 
 	\textbf{String:} or Word, a sequence of symbols.
@@ -114,8 +112,7 @@
 }
 \note{
 	\textbf{Language:} A set of strings. 
-	For example, the set of all strings over an alphabet.
-	The empty set is the language of NO strings over an alphabet.
+	The \textbf{empty} set is the language of NO strings over an alphabet.
 	We could also just specify all the members of a language (like a dictionary).
 	We're more interested in languages that are formed according to some rules so that we can describe the language without specifying all its members.
 	We'll be dealing with the \textbf{regular languages}, which are formed using three set operations.
@@ -201,12 +198,14 @@
 		&= \{ \lambda \} \cup A \cup A^2 \cdots \\
 	\end{align*}
 	\pause
-	If $A = \{ w \}$ then $A^* = \{ \lambda, \: w, \: ww, \: www, \: \dots\}$.\\
+	If $A = \{ w \}$ then $A^* = \{ \lambda, \: w, \: ww, \: www, \: \dots\}$.\\[2 ex]
+	\pause
+	$\Sigma^*$: all strings over $\Sigma$.
 \end{frame}
 \note[itemize]{
 	\item The Kleene closure of a language is that language repeated any number of times.
 	\item If you have a language of just one word, you get the empty string, or that word repeated any number of times.
-	\item We already used the notation: the Kleene closure of an alphabet is the language of all possible strings over that alphabet
+	\item So the Kleene closure of an alphabet is all the possible strings over the alphabet.
 
 
 }
@@ -259,16 +258,18 @@
 	
 \end{frame}
 \note[itemize]{
-	\item Two ways of representing regular languages.
+	\item Two ways of representing languages.
 
 	\item[\click] The first is regular expressions
 	\begin{itemize}
 		\item Look pretty much the same as the set notation.
 		\item We drop some braces
 		\item We use a plus instead of the union symbol.
+		\item Difference: two regular expressions are considered distinct, even if the languages they describe are exactly the same.
 	\end{itemize}
 }
 
+\iffalse
 \begin{frame}{Regular Expressions}
 	\begin{exampleblock}{What's new here?}
 	Languages:
@@ -284,11 +285,13 @@
 
 \end{frame}
 \note[itemize]{
+	\item[] \textbf{What's new here?}
 	\item Regular expressions aren't languages, they're descriptions of languages.
 	\item Two regular expressions are considered distinct, even if the languages they describe are exactly the same.
 
 	\item The next way of representing regular languages is will probably seem more different.
 }
+\fi
 
 \begin{frame}
 	\frametitle{Finite Automata}
@@ -316,8 +319,8 @@
 	A \textbf{Finite automaton} is a machine with five parts.
 	It has a finite number of configurations, which we call states.
 	It moves between states when it receives an input symbol.
-	Elevator example.
-	We deal with machines that either accept or reject a string of inputs, based on the state of the machine after the input string.
+	Elevator example. (DON'T RAMBLE)
+	We deal with machines that either \textbf{accept or reject} a string of inputs, based on the state of the machine after the input string.
 	\begin{itemize}
 		\item $Q$ is a set of states, really a set of names for states.
 		These names are basically meaningless, typically they're just numbered.
@@ -384,28 +387,37 @@
 		\Delta : (Q \times \Sigma^*) \to Q
 	\]
 	\pause
-	For $w = abc \in \Sigma^*$:
+	For $abc \in \Sigma^*$:
 	\begin{align*}
-		\Delta(q_1, w) &= \delta(\Delta(q_1, ab), c) \\
-		& = \delta(\delta(\delta(q_1, a), b), c) \\
+		\Delta(q_1, abc) &= \delta \big( \Delta(q_1, ab), c \big) \\
+		& = \delta \Big( \delta \big( \delta(q_1, a), b \big), c \Big) \\
 	\end{align*}
 	
 	\pause
 	No transitions on $\lambda$:
 	\[
-		\delta(q_i, \lambda) = q_i
+		\Delta(q_i, \lambda) = q_i
 	\]
-	\pause
 
-	The machine \textbf{accepts} $w$ if $\Delta(s, w) \in F$.\\[2 ex]
-	\pause
-
-	A machine \textbf{represents} $L(M) = \{ w \in \Sigma^* \mid \Delta(s, w) \in F \}$.
 \end{frame}
 \note[itemize]{
 	\item We want to talk about the state of the machine after a string of inputs, not just after each symbol, so we want to extend the transition function
 	\item So now we have a transition on any string, not just on a symbol.
+	\item Define this by chaining together applications of the original transition function.
 	\item We don't transition on the empty string (although it's equally valid to define automata that have lambda-transitions.)
+}
+
+\begin{frame}
+	\frametitle{Finite Automata and Languages}
+	The machine \textbf{accepts} $w$ if $\Delta(s, w) \in F$.\\[2 ex]
+	\pause
+
+	A machine \textbf{represents} $L(M) = \{ w \in \Sigma^* \mid \Delta(s, w) \in F \}$. \\[2 ex]
+	\pause
+
+	A language is \textbf{representable} if it can be represented by finite automaton.
+\end{frame}
+\note[itemize]{
 	\item The machine accepts all the strings that take it from its start state to an accepting state
 	\item The machine represents the language of all strings that take it from $s$ to an accepting state.
 	\item Representable language --- can be represented by a finite automaton.
@@ -435,6 +447,8 @@
 	Automata with this restriction are DFAs.
 	\item We can build automata without this restriction: they are called nondeterministic, abbreviated to NDFA.
 	\item This automaton has two transitions from $q_0$ on $a$, to itself and to $q_1$. 
+	\item Multiple transitions means more than one state ``active''.
+	\item No transition $\implies$ dead state.
 			There is no transition from $q_1$ on $a$, and no transition from $q_0$ on $b$.
 	\item Talk about how it behaves.
 }
@@ -454,13 +468,21 @@
 	\]
 	instead of 
 	\[
-		\delta(q_0, a) = q_1 %\quad \text{ or } \quad \Delta(q_0, a) = q_1
+		\delta(q_0, a) = q_1. %\quad \text{ or } \quad \Delta(q_0, a) = q_1
 	\]
+	~\\[2 ex]
+	\pause
+	An NDFA accepts $w$ if
+	\[
+		\Delta(s, w) \cap F \neq \emptyset.
+	\]
+
 
 \end{frame}
 \note[itemize]{
 	\item any subset of the states may be active at once, so we need define transitions to the power set of $Q$.
 	\item Rather than say that a state IS EQUAL TO the result of a transition, we say that it is IN the result of the transition.
+	\item An NDFA is accepts an input if any of its accepting states are active.
 }
 
 \begin{frame}
@@ -563,6 +585,14 @@
 	Introduce my rough diagrams.
 	Mention that the sets of states are not shown with perfect accuracy.
 
+	\begin{itemize}
+		\item $s$ is the start state
+		\item $F$ is all the accepting states
+		\item $M_A$ represents any state of the machine
+		\item First arrow represents transitions from the initial state to any state of the automaton
+		\item And the second arrow represents transitions from any state to any accepting state.
+	\end{itemize}
+
 }
 
 \begin{frame}
@@ -587,11 +617,13 @@
 				\path[->](sb) edge (mb);
 				\path[->](mb) edge (fb);
 			}
-			\visible<3->{
+			\visible<4->{
 				\path[->](sab) edge [out=0, in=180, distance = 1.7 cm] (ma);
-				\path[->](sab) edge [out=0, in=180, distance = 1.7 cm] (mb);
 			}
 			\visible<4->{
+				\path[->](sab) edge [out=0, in=180, distance = 1.7 cm] (mb);
+			}
+			\visible<3->{
 				\node  (sab_label)   [below of = sab,node distance=1cm, text width=3cm] {\footnotesize{Accepting when\\$\lambda \in A \cup B$}};
 			}
 		\end{tikzpicture}
@@ -603,8 +635,8 @@
 	\item keep all the states of $M_A$ and $M_B$
 	\item Keep all the accepting states of $M_A$ and $M_B$.
 	\item[\click] Add a new initial state which we'll link into both machines
-	\item[\click] Add transitions from $s_\cup$ to mimic those from $s_A$ and $s_B$.
 	\item[\click] If either language contains the empty string, $s_\cup$ is accepting.
+	\item[\click] Add transitions from $s_\cup$ to mimic those from $s_A$ and $s_B$.
 
 }
 
@@ -627,17 +659,17 @@
 					\path[->](mb) edge (fb);
 				}
 
-				\visible<4->{
+				\visible<2->{
 					\path[->](ma) edge  [out=0, in=180, below, distance=4cm]          (sb);
 				}
 				\visible<5->{
 					\path[->](sab) edge [dashed,out=0, in=180, below, distance=2cm]   (mb);
 				}
-				\visible<3->{
+				\visible<4->{
 					\node  (sab_label)   [below of = sab,node distance=1cm, text width=3cm] {\footnotesize{Accepting when\\$\lambda \in A \cap B$}};
 				}
-				\visible<2->{
-					\node  (sab_label)   [below of = sb,node distance=1cm, text width=3cm]  {\footnotesize{Accepting when\\$\lambda \in  B$}};
+				\visible<3->{
+					\node  (sb_label)    [below of = sb,node distance=1cm, text width=3cm]  {\footnotesize{Accepting when\\$\lambda \in  B$}};
 				}
 			\end{tikzpicture}
 	\end{figure}
@@ -647,11 +679,11 @@
 	\item Connect the two machines in series
 	\item Keep all the states of both machines
 	\item The initial state of the new machine is the start state of $M_A$.
-	\item The accepting states are the accepting states of $M_B$. 
-	\item[\click] If lambda is in $B$, then $s_B$ is an accepting state.
 	\item The accepting states of $M_A$ are no longer accepting --- a string of $A$ needs to be followed by a string of $B$.
-	\item[\click] $s_A$ is accepting if lambda is in both $A$ and $B$.
+	\item The accepting states are the accepting states of $M_B$. 
 	\item[\click] Add transitions to $s_B$ shadowing those into $F_A$
+	\item[\click] If lambda is in $B$, then $s_B$ is an accepting state.
+	\item[\click] $s_A$ is accepting if lambda is in both $A$ and $B$.
 	\item[\click] If lambda in $A$, add transitions from $s_A$ that mimic those from $s_B$.
 }
 
@@ -697,9 +729,9 @@
 	\end{figure}
 \end{frame}
 \note[itemize]{
-	\item Link $M_A$ to itself to form a circle.
 	\item add a new start state, accepting to accept $\lambda$.
 	\item add transitions from $s_{A*}$ shadowing the transitions from $s_A$.
+	\item Link $M_A$ to itself to form a circle.
 	\item add transitions from every state in $F_A$ that mimic those from $s_A$.
 	\item Now we have all the operations and all the atomics, so we can represent all the regular languages.
 }
@@ -726,21 +758,40 @@
 \begin{frame}
 	\frametitle{Power Set Construction}
 	\begin{itemize}
-		\setlength\itemsep{1 ex}
+		\setlength\itemsep{2 ex}
 		\pause
-		\item[] $Q' = 2^Q$
-		\item[] $\{ q_1, q_2, \dots, q_n \} \subseteq Q \quad \implies \quad \{ q_1, q_2, \dots, q_n \} \in Q'$.
+		\item[] $Q' = 2^Q$\\[1 ex]
+		$\{ q_1, q_2, \dots, q_n \} \subseteq Q \quad \implies \quad \{ q_1, q_2, \dots, q_n \} \in Q'$.
 		\pause
 		\item[] $s' = \{ s \}$
 		\pause
 		\item[] $F' = \{ p \in Q' \mid p \cap F \neq \emptyset \}$
-		\pause
-		\item[] For $a \in \Sigma$,
+	\end{itemize}
+	~\\[2 em]
+	\pause
+	We have 
+	\begin{align*}
+		M' = (Q', \Sigma, \{ s \}, \delta', F')
+	\end{align*}
+	
+\end{frame}
+\note[itemize]{
+	\item Any subset of the states of $M$ may be active at any given time, so we need one state in $M'$ to represent each subset of $Q$.
+	\item[\click] Thus the set of states for our DFA is the power set of the states of our NDFA.
+	\item[\click] The initial state of $M'$ is the subset containing just the initial state of $M$.
+	\item[\click] The accepting states of $M'$ are all the subsets that contain an accepting state of $M$.
+	\item[\click] Everything except the transition function is defined
+
+}
+
+\begin{frame}
+	\frametitle{Power Set Construction}
+	For $a \in \Sigma$ define,
 		\begin{align*}
 			\delta'(\{ q_1, q_2, \dots, q_n \}, a) &= \delta(q_1, a) \cup \delta(q_2, a) \cup \cdots \cup \delta(q_n, a) \\
 			&= \bigcup_{i = 1}^n \delta(q_i, a)
 		\end{align*}
-	\end{itemize}
+
 	\pause
 	This works because
 	\[
@@ -752,12 +803,8 @@
 	\]
 \end{frame}
 \note[itemize]{
-	\item Any subset of the states of $M$ may be active at any given time, so we need one state in $M'$ to represent each subset of $Q$.
-	\item[\click] Thus the set of states for our DFA is the power set of the states of our NDFA.
-	\item[\click] The initial state of $M'$ is the subset containing just the initial state of $M$.
-	\item[\click] The accepting states of $M'$ are all the subsets that contain an accepting state of $M$.
 	\item[\click] The transitions in $M'$ are defined as a union of transitions in $M$.
-	\item[\click] This construction works because the active state in the DFA always corresponds exactly to the set of active states in the original NDFA
+	\item[\click] This works because the active state in the DFA always corresponds exactly to the set of active states in the original NDFA
 	\item Thus the set of inputs that lead to an accepting state correspond exactly. 
 }
 
@@ -767,11 +814,21 @@
 	\textit{We can construct a regular expression to describe the language accepted by any DFA.}\\[1 em]
 	\pause
 
-	Let $M$ be a DFA with $n$ states.
-	Number these states $q_1, q_2, \dots, q_n$.
+	Let $M$ be a DFA with states $Q = \{ q_1, q_2, \dots, q_n \}$
+	\pause
+
+	Let $1 \leq i, j \leq n$.\\
+	Let $0 \leq k \leq n$.\\
+
+	\pause
+
+
+
+	Create a regular expression $R_k(i, j)$. 
+	Takes $M$ from $q_i$ to $q_j$ without passing through a state numbered higher than $k$.
 
 	\[
-		R_0(i, j) = \{ a \in \Sigma^* \mid \delta(q_i, a) = q_j \}
+		R_0(i, j) = \{ a \in \Sigma \cup \{ \lambda \} \mid \delta(q_i, a) = q_j \}
 	\]
 
 
@@ -783,12 +840,16 @@
 \end{frame}
 \note[itemize]{
 	\item We have just shown that DFAs and NDFAs are equivalent, so we need only show that any language represented by a DFA is regular.
+	\item We have a DFA with states numbered from $1$ to $n$.
+	\item Examine the language that can take $M$ from $q_i$ to $q_j$ without passing through any states numbered higher than $k$.
+	\item So for $k = 0$, we only consider direct transitions.
+	\item For $k = 1$, we are only allowed to pass through $q_1$, and so on.
 	\item 
 	\item This completes the proof of Kleene's theorem.
 }
 
 \begin{frame}
-	\frametitle{Example of that Last Bit}
+	\frametitle{Example}
 	Remember this?
 	\begin{figure}[H]
 		\centering
