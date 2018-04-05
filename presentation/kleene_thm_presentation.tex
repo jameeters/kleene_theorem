@@ -4,6 +4,7 @@
 \usepackage{mathtools}
 \usepackage{amsfonts}
 \usepackage{amsmath}
+\usepackage{bm}
 \usepackage{graphicx}
 \usepackage{pgfpages}
 \usepackage[]{xcolor}
@@ -14,6 +15,7 @@
 \newcommand{\meo}[1]{\texttt{#1}} % My Eyes Only: notes just for me
 \newcommand{\bigo}{\mathcal{O}}
 \newcommand{\extra}[1]{{\color{purple} {#1}}}
+\newcommand{\click}{$\bm{\star}$}
 
 \usetheme{default}
 \usecolortheme{beaver}
@@ -53,7 +55,6 @@
 		initial text = {\scriptsize{\textsc{start}}},
 		initial distance = 1 pt,
 		every initial by arrow/.style={->},
-		initial below,
 		elliptic state/.style={draw,rounded rectangle},
 		accepting/.style ={thick, double}
 	}
@@ -66,6 +67,11 @@
 
 \frame{
 	\titlepage
+}
+\note[itemize]{
+	\item Proof of Kleene's theorem
+	\item Related to the popularity of regular expressions
+	\item Start with an introduction to formal language theory, then prove Kleene's theorem, then go through examples and applications.
 }
 
 \begin{frame}
@@ -170,19 +176,19 @@
 			\end{flalign*}
 	\end{columns}
 \end{frame}
-\note{
-	Start with concatenation of strings --- just bolting one string onto the end of the other: ``run'' and ``way'' to get runway.\\[2 ex]
+\note[itemize]{
+	\item Concatenation of strings is simple --- just bolt one string onto the end of the other: ``run'' and ``way'' to get runway.
 
-	For languages, we use the set product.
-	The concatenation of two languages is the language of words from the first language concatenated with words of the second language.\\[2 ex]
+	\item For languages, we use the set product. 
+		Any word of the first language concatenated with any word of the second language.
 
-	Next I want to go over a bit of notation that will make the Kleene Closure easier to understand.\\[2 ex]
+	\item A bit of notation that will make the Kleene Closure easier to understand.
 
-	We use superscripts to denote concatenating a word with itself, or repeating the word some number of times.
-	So repeating a word zero times gets us the empty string.\\[2 ex]
+	\item We use superscripts to denote concatenating a word with itself, or repeating the word some number of times.
+		So repeating a word zero times gets us the empty string.
 
-	The same is true for languages. 
-	But note that repeating a language $n$ times doesn't get us all the strings in that language repeated $n$ times, it gets us any combination of $n$ words from that language.
+	\item The same is true for languages. 
+		But note that repeating a language $n$ times doesn't get us all the strings in that language repeated $n$ times, it gets us any combination of $n$ words from that language.
 
 }
 
@@ -195,12 +201,13 @@
 		&= \{ \lambda \} \cup A \cup A^2 \cdots \\
 	\end{align*}
 	\pause
-	If $A = \{ w \}$ then $A^* = \{ \lambda, \: w, \: ww, \: www, \: \dots\}$.
+	If $A = \{ w \}$ then $A^* = \{ \lambda, \: w, \: ww, \: www, \: \dots\}$.\\
 \end{frame}
-\note{
-	The Kleene closure of a language is that language repeated any number of times.\\[2 ex]
+\note[itemize]{
+	\item The Kleene closure of a language is that language repeated any number of times.
+	\item If you have a language of just one word, you get the empty string, or that word repeated any number of times.
+	\item We already used the notation: the Kleene closure of an alphabet is the language of all possible strings over that alphabet
 
-	If you have a language of just one word, you get the empty string, or that word repeated any number of times.
 
 }
 
@@ -223,14 +230,13 @@
 		\item $A^*$
 	\end{itemize}
 \end{frame}
-\note{
-	The \textbf{atomic} regular languages are the regular languages over any arbitrary alphabet.
-	They are the basis for all other regular languages.
-	The language containing no strings.
-	The language containing just the empty string.
-	The language containing a one-symbol string for each symbol in the alphabet. \\[2 ex]
-
-	And if $A$ and $B$ are regular languages, then so are their union, concatenation, and Kleene Closure.
+\note[itemize]{
+	\item The \textbf{atomic} regular languages are the regular languages over any arbitrary alphabet.
+	\item They are the basis for all other regular languages.
+	\item[\click] The language containing no strings.
+	\item[\click] The language containing just the empty string.
+	\item[\click] The language containing a one-symbol string for each symbol in the alphabet.
+	\item[\click] And if $A$ and $B$ are regular languages, then so are their union, concatenation, and Kleene Closure.
 }
 
 \begin{frame}
@@ -243,26 +249,24 @@
 		\item $\lambda$ means $\{ \lambda \}$;
 		\item $a$ means $\{ a \}$ for any $a \in \Sigma$.
 	\end{itemize}~\\[1 ex]
-	\pause
+
 	If $\alpha$ means $A$ and $\beta$ means $B$, then
 	\begin{itemize}
 		\item $\alpha \beta$ means $AB$;
 		\item $\alpha + \beta$ means $A \cup B$;
 		\item $\alpha^*$ means $A^*$.
 	\end{itemize}
-	\pause
 	
 \end{frame}
-\note{
-	Now we're going to go over two ways of representing regular languages.\\[2 ex]
+\note[itemize]{
+	\item Two ways of representing regular languages.
 
-	The first is \textbf{regular expressions}, which look almost exactly the same as the set notation we just used.
-	The only differences are, we drop some braces, and use a plus instead of the union symbol. \\[ 2 ex]
-
-	The actual difference is that regular expressions are a shorthand for regular languages so they aren't languages themselves, they're statements about languages.
-	Two regular expressions are considered distinct, even if the languages they describe are exactly the same.\\[2 ex]
-
-	The next way of representing regular languages is will probably seem more different.
+	\item[\click] The first is regular expressions
+	\begin{itemize}
+		\item Look pretty much the same as the set notation.
+		\item We drop some braces
+		\item We use a plus instead of the union symbol.
+	\end{itemize}
 }
 
 \begin{frame}{Regular Expressions}
@@ -279,6 +283,12 @@
 	\end{exampleblock}
 
 \end{frame}
+\note[itemize]{
+	\item Regular expressions aren't languages, they're descriptions of languages.
+	\item Two regular expressions are considered distinct, even if the languages they describe are exactly the same.
+
+	\item The next way of representing regular languages is will probably seem more different.
+}
 
 \begin{frame}
 	\frametitle{Finite Automata}
@@ -324,7 +334,7 @@
 \begin{frame}
 	\frametitle{Building a Finite Automaton}
 	\begin{center}
-	\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+	\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm, initial below]
 		\pause % 1
 		\temporal<3>
 		{\node[state] (q0)                     {$q_0$};}
@@ -353,7 +363,8 @@
 	\visible<3->{$s = q_0$}\\
 	\visible<4->{$F = \{ q_0 \}$}\\
 	\visible<5->{$\Sigma = \{ 0, 1 \}$}
-
+	~\\[2 ex]
+	\visible<12->{Test: $10101_b = 21$}
 \end{frame}
 \note[itemize]{
 	\item Build a finite automaton to accept binary numbers divisible by 3. (reading from the most significant bit).
@@ -362,6 +373,7 @@
 	\item We accept strings divisible by 3, so $q_0$ is our only accepting state
 	\item The possible input symbols are obviously 0 and 1.
 	\item Now go through the transitions.
+	\item Test: $21 = 10101_b$
 }
 
 \begin{frame}
@@ -372,10 +384,12 @@
 		\Delta : (Q \times \Sigma^*) \to Q
 	\]
 	\pause
-	For $wa \in \Sigma^*$:
-	\[
-		\Delta(q_1, wa) = \delta(\Delta(q_1, w), a)
-	\]
+	For $w = abc \in \Sigma^*$:
+	\begin{align*}
+		\Delta(q_1, w) &= \delta(\Delta(q_1, ab), c) \\
+		& = \delta(\delta(\delta(q_1, a), b), c) \\
+	\end{align*}
+	
 	\pause
 	No transitions on $\lambda$:
 	\[
@@ -394,6 +408,7 @@
 	\item We don't transition on the empty string (although it's equally valid to define automata that have lambda-transitions.)
 	\item The machine accepts all the strings that take it from its start state to an accepting state
 	\item The machine represents the language of all strings that take it from $s$ to an accepting state.
+	\item Representable language --- can be represented by a finite automaton.
 }
 
 \begin{frame}
@@ -445,12 +460,12 @@
 \end{frame}
 \note[itemize]{
 	\item any subset of the states may be active at once, so we need define transitions to the power set of $Q$.
-	\item We say that a state is IN the result of the transition, rather than EQUAL to the result of the transition.
+	\item Rather than say that a state IS EQUAL TO the result of a transition, we say that it is IN the result of the transition.
 }
 
 \begin{frame}
 	\frametitle{Kleene's Theorem}
-	A language is represented by a finite automaton if and only if it is regular.
+	A language representable if and only if it is regular.
 
 	\begin{enumerate}
 		\pause
@@ -461,6 +476,14 @@
 		\item All representable languages are regular.
 	\end{enumerate}
 \end{frame}
+\note[itemize]{
+	\item A language is representable by a finite automaton if and only if it is regular.
+	\item We prove this in three parts
+	\item [\click] All regular languages are representable by an NDFA
+	\item [\click] NDFAs and DFAs are equivalent, they represent the same family of languages.
+	\item [\click] All representable languages are regular.
+}
+
 
 \begin{frame}
 	\frametitle{The Atomic Regular Languages are Representable}
@@ -510,6 +533,7 @@
 \begin{frame}
 	\frametitle{Combining Representable Languages}
 	\begin{figure}[H]
+		\centering
 		\begin{subfigure}{0.5 \textwidth}
 			\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm, initial left]
 				\node[initial,state]    (q0)                   {$s_A$};
@@ -518,6 +542,7 @@
 				\path[->](q0) edge (ma);
 				\path[->](ma) edge (fa);
 			\end{tikzpicture}
+			\caption*{$L(M_A) = A$}
 		\end{subfigure}\\[2 em]
 		\begin{subfigure}{0.5 \textwidth}
 			\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm, initial left]
@@ -527,6 +552,7 @@
 				\path[->](q0) edge (mb);
 				\path[->](mb) edge (fb);
 			\end{tikzpicture}
+			\caption*{$L(M_B) = B$}
 		\end{subfigure}
 	\end{figure}
 \end{frame}
@@ -571,14 +597,220 @@
 		\end{tikzpicture}
 	\end{figure}
 \end{frame}
+\note[itemize]{
+	\item Need a machine to accept strings from either language.
+	\item Connect $M_A$ and $M_B$ in parallel.
+	\item keep all the states of $M_A$ and $M_B$
+	\item Keep all the accepting states of $M_A$ and $M_B$.
+	\item[\click] Add a new initial state which we'll link into both machines
+	\item[\click] Add transitions from $s_\cup$ to mimic those from $s_A$ and $s_B$.
+	\item[\click] If either language contains the empty string, $s_\cup$ is accepting.
+
+}
 
 \begin{frame}
 	\frametitle{Concatenation of Representable languages}
-	
+	\begin{figure}[H]
+		\centering
+			\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=3cm, initial left]
+				\visible<1->{
+					\node[initial,state]    (sab)                   {$s_A$};
+					\node[elliptic state]   (ma)  [right of = sab]  {$\quad M_A \quad$};
+					\node[state]            (fa)  [right of = ma]   {$F_A$};
+					\path[->](sab) edge (ma);
+					\path[->](ma) edge (fa);
+
+					\node[state]            (sb)  [below of = ma, node distance = 2cm]  {$s_B$};
+					\node[elliptic state]   (mb)  [right of = sb]         {$\quad M_B \quad$};
+					\node[state, accepting] (fb)  [right of = mb]         {$F_B$};
+					\path[->](sb) edge (mb);
+					\path[->](mb) edge (fb);
+				}
+
+				\visible<4->{
+					\path[->](ma) edge  [out=0, in=180, below, distance=4cm]          (sb);
+				}
+				\visible<5->{
+					\path[->](sab) edge [dashed,out=0, in=180, below, distance=2cm]   (mb);
+				}
+				\visible<3->{
+					\node  (sab_label)   [below of = sab,node distance=1cm, text width=3cm] {\footnotesize{Accepting when\\$\lambda \in A \cap B$}};
+				}
+				\visible<2->{
+					\node  (sab_label)   [below of = sb,node distance=1cm, text width=3cm]  {\footnotesize{Accepting when\\$\lambda \in  B$}};
+				}
+			\end{tikzpicture}
+	\end{figure}
 \end{frame}
+\note[itemize]{
+	\item Needs to accept strings of $A$ concatenated with strings of $B$.
+	\item Connect the two machines in series
+	\item Keep all the states of both machines
+	\item The initial state of the new machine is the start state of $M_A$.
+	\item The accepting states are the accepting states of $M_B$. 
+	\item[\click] If lambda is in $B$, then $s_B$ is an accepting state.
+	\item The accepting states of $M_A$ are no longer accepting --- a string of $A$ needs to be followed by a string of $B$.
+	\item[\click] $s_A$ is accepting if lambda is in both $A$ and $B$.
+	\item[\click] Add transitions to $s_B$ shadowing those into $F_A$
+	\item[\click] If lambda in $A$, add transitions from $s_A$ that mimic those from $s_B$.
+}
+
+\begin{frame}
+	\frametitle{Kleene Closure of a Representable Language}
+	\begin{figure}[H]
+		\centering
+			\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2.5cm, initial left]
+				\visible<2->{
+					\node[initial,accepting,state]    (sas)                   {$s_{A^*}$};
+				}
+
+				\visible<1->{
+					\node[state]            (sa)  [right of = sas]            {$s_A$};
+					\node[elliptic state]   (ma)  [right of = sa]             {$\quad M_A \quad$};
+					\node[state,accepting]  (fa)  [right of = ma]             {$F_A$};
+					\path[->](sa) edge (ma);
+					\path[->](ma) edge (fa);
+				}
+
+				\node (ghost_start)  [above of = sa,         node distance = 1 cm,   inner sep = 0 cm] {};
+				\node (ghost_start2) [left of  =ghost_start, node distance = 0.1 cm, inner sep = 0 cm] {};
+
+				\visible<3->{
+					\path[-] (sas)          edge [out=0, in=180, above, distance = 1 cm] (ghost_start);
+					\path[-] (ghost_start)  edge [out=0, in=180]                         (ghost_start2);
+					\path[->](ghost_start)  edge [out=0, in=180, above, distance = 1 cm] (ma);
+				}
+				% I tried a Bezier, but I'd need more than 4 control points to get the results I want
+				\node (ghost_end)  [below of = fa,        node distance = 1.2 cm, inner sep = 0 cm] {};
+				\node (ghost_end2) [right of = ghost_end, node distance = 0.2 pt, inner sep = 0 cm] {};
+				\node (ghost_mid)  [below of = ma,        node distance = 1.2 cm, inner sep = 0 cm] {};
+				\node (ghost_mid2) [left of  = ghost_mid, node distance = 0.2 cm, inner sep = 0 cm] {};
+
+				\visible<4->{
+					\path[-]  (fa)         edge [out=0,   in=0,   below, distance = 1.5 cm] (ghost_end);
+					\path[-]  (ghost_end2) edge [out=180, in=0]                             (ghost_end);
+					\path[-]  (ghost_end)  edge [out=180, in=0]                             (ghost_mid);
+					\path[-]  (ghost_mid2) edge [out=0,   in=0]                             (ghost_mid);
+					\path[<-] (ma)         edge [out=180, in=180, below, distance = 1.5 cm] (ghost_mid);
+				}
+			\end{tikzpicture}
+	\end{figure}
+\end{frame}
+\note[itemize]{
+	\item Link $M_A$ to itself to form a circle.
+	\item add a new start state, accepting to accept $\lambda$.
+	\item add transitions from $s_{A*}$ shadowing the transitions from $s_A$.
+	\item add transitions from every state in $F_A$ that mimic those from $s_A$.
+	\item Now we have all the operations and all the atomics, so we can represent all the regular languages.
+}
+
+\begin{frame}
+	\frametitle{NDFAs and DFAs are Equivalent}
+	\textit{A language is representable by an NDFA if and only if it is representable by a DFA.}\\[1 em]
+	\pause
+	All DFAs are NDFAs: nothing to prove in that direction.\\[1 em]
+
+	\pause
+	For an NDFA $M = (Q, \Sigma, s, \delta, F)$ construct a DFA $M'$ such that
+	\[
+		L(M') = L(M).
+	\]
+\end{frame}
+\note[itemize]{
+	\item We need to show that any language represented by an NDFA can be represented by a DFA, and vice-versa.
+	\item All DFAs are actually NDFAs already, so we don't have to worry about the vice-versa part.
+	\item For any NDFA, we need to construct a DFA that accepts the same language.
+	\item I'm just going to skim over the construction we use.
+}
+
+\begin{frame}
+	\frametitle{Power Set Construction}
+	\begin{itemize}
+		\setlength\itemsep{1 ex}
+		\pause
+		\item[] $Q' = 2^Q$
+		\item[] $\{ q_1, q_2, \dots, q_n \} \subseteq Q \quad \implies \quad \{ q_1, q_2, \dots, q_n \} \in Q'$.
+		\pause
+		\item[] $s' = \{ s \}$
+		\pause
+		\item[] $F' = \{ p \in Q' \mid p \cap F \neq \emptyset \}$
+		\pause
+		\item[] For $a \in \Sigma$,
+		\begin{align*}
+			\delta'(\{ q_1, q_2, \dots, q_n \}, a) &= \delta(q_1, a) \cup \delta(q_2, a) \cup \cdots \cup \delta(q_n, a) \\
+			&= \bigcup_{i = 1}^n \delta(q_i, a)
+		\end{align*}
+	\end{itemize}
+	\pause
+	This works because
+	\[
+		\Delta'(\{ s \}, w) = \Delta(s, w) \quad \text{for all } w \in \Sigma^*
+	\]
+	which implies
+	\[
+		\Delta'(\{ s \}, w) \in F' \iff \Delta(s, w) \subseteq F.
+	\]
+\end{frame}
+\note[itemize]{
+	\item Any subset of the states of $M$ may be active at any given time, so we need one state in $M'$ to represent each subset of $Q$.
+	\item[\click] Thus the set of states for our DFA is the power set of the states of our NDFA.
+	\item[\click] The initial state of $M'$ is the subset containing just the initial state of $M$.
+	\item[\click] The accepting states of $M'$ are all the subsets that contain an accepting state of $M$.
+	\item[\click] The transitions in $M'$ are defined as a union of transitions in $M$.
+	\item[\click] This construction works because the active state in the DFA always corresponds exactly to the set of active states in the original NDFA
+	\item Thus the set of inputs that lead to an accepting state correspond exactly. 
+}
+
+\begin{frame}
+	\frametitle{All Representable Languages are Regular}
+
+	\textit{We can construct a regular expression to describe the language accepted by any DFA.}\\[1 em]
+	\pause
+
+	Let $M$ be a DFA with $n$ states.
+	Number these states $q_1, q_2, \dots, q_n$.
+
+	\[
+		R_0(i, j) = \{ a \in \Sigma^* \mid \delta(q_i, a) = q_j \}
+	\]
 
 
+	\[
+		R_{k+1}(i, j) = R_k(i, j) + (R_k(i, k) \; (R_k(k+1, k+1))^* \; R_k(k, j))
+	\]
 
+
+\end{frame}
+\note[itemize]{
+	\item We have just shown that DFAs and NDFAs are equivalent, so we need only show that any language represented by a DFA is regular.
+	\item 
+	\item This completes the proof of Kleene's theorem.
+}
+
+\begin{frame}
+	\frametitle{Example of that Last Bit}
+	Remember this?
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}[>=stealth',shorten >= 1 pt, auto, node distance = 2 cm]
+			\node[initial,state,accepting] (q0)                 {$q_3$};
+			\node[state]                   (q1) [right of = q0] {$q_1$};
+			\node[state]                   (q2) [right of = q1] {$q_2$};
+
+			\path[->](q0) edge [loop above] node {0} (q0);
+			\path[->](q0) edge [bend left]  node {1} (q1);
+			\path[->](q1) edge [bend left]  node {0} (q2);
+			\path[->](q1) edge [bend left]  node {1} (q0);
+			\path[->](q2) edge [bend left]  node {0} (q1);
+			\path[->](q2) edge [loop right] node {1} (q2);
+		\end{tikzpicture}
+	\end{figure}
+	It's numbered differently than before!
+\end{frame}
+\note[itemize]{
+	\item We have to number the states starting at 1, not 0.
+	\item This is the intuitive way to change the numbering
+}
 \begin{frame}[shrink]
 	\frametitle{References}
 	\bibliographystyle{amsplain}
