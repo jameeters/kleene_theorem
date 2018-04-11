@@ -20,6 +20,7 @@
 \newcommand{\bigo}{\mathcal{O}}
 \newcommand{\extra}[1]{{\color{purple} {#1}}}
 \newcommand{\click}{$\bm{\star}$}
+\newcommand{\gray}[1]{\color{gray}{#1}}
 
 \usetheme{default}
 \usecolortheme{beaver}
@@ -862,7 +863,7 @@
 
 \end{frame}
 \begin{frame}
-	\frametitle{Building Regular Expressions for Paths}
+	\frametitle{Regular Expressions for Direct Transitions}
 	Start with $k = 0$ \hspace{1 ex} (No intermediate states allowed.)
 	\pause
 
@@ -893,33 +894,40 @@
 
 
 \begin{frame}
-	\frametitle{Dr. Cilroie Wazere}
+	\frametitle{Regular Expressions for Indirect Transitions}
 
+	\begin{align*}
+		R_1(i, j) &= R_0(i, j) + \big(R_0(i, 1) \ (R_0(1, 1))^* \ R_0(1, j) \big) \\[1 ex]
+		\uncover<2->{
+			R_{k+1}(i, j) &= R_k(i, j) + \big( R_k(i, k) \ \big(R_k(k\!+\!1, k\!+\!1)\big)^* \ R_k(k, j) \big)
+		}
+	\end{align*}
+	\pause % uncover line 2.
+
+	\pause
 	\begin{figure}[H]
 		\centering
 		\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=3cm]
-			\node[state]            (qk)                       {$q_{k+1}$};
+			\visible<4->{
+			\node[state]            (qk)                       {$q_{k+1}$};}
 			\node[state]            (qi) [above left of = qk]  {$q_i$};
 			\node[state]            (qj) [above right of = qk] {$q_j$};
 			
 			\path[->] (qi) edge   [wavy]                                                            node {$R_k(i, j)$}     (qj);
-			\path[->] (qi) edge   [wavy, swap]                                                      node {$R_k(i, k)$}     (qk);
-			\path[->] (qk) edge   [less wavy, loop, out = 315, in = 235, looseness = 5, pos = 0.17] node {$(R_k(k, k))^*$} (qk);
-			\path[->] (qk) edge   [wavy, swap]                                                      node {$R_k(k, j)$}     (qj);
+
+			\visible<5->
+			{\path[->] (qi) edge   [wavy, swap]                                                      node {$R_k(i, k)$}     (qk);}
+
+			\visible<6->
+			{\path[->] (qk) edge   [wavy, loop, out = 320, in = 220, looseness = 5, pos = 0.17]      node {$\big(R_k(k\!+\!1, k\!+\!1)\big)^*$} (qk);}
+
+			\visible<7->
+			{\path[->] (qk) edge   [wavy, swap]                                                      node {$R_k(k, j)$}     (qj);}
 		\end{tikzpicture}
+		\caption*{\gray{Adapted from Harrison \cite[pg.~59]{lemmings}}}
 	\end{figure}
 \end{frame}
 
-\begin{frame}
-	\frametitle{What's Next}
-	A language representable if and only if it is regular.
-
-	\begin{enumerate}
-		\item[$\checkmark $1.] All regular languages are represented by an NDFA.
-		\item[$\checkmark $2.] A language is representable by an NDFA if and only if it is representable by a DFA.
-		\item[$\checkmark $3.] All representable languages are regular.
-	\end{enumerate}
-\end{frame}
 
 \begin{frame}
 	\frametitle{Example}
@@ -942,10 +950,20 @@
 	\end{figure}
 	It's numbered differently than before!
 \end{frame}
-\note[itemize]{
-	\item We have to number the states starting at 1, not 0.
-	\item This is the intuitive way to change the numbering
-}
+
+
+\begin{frame}
+	\frametitle{What's Next}
+	A language representable if and only if it is regular.
+
+	\begin{enumerate}
+		\item[$\checkmark $1.] All regular languages are represented by an NDFA.
+		\item[$\checkmark $2.] A language is representable by an NDFA if and only if it is representable by a DFA.
+		\item[$\checkmark $3.] All representable languages are regular.
+	\end{enumerate}
+\end{frame}
+
+
 \begin{frame}[shrink]
 	\frametitle{References}
 	\bibliographystyle{amsplain}
