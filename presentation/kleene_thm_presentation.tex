@@ -11,6 +11,10 @@
 \usepackage{tikz}
 \usepackage{subcaption}
 \usepackage{float}
+\usepackage{skull}
+\usepackage[makeroom]{cancel}
+\usepackage{latexsym}
+\usepackage{listings}
 
 \newcommand{\meo}[1]{\texttt{#1}} % My Eyes Only: notes just for me
 \newcommand{\bigo}{\mathcal{O}}
@@ -25,10 +29,11 @@
 \beamertemplatenavigationsymbolsempty
 \setbeameroption{show notes}
 
+\setlength{\parskip}{2 ex}
 
 \newif\ifpresstime
 	\presstimefalse
-	\presstimetrue
+	% \presstimetrue
 
 \mode<presentation>{
 	\setbeameroption{hide notes}
@@ -50,13 +55,15 @@
 		\date{\today}
 	\fi
 
-\usetikzlibrary{arrows, automata, shapes}
+\usetikzlibrary{arrows, automata, shapes, decorations.pathmorphing}
 \tikzset{
 		initial text = {\scriptsize{\textsc{start}}},
 		initial distance = 1 pt,
 		every initial by arrow/.style={->},
 		elliptic state/.style={draw,rounded rectangle},
-		accepting/.style ={thick, double}
+		accepting/.style ={thick, double},
+		wavy/.style={decorate, decoration={snake,amplitude=2 pt, segment length=5 pt, post length = 5 pt}},
+		less wavy/.style={decorate, decoration={snake,amplitude=2 pt, segment length=3 pt, post length = 5 pt}}
 	}
 
 
@@ -167,7 +174,7 @@
 		\pause
 			\begin{flalign*}
 				A^0 &= \{ \lambda\} 					& \\
-				A^1 &= A = A 							& \\
+				A^1 &= A 							& \\
 				A^2 &= AA = \{ xy \mid x, y \in A \}	& \\
 				A^k &= A A^{k-1}
 			\end{flalign*}
@@ -428,12 +435,20 @@
 		\node[state, initial]   (q0)                 {$q_0$};
 		\node[state]            (q1) [right of = q0] {$q_1$};
 		\node[state, accepting] (q2) [right of = q1] {$q_2$};
-		% \node[state, accepting] (q3) [right of = q2] {$q_3$};
+		\visible<5->{
+			\node[state, red]   (qx) [above of = q1] {$\skull$};
+		}
 
 		\path[->] (q0) edge [loop above]        node {$a$}       (q0);
 		\path[->] (q0) edge                     node {$a$}       (q1);
 		\path[->] (q1) edge                     node {$b$}       (q2);
 		\path[->] (q0) edge [bend right, below] node {$\lambda$} (q2);
+
+		\visible<5->{
+			\path[->] (q0) edge    [red, pos = 0.7] node {$b$}    (qx);
+			\path[->] (q1) edge    [red]            node {$a$}    (qx);
+			\path[->] (q2) edge    [red, swap]      node {$a, b$} (qx);
+		}
 	\end{tikzpicture}
 	\end{center}
 	\pause
@@ -471,7 +486,7 @@
 	\pause
 	An NDFA accepts $w$ if
 	\[
-		\Delta(s, w) \cap F \neq \emptyset.
+		\Delta(s, w) \subseteq F.
 	\]
 
 
@@ -699,7 +714,7 @@
 }
 
 \begin{frame}
-	\frametitle{Kleene's Theorem}
+	\frametitle{What's Next?}
 	A language representable if and only if it is regular.
 
 	\begin{enumerate}
@@ -782,7 +797,38 @@
 }
 
 \begin{frame}
-	\frametitle{Kleene's Theorem}
+	\frametitle{Power Set Construction Example}
+	\begin{columns}
+	\column{0.4 \textwidth}
+		\begin{figure}[H]
+			\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+				\node[state, initial, accepting] (q0)                       {$q_0$};
+				\node[state]                     (q1) [right of = q0]       {$q_1$};
+				\node[state]                     (q2) [below of = q0, xshift = 1 cm] {$q_2$};
+				
+				\path[->] (q0) edge [bend left] node {$a$}       (q1);
+				\path[->] (q1) edge [bend left] node {$b$}       (q0);
+				\path[->] (q1) edge [bend left] node {$b$}       (q2);
+				\path[->] (q2) edge [bend left] node {$a$}       (q0);
+			\end{tikzpicture}
+		\end{figure}
+	\column{0.6 \textwidth}
+		This is $M$.
+
+		$M$ accepts $(a(b + ba))^* = (ab+aba)^*$.
+
+		We want to construct a DFA $M'$.
+
+	\end{columns}
+	\alt<2->
+	{$Q' = \big\{ \emptyset, \{ q_0 \}, \{ q_1 \}, \cancel{\{ q_2 \}}, \{ q_0, q_1 \}, \{ q_0, q_2 \}, \cancel{\{ q_1, q_2 \}}, \cancel{\{ q_0, q_1, q_2 \}} \big\}$}
+	{$Q' = \big\{ \emptyset, \{ q_0 \}, \{ q_1 \}, \{ q_2 \}, \{ q_0, q_1 \}, \{ q_0, q_2 \}, \{ q_1, q_2 \}, \{ q_0, q_1, q_2 \} \big\}$}
+
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{What's Next?}
 	A language representable if and only if it is regular.
 
 	\begin{enumerate}
@@ -796,44 +842,76 @@
 	\frametitle{All Representable Languages are Regular}
 
 	\textit{We can construct a regular expression to describe the language accepted by any DFA.}\\[1 em]
-	\pause
 
 	Let $M$ be a DFA with states $Q = \{ q_1, q_2, \dots, q_n \}$
+
+	$1 \leq i, j \leq n$.
 	\pause
 
-	Let $1 \leq i, j \leq n$.\\
-	Let $0 \leq k \leq n$.\\
-
+	Look at paths $q_i \leadsto q_j$. 
 	\pause
 
+	$0 \leq k \leq n$.
 
+	Look at paths $q_i \leadsto q_j$ that do not pass through any state numbered higher than $k$.
+	\pause
 
-	Create a regular expression $R_k(i, j)$. 
-	Takes $M$ from $q_i$ to $q_j$ without passing through a state numbered higher than $k$.
+	$R_k(i, j)$ describes the words that label these paths.
 
-	\[
-		R_0(i, j) = \{ a \in \Sigma \cup \{ \lambda \} \mid \delta(q_i, a) = q_j \}
-	\]
-
-
-	\[
-		R_{k+1}(i, j) = R_k(i, j) + (R_k(i, k) \; (R_k(k+1, k+1))^* \; R_k(k, j))
-	\]
 
 
 \end{frame}
-\note[itemize]{
-	\item We have just shown that DFAs and NDFAs are equivalent, so we need only show that any language represented by a DFA is regular.
-	\item We have a DFA with states numbered from $1$ to $n$.
-	\item Examine the language that can take $M$ from $q_i$ to $q_j$ without passing through any states numbered higher than $k$.
-	\item So for $k = 0$, we only consider direct transitions.
-	\item For $k = 1$, we are only allowed to pass through $q_1$, and so on.
-	\item 
-	\item This completes the proof of Kleene's theorem.
-}
+\begin{frame}
+	\frametitle{Building Regular Expressions for Paths}
+	Start with $k = 0$ \hspace{1 ex} (No intermediate states allowed.)
+	\pause
+
+	$R_0(i, j)$ describes the \textbf{direct} transitions from $q_i$ to $q_j$.
+	\pause
+
+	\begin{align*}
+		R_0(i, j) &= 
+		\begin{cases}
+			\{ a \in \Sigma \mid \delta(q_i, a) = q_j \} 			& \text{ if } i \neq j \\
+			\{ a \in \Sigma \mid \delta(q_i, a) = q_j \} + \lambda 	& \text{ if } i = j
+		 \end{cases}\\[2 ex]
+		\uncover<4->{
+			&=
+			\begin{cases}
+				\emptyset \\
+				a_1 + a_2 + \cdots \\
+				\lambda \\
+				\lambda + a_1 + a_2 + \cdots
+			\end{cases}
+			\ (a_1, a_2, \dots \in \Sigma)
+		}
+	\end{align*}
+	\pause % I've forgotten the Act of Contrition
+	\pause
+	These are all regular!
+\end{frame}
+
 
 \begin{frame}
-	\frametitle{Kleene's Theorem}
+	\frametitle{Dr. Cilroie Wazere}
+
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=3cm]
+			\node[state]            (qk)                       {$q_{k+1}$};
+			\node[state]            (qi) [above left of = qk]  {$q_i$};
+			\node[state]            (qj) [above right of = qk] {$q_j$};
+			
+			\path[->] (qi) edge   [wavy]                                                            node {$R_k(i, j)$}     (qj);
+			\path[->] (qi) edge   [wavy, swap]                                                      node {$R_k(i, k)$}     (qk);
+			\path[->] (qk) edge   [less wavy, loop, out = 315, in = 235, looseness = 5, pos = 0.17] node {$(R_k(k, k))^*$} (qk);
+			\path[->] (qk) edge   [wavy, swap]                                                      node {$R_k(k, j)$}     (qj);
+		\end{tikzpicture}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{What's Next}
 	A language representable if and only if it is regular.
 
 	\begin{enumerate}
@@ -846,6 +924,7 @@
 \begin{frame}
 	\frametitle{Example}
 	Remember this?
+
 	\begin{figure}[H]
 		\centering
 		\begin{tikzpicture}[>=stealth',shorten >= 1 pt, auto, node distance = 2 cm]
@@ -872,6 +951,79 @@
 	\bibliographystyle{amsplain}
 	\nocite{*}
 	\bibliography{../paper/references.bib}
+\end{frame}
+
+
+\begin{frame}[fragile]
+	\frametitle{Questions?}
+	\begin{figure}[H]
+		\includegraphics[width = \textwidth]{../images/pumping_lemmings.png}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Power Set with $\lambda$--closure}
+
+	\centering
+	\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+		\node[state, initial]   (q0)                 {$q_0$};
+		\node[state]            (q1) [right of = q0] {$q_1$};
+		\node[state, accepting] (q2) [right of = q1] {$q_2$};
+		\node[state]            (qx) [above of = q1] {$\skull$};
+		
+		\path[->] (q0) edge [loop above]        node {$a$}       (q0);
+		\path[->] (q0) edge                     node {$a$}       (q1);
+		\path[->] (q1) edge                     node {$b$}       (q2);
+		\path[->] (q0) edge [bend right, below] node {$\lambda$} (q2);
+
+		\path[->] (q0) edge [pos = 0.7] node {$b$}    (qx);
+		\path[->] (q1) edge             node {$a$}    (qx);
+		\path[->] (q2) edge [swap]      node {$a, b$} (qx);
+	\end{tikzpicture}
+
+	\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+		\node[elliptic state, initial, accepting] (q02)                  {$\{ q_0, q_2 \}$};
+		\node[elliptic state]                     (q01) [right of = q02] {$\{ q_0, q_1 \}$};
+		\node[state, accepting]                   (q2)  [right of = q01] {$\{q_2\}$};
+		\node[state]                              (qx)  [below of = q1]  {$\emptyset$};
+		
+		\path[->] (q02) edge              node {$a$} (q01);
+		\path[->] (q01) edge [loop above] node {$a$} (q01);
+		\path[->] (q01) edge              node {$b$} (q2);
+
+		\path[->] (q02) edge [pos = 0.7, swap]   node {$b$}    (qx);
+		\path[->] (q2) edge                      node {$a, b$} (qx);
+		\path[->] (qx) edge  [loop below, right] node {$a, b$} (qx);
+	\end{tikzpicture}
+\end{frame}
+
+\begin{frame}
+	\frametitle{A picture that is too big!}
+	\centering
+	\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+		\visible<1->{
+			\node[state, initial, accepting] (q0)                         {$\{q_0\}$};
+		}
+		\visible<1->{
+			\node[state]                     (q1)  [right of = q0]        {$\{q_1\}$};
+		}
+		
+		\node[elliptic state, accepting] (q02) [right of = q1]        {$\{ q_0, q_2 \}$};
+		\node[elliptic state, accepting] (q01) [right of = q02]       {$\{ q_0, q_1 \}$};
+		
+		\path[->] (q0)  edge                                      node {$a$} (q1);
+		\path[->] (q1)  edge                                      node {$b$} (q02);
+		\path[->] (q02) edge [bend left]                          node {$a$} (q01);
+		\path[->] (q01) edge [bend left]                          node {$b$} (q02);
+		\path[->] (q01) edge [loop above, above, distance = 1 cm] node {$a$} (q1);
+
+		\node[state]                     (qx)  [below of = q1]        {$\emptyset$};
+		\path[->] (q0)  edge [bend right, swap]                                   node {$b$}    (qx);
+		\path[->] (q1)  edge                                                      node {$a$}    (qx);
+		\path[->] (q02) edge [bend left]                                          node {$b$}    (qx);
+		\path[->] (qx)  edge [loop right, out = 350, in = 300, distance = 0.7 cm] node {$a, b$} (qx);
+
+	\end{tikzpicture}
 \end{frame}
 
 \end{document}
