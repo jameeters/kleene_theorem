@@ -62,7 +62,7 @@
 
 %%% Begin information section 
 	%% title of your report?
-	\title{An Exemplified Proof of Kleene's Theorem}
+	\title{An Exemplified Proof of\\ Kleene's Theorem}
 
 	%% Your name 
 	\author{James McFeeters}
@@ -72,7 +72,7 @@
 	\advisor{Darrah Chavey}
 
 	%% Second reader's name? Ask the Colloquium Instructor who it will be.
-	\reader{Placeholder Name}
+	\reader{Patrice Leff\"ube}
 
 	\thesisyear{2018}
 	\thesismonth{March}
@@ -330,7 +330,7 @@
 			\[
 				\delta( \Delta(q_1, w), a) = q_n.
 			\]
-			We define $\delta(q_i, \lambda) = q_i$.
+			We define $\Delta(q_i, \lambda) = q_i$.
 			This defines $\Delta: (Q \times \Sigma^*) \mapsto Q$ \footcite{hopcroft}{17}.
 		\end{remark}
 
@@ -388,7 +388,7 @@
 				\node[state]                   (1) [right of = 0] {$q_1$};
 				\node[state]                   (2) [right of = 1] {$q_2$};
 			\end{tikzpicture}
-			\caption{$\miii$ without any transitions}
+			\caption{$\miii$ without any transitions.}
 			\label{fig:m3_1}
 		\end{figure}
 
@@ -488,9 +488,9 @@
 			This complication makes our definition of the transition function awkward to apply to NDFAs.
 			For an NDFA, we define the following refinement:
 			\[
-				\delta : (Q \times \Sigma) \mapsto 2^Q
+				\delta : (Q \times \Sigma) \mapsto \{ p \mid p \subseteq Q \}
 			\]
-			where $2^Q$ is the power set (set of all subsets) of $Q$.
+			where $\{ p \mid p \subseteq Q \}$ is the power set (set of all subsets) of $Q$.
 			This defines the result of a transition to be a set of states, rather than a single state, so rather than
 			\[
 				\delta(q_0, a) = q_1
@@ -534,7 +534,7 @@
 	\begin{proof}
 		We first show that the atomic regular languages are representable, then show that the result of any regular operation on representable languages is representable. The constructions used are adapted from Rosen \footcite{rosen}{880--881}.
 
-		It is simple to construct an NDFAs to accept the atomic regular languages:
+		It is simple to construct NDFAs to accept the atomic regular languages:
 		\begin{itemize}
 			\item [] $\emptyset$ is accepted by an automaton with one initial state, no accepting states, and no transitions, as depicted in Figure~\ref{sfig:ndfa_emptyset}.
 			\item [] $\{ \lambda \}$ is accepted by the NDFA with one state, which is both its initial state and an accepting state, as in Figure~\ref{sfig:ndfa_lambda}.
@@ -900,6 +900,10 @@
 		\]
 		where
 		\[
+			Q' = \{ p \mid p \subseteq Q \}
+		\]
+		and
+		\[
 			F' = \{ p \in Q' \mid p \cap F \neq \emptyset\}.
 		\]
 
@@ -923,7 +927,7 @@
 		Suppose that $|w| = 0$.
 		Then $w = \lambda$, and $M$ will remain in its initial state, so 
 		\[
-			\delta'(\{ s \}, \lambda) = \{ s \} = \delta(s, \lambda).
+			\Delta'(\{ s \}, \lambda) = \{ s \} = \Delta(s, \lambda).
 		\]
 
 		Now suppose that $\Delta'(\{ s \}, w) = \Delta(s, w)$ for all $w \in \Sigma^*$ with $|w| \leq N$.
@@ -980,7 +984,7 @@
 
 		For $k \geq 1$ we define
 		\[
-			W_k(i, j) = W_{k-1}(i, j) \cup W_{k-1}(i, k) \ W_{k-1}(k, k)^* \ W_{k-1}(k, j).
+			W_k(i, j) = W_{k-1}(i, j) \cup W_{k-1}(i, k) \ \big(W_{k-1}(k, k)\big)^* \ W_{k-1}(k, j).
 		\]
 		That is, $W_k(i, j)$ is the union of two languages:
 		The first is the language of all strings that take $M$ from $q_i$ to $q_j$ using vertices numbered less than $k$.
@@ -991,19 +995,19 @@
 
 		For all $i$ and $j$, we know that 
 		\[
-			W_{l+1}(i, j) = W_l(i, j) \ \cup \ W_l(i, k)\ W_l(l+1, l+1)^* \ W_l(l+1, j).
+			W_{l+1}(i, j) = W_l(i, j) \enspace \cup \enspace W_l(i, l\tp1)\ \big(W_l(l\tp1, l\tp1)\big)^* \ W_l(l\tp1, j).
 		\]
 		By our inductive hypothesis, we know that the languages 
 		\begin{enumerate}[label = (\roman*), itemsep = -0.3 ex, nolistsep]
 			\item $W_l(i, j)$
-			\item $W_l(i, k)$
-			\item $W_l(l+1, l+1)$
-			\item $W_l(l+1, j)$
+			\item $W_l(i, l\tp1)$
+			\item $W_l(l\tp1, l\tp1)$
+			\item $W_l(l\tp1, j)$
 		\end{enumerate}
 		are all regular.
-		Thus $W_l(l+1, l+1)^*$ is regular as the Kleene closure of a regular language, and 
+		Thus $\big(W_l(l\tp1, l\tp1)\big)^*$ is regular as the Kleene closure of a regular language, and 
 		\[
-			W_l(i, k)\, W_l(l+1, l+1)^*\, W_l(l+1, j)
+			W_l(i, l\tp1)\, W_l(l\tp1, l\tp1)^*\, W_l(l\tp1, j)
 		\] 
 		is regular as a concatenation of regular languages.
 		Thus $W_{l+1}(i, j)$ is regular as a union of regular languages.
@@ -1033,7 +1037,7 @@
 		\begin{align*}
 			R_0(i, j) &= a_1 + a_2 + \cdots \text{ for all } \{ a_m \in \Sigma \cup \{ \lambda \} \mid \delta(q_i, a_m) = q_j \} \\
 			\text{and}\\
-			R_{k+1}(i, j) &= R_k(i, j) + \big( R_k(i, k) \ (R_k(k+1, k+1))^* \ R_k(k, j) \big)
+			R_{k+1}(i, j) &= R_k(i, j) + \big( R_k(i, k\tp1) \ (R_k(k\tp1, k\tp1))^* \ R_k(k\tp1, j) \big)
 		\end{align*}
 		
 
@@ -1175,7 +1179,7 @@
 			R'_2 (i, j) = 
 			\begin{bmatrix*}[l]
 				1^*			& \emptyset		& 1^*0 										\\
-				\emptyset 	& \bm{0*}		& \bm{0^*}1									\\
+				\emptyset 	& \bm{0^*}		& \bm{0^*}1									\\
 				01^* 		& 1\bm{0^*} 	& \lambda + 01^*0 + \bm{1 0^* 1} 			\\
 			\end{bmatrix*}
 		\]
@@ -1250,8 +1254,10 @@
 \mychapter{Motivation} % (fold)
 \label{sec:motivation}
 
-	The relationship between regular languages and DFAs established by Kleene's theorem plays a significant role in the ubiquity of regular expression-based software tools. 
+	The relationship between regular languages and finite automata established by Kleene's theorem plays a significant role in the ubiquity of regular expression-based software tools. 
 	In this chapter, we will discuss some of the formalisms used to leverage Kleene's theorem in practice and provide examples to demonstrate the power and utility of regular expressions.
+	% I reworded this to avoid the margins, now it hyphenates a word on 4/5 line breaks.
+	% I cannot win.
 
 	\section{Formalisms} % (fold)
 	\label{sec:formalisms}
@@ -1298,7 +1304,7 @@
 					\path[->](q2) edge [loop right] node {1} (q2);
 				\end{tikzpicture}
 			} \\
-			\subfloat[The matrix representing $M_3$]{
+			\subfloat[The matrix representing $M_3$.]{
 			\label{sfig:m3_matrix}
 				\framebox[0.5 \textwidth]{
 				\begin{tabular}{c c c}
@@ -1336,17 +1342,20 @@
 		Table~\ref{tab:grep_regexps} gives some examples of the syntax used by \texttt{grep}:
 
 		\begin{figure}[H]
+			\renewcommand{\v}[1]{\verb!{#1}!}
+			\centering
 			\begin{tabular}{r l}
-				\textbf{Expression} 	& \textbf{Meaning} \\
+				\textbf{Expression} 		& \textbf{Meaning} \\
 				\hline
-				$.$ 					& Any character \\
-				$a$ 					& The letter $a$ \\
-				$a?$ 					& $a$ once or zero times \\
-				$a*$ 					& $a$ zero or more times \\
-				$a+$ 					& $a$ one or more times \\
-				$a \{ n, m \}$ 			& $a$ between $n$ and $m$ times \\
-				$[\char`^{} abc]$ 		& any character except $a$, $b$, or $c$ \\
-				$(a | b)$ 				& either $a$ or $b$ \\
+				\verb!.! 			& Any character \\
+				\verb!a! 			& The letter \verb!a! \\
+				\verb!a?! 			& \verb!a! once or zero times \\
+				\verb!a*! 			& \verb!a! zero or more times \\
+				\verb!a+! 			& \verb!a! one or more times \\
+				\verb!a{n, m}! 	& \verb!a! between \verb!n! and \verb!m! times \\
+				\verb![^abc]! 		& any character except \verb!a!, \verb!b!, or \verb!c! \\
+				\verb!(a|b)! 		& either \verb!a! or \verb!b! \\
+				\hline
 			\end{tabular}
 			\caption{
 				A sampling of the regular expression syntax used by \texttt{grep} \cite{man_grep}.
