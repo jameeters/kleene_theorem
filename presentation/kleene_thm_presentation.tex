@@ -34,7 +34,7 @@
 
 \newif\ifpresstime
 	\presstimefalse
-	% \presstimetrue
+	\presstimetrue
 
 \mode<presentation>{
 	\setbeameroption{hide notes}
@@ -44,7 +44,6 @@
 	\pgfpagesuselayout{2 on 1}[letterpaper, border shrink=5mm]
 
 }
-
 
 \ifpresstime
 		\renewcommand{\meo}[1]{}
@@ -821,9 +820,17 @@
 		We want to construct a DFA $M'$.
 
 	\end{columns}
-	\alt<2->
-	{$Q' = \big\{ \emptyset, \{ q_0 \}, \{ q_1 \}, \cancel{\{ q_2 \}}, \{ q_0, q_1 \}, \{ q_0, q_2 \}, \cancel{\{ q_1, q_2 \}}, \cancel{\{ q_0, q_1, q_2 \}} \big\}$}
+	\alt<-2>
 	{$Q' = \big\{ \emptyset, \{ q_0 \}, \{ q_1 \}, \{ q_2 \}, \{ q_0, q_1 \}, \{ q_0, q_2 \}, \{ q_1, q_2 \}, \{ q_0, q_1, q_2 \} \big\}$}
+	{$Q' = \big\{ \emptyset, \{ q_0 \}, \{ q_1 \}, \cancel{\{ q_2 \}}, \{ q_0, q_1 \}, \{ q_0, q_2 \}, \cancel{\{ q_1, q_2 \}}, \cancel{\{ q_0, q_1, q_2 \}} \big\}$}
+	\pause
+	\pause
+
+	\pause
+	$s' = \{ q_0 \}$
+
+	\pause
+	$F' = \{ \{ q_0 \}, \{ q_0, q_1 \}, \{ q_0, q_2 \} \}$
 
 
 \end{frame}
@@ -843,8 +850,10 @@
 	\frametitle{All Representable Languages are Regular}
 
 	\textit{We can construct a regular expression to describe the language accepted by any DFA.}\\[1 em]
+	\pause
 
 	Let $M$ be a DFA with states $Q = \{ q_1, q_2, \dots, q_n \}$
+	\pause
 
 	$1 \leq i, j \leq n$.
 	\pause
@@ -899,7 +908,7 @@
 	\begin{align*}
 		R_1(i, j) &= R_0(i, j) + \big(R_0(i, 1) \ (R_0(1, 1))^* \ R_0(1, j) \big) \\[1 ex]
 		\uncover<2->{
-			R_{k+1}(i, j) &= R_k(i, j) + \big( R_k(i, k) \ \big(R_k(k\!+\!1, k\!+\!1)\big)^* \ R_k(k, j) \big)
+			R_{k+1}(i, j) &= R_k(i, j) + \big( R_k(i, k\!+\!1) \ \big(R_k(k\!+\!1, k\!+\!1)\big)^* \ R_k(k\!+\!1, j) \big)
 		}
 	\end{align*}
 	\pause % uncover line 2.
@@ -916,13 +925,13 @@
 			\path[->] (qi) edge   [wavy]                                                            node {$R_k(i, j)$}     (qj);
 
 			\visible<5->
-			{\path[->] (qi) edge   [wavy, swap]                                                      node {$R_k(i, k)$}     (qk);}
+			{\path[->] (qi) edge   [wavy, swap]                                                      node {$R_k(i, k\!+\!1)$}     (qk);}
 
 			\visible<6->
 			{\path[->] (qk) edge   [wavy, loop, out = 320, in = 220, looseness = 5, pos = 0.17]      node {$\big(R_k(k\!+\!1, k\!+\!1)\big)^*$} (qk);}
 
 			\visible<7->
-			{\path[->] (qk) edge   [wavy, swap]                                                      node {$R_k(k, j)$}     (qj);}
+			{\path[->] (qk) edge   [wavy, swap]                                                      node {$R_k(k\!+\!1, j)$}     (qj);}
 		\end{tikzpicture}
 		\caption*{\gray{Adapted from Harrison \cite[pg.~59]{lemmings}}}
 	\end{figure}
@@ -989,8 +998,86 @@
 		\item[$\checkmark $2.] A language is representable by an NDFA if and only if it is representable by a DFA.
 		\item[$\checkmark $3.] All representable languages are regular.
 	\end{enumerate}
+	So we have proven Kleene's theorem.
 \end{frame}
 
+
+\begin{frame}
+	\frametitle{Applications}
+	\begin{itemize}
+		\pause
+		\item We can convert a regular language (or expression) into an NDFA.
+		\pause
+		\item We can convert an NDFA into a DFA
+		\pause
+		\item We can minimize a DFA
+		\pause
+		\item We can represent a DFA as a matrix
+	\end{itemize}
+	\pause
+	\begin{columns}
+	\column{0.5 \textwidth}
+		\begin{figure}[H]
+			\centering
+			\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=1.7cm]
+				\node[initial,state,accepting] (q0)                {$q_0$};
+				\node[state]                   (q1) [right of = q0] {$q_1$};
+				\node[state]                   (q2) [right of = q1] {$q_2$};
+
+				\path[->](q0) edge [loop above] node {0} (q0);
+				\path[->](q0) edge [bend left]  node {1} (q1);
+				\path[->](q1) edge [bend left]  node {0} (q2);
+				\path[->](q1) edge [bend left]  node {1} (q0);
+				\path[->](q2) edge [bend left]  node {0} (q1);
+				\path[->](q2) edge [loop right] node {1} (q2);
+			\end{tikzpicture}
+		\end{figure}
+	\pause
+	\column{0.5 \textwidth}
+		\begin{figure}[H]
+			\centering
+			\begin{tabular}{c c c}
+								& $\mathbf{0}$ 	& $\mathbf{1}$ \\
+				$\mathbf{q_0}$	& $q_0$			& $q_1$ \\
+				$\mathbf{q_1}$	& $q_2$			& $q_0$ \\
+				$\mathbf{q_2}$	& $q_1$			& $q_2$ \\
+			\end{tabular}
+		\end{figure}
+	\end{columns}
+	\pause
+	Looking up a value in an array is $\bigo(1)$.\\
+	\pause
+	Looking up $N$ values in an array is $\bigo(N)$.
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Grep (Everyone's Favorite Unix Utility!)}
+	\begin{center}
+		{\small
+		\begin{tabular}{|r l|}
+			\hline
+			\textbf{Expression} 	& \textbf{Meaning} \\
+			\hline
+			$\mathtt{.}$ 					& Any character \\
+			$\mathtt{a}$ 					& The letter $\mathtt{a}$ \\
+			$\mathtt{a?}$ 					& $\mathtt{a}$ once or zero times \\
+			$\mathtt{a*}$ 					& $\mathtt{a}$ zero or more times \\
+			$\mathtt{a+}$ 					& $\mathtt{a}$ one or more times \\
+			$\mathtt{a \{ n, m \}}$ 		& $\mathtt{a}$ between $\mathtt{n}$ and $\mathtt{m}$ times \\
+			$\mathtt{[\char`^{} abc]}$ 		& any character except $\mathtt{a}$, $\mathtt{b}$, or $\mathtt{c}$ \\
+			$\mathtt{(a | b)}$ 				& either $\mathtt{a}$ or $\mathtt{b}$ \\
+			\hline
+		\end{tabular}
+		}
+	\end{center}
+	\begin{block}{Examples}
+	\vspace{-3 ex}
+		\begin{itemize}
+			\item[] \verb!a (ND)?FA!
+			\item[] \verb!^\d{2}:\d{2}:\d{2}\d{1,2}\/\d{1,2}\/\d{1,2}$! 
+		\end{itemize}
+	\end{block}
+\end{frame}
 
 \begin{frame}[shrink]
 	\frametitle{References}
