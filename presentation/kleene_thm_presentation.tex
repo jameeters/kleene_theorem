@@ -40,7 +40,7 @@
 	\setbeameroption{hide notes}
 }
 \mode<handout>{
-	\setbeameroption{show only notes}
+	% \setbeameroption{show only notes}
 	\pgfpagesuselayout{2 on 1}[letterpaper, border shrink=5mm]
 
 }
@@ -55,7 +55,7 @@
 		\date{\today}
 	\fi
 
-\usetikzlibrary{arrows, automata, shapes, decorations.pathmorphing}
+\usetikzlibrary{arrows, automata, shapes, decorations.pathmorphing, fit}
 \tikzset{
 		initial text = {\scriptsize{\textsc{start}}},
 		initial distance = 1 pt,
@@ -63,7 +63,8 @@
 		elliptic state/.style={draw,rounded rectangle},
 		accepting/.style ={thick, double},
 		wavy/.style={decorate, decoration={snake,amplitude=2 pt, segment length=5 pt, post length = 5 pt}},
-		less wavy/.style={decorate, decoration={snake,amplitude=2 pt, segment length=3 pt, post length = 5 pt}}
+		less wavy/.style={decorate, decoration={snake,amplitude=2 pt, segment length=3 pt, post length = 5 pt}},
+		hl state/.style={state, draw=none, fill=blue, fill opacity = 0.3, inner sep = - 15 pt}
 	}
 
 
@@ -347,8 +348,8 @@
 	\visible<4->{$F = \{ q_0 \}$}\\
 	\visible<5->{$\Sigma = \{ 0, 1 \}$}
 	~\\[2 ex]
-	\visible<12->{$0 \to 2 x \mod 3$}\\
-	\visible<12->{$1 \to (2 x + 1) \mod 3$}
+	\visible<12->{$0: x \to 2 x \mod 3$}\\
+	\visible<12->{$1: x \to (2 x + 1) \mod 3$}
 \end{frame}
 \note[itemize]{
 	\item Build a finite automaton to accept binary numbers divisible by 3. (reading from the most significant bit).
@@ -376,12 +377,6 @@
 	\end{align*}
 	
 	\pause
-	\iffalse
-	No transitions on $\lambda$:
-	\[
-		\Delta(q_i, \lambda) = q_i
-	\]
-	\fi
 	\begin{figure}
 	\centering
 		\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
@@ -445,9 +440,39 @@
 		\path[->] (q0) edge [bend right, below] node {$\lambda$} (q2);
 
 		\visible<5->{
-			\path[->] (q0) edge    [red, pos = 0.7] node {$b$}    (qx);
-			\path[->] (q1) edge    [red]            node {$a$}    (qx);
-			\path[->] (q2) edge    [red, swap]      node {$a, b$} (qx);
+			\path[->] (q0) edge [red, pos = 0.7]                                        node {$b$}    (qx);
+			\path[->] (q1) edge [red]                                                   node {$a$}    (qx);
+			\path[->] (q2) edge [red, swap]                                             node {$a, b$} (qx);
+			\path[->] (qx) edge [red, loop right, out = 0, in = 50, distance = 0.75 cm] node {$a, b$} (qx);
+		}
+		\visible<6-7>{
+			\node[hl state][fit=(q0)]{};
+			\node[hl state][fit=(q2)]{};
+		}
+		\visible<7->{
+			\node[draw=none](input a)[above left of = q0, text = blue, node distance = 3 cm, xshift = 0.5 cm]{Input $a$};
+		}
+		\visible<8-10>{
+			\node[hl state][fit=(q0)]{};
+			\node[hl state][fit=(q1)]{};
+		}
+		\visible<8>{
+			\node[hl state][fit=(qx)]{};
+		}
+		\visible<10->{
+			\node[draw=none](input b)[below of = input a, node distance = 10 pt, text = blue]{Input $b$};
+		}
+		\visible<11>{
+			\node[hl state][fit=(qx)]{};
+		}
+		\visible<11-12>{
+			\node[hl state][fit=(q2)]{};
+		}
+		\visible<12->{
+			\node[draw=none](input any)[below of = input b, node distance = 10 pt, text = blue]{Input anything};
+		}
+		\visible<13>{
+			\node[hl state][fit=(qx)]{};
 		}
 	\end{tikzpicture}
 	\end{center}
@@ -486,7 +511,7 @@
 	\pause
 	An NDFA accepts $w$ if
 	\[
-		\Delta(s, w) \subseteq F.
+		\Delta(s, w) \cap F \neq \emptyset.
 	\]
 
 
@@ -499,7 +524,7 @@
 
 \begin{frame}
 	\frametitle{Kleene's Theorem}
-	A language representable if and only if it is regular.
+	A language is representable if and only if it is regular.
 
 	\begin{enumerate}
 		\pause
@@ -568,22 +593,22 @@
 	\frametitle{Combining Representable Languages}
 	\begin{figure}[H]
 		\centering
-			\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2.5cm, initial left]
+			\begin{tikzpicture}[>=stealth,shorten >=1pt,auto,node distance=2.5cm, initial left]
 				\node[initial,state]    (q0)                   {$s_A$};
 				\node[elliptic state]   (ma)  [right of  = q0] {$\quad M_A \quad$};
 				\node[state, accepting] (fa)  [right of = ma]  {$F_A$};
-				\path[->](q0) edge node {$\lambda$} (ma);
-				\path[->](ma) edge node {$\lambda$} (fa);
+				\path[->](q0) edge          node {$\lambda$} (ma);
+				\path[->](ma) edge [double] node {$\lambda$} (fa);
 			\end{tikzpicture}
 			\caption*{$L(M_A) = A$}
 		\end{figure}~\\[2 em]
 		\begin{figure}[H]
-			\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2.5cm, initial left]
+			\begin{tikzpicture}[>=stealth,shorten >=1pt,auto,node distance=2.5cm, initial left]
 				\node[initial,state]    (q0)                   {$s_B$};
 				\node[elliptic state]   (mb)  [right of  = q0] {$\quad M_B \quad$};
 				\node[state, accepting] (fb)  [right of = ma]  {$F_B$};
-				\path[->](q0) edge node {$\lambda$} (mb);
-				\path[->](mb) edge node {$\lambda$} (fb);
+				\path[->](q0) edge          node {$\lambda$} (mb);
+				\path[->](mb) edge [double] node {$\lambda$} (fb);
 			\end{tikzpicture}
 			\caption*{$L(M_B) = B$}
 		\end{figure}
@@ -609,23 +634,23 @@
 	\frametitle{Union of Representable Languages}
 	\begin{figure}[H]
 		\centering
-		\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2.4cm, initial left]
+		\begin{tikzpicture}[>=stealth,shorten >=1pt,auto,node distance=2.4cm, initial left]
 			\visible<2->{
-				\node[initial,state]    (sab)                             {$s_\cup$};
+				\node[initial,state]    (sab)                             {$s_{A \cup B}$};
 			}
 
 			\visible<1->{
 				\node[state]            (sa)  [above right of = sab, xshift = 1 cm]      {$s_A$};
 				\node[elliptic state]   (ma)  [right of = sa]                            {$\quad M_A \quad$};
 				\node[state,accepting]  (fa)  [right of = ma]                            {$F_A$};
-				\path[->](sa) edge node {$\lambda$} (ma);
-				\path[->](ma) edge node {$\lambda$} (fa);
+				\path[->](sa) edge          node {$\lambda$} (ma);
+				\path[->](ma) edge [double] node {$\lambda$} (fa);
 
 				\node[state]            (sb)  [below right of = sab, xshift = 1 cm]      {$s_B$};
 				\node[elliptic state]   (mb)  [right of = sb]                            {$\quad M_B \quad$};
 				\node[state, accepting] (fb)  [right of = mb]                            {$F_B$};
-				\path[->](sb) edge node {$\lambda$} (mb);
-				\path[->](mb) edge node {$\lambda$} (fb);
+				\path[->](sb) edge          node {$\lambda$} (mb);
+				\path[->](mb) edge [double] node {$\lambda$} (fb);
 			}
 			\visible<3->{
 				\path[->](sab) edge [out=0, in=180]       node {$\lambda$} (sa);
@@ -649,20 +674,20 @@
 	\frametitle{Concatenation of Representable languages}
 	\begin{figure}[H]
 		\centering
-			\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2.5cm, initial left]
+			\begin{tikzpicture}[>=stealth,shorten >=1pt,auto,node distance=2.5cm, initial left]
 				\node[initial,state]    (sab)                   {$s_A$};
 				\node[elliptic state]   (ma)  [right of = sab]  {$\quad M_A \quad$};
 				\alt<2->
 					{\node[state]            (fa)  [right of = ma]   {$F_A$};}
 					{\node[state, accepting] (fa)  [right of = ma]   {$F_A$};}
-				\path[->](sab) edge node {$\lambda$} (ma);
-				\path[->](ma)  edge node {$\lambda$} (fa);
+				\path[->](sab) edge          node {$\lambda$} (ma);
+				\path[->](ma) edge [double] node {$\lambda$} (fa);
 
-					\node[state]            (sb)  [below right of = ma, node distance = 2cm, yshift = -1 cm]  {$s_B$};
-					\node[elliptic state]   (mb)  [right of = sb]                                             {$\quad M_B \quad$};
-					\node[state, accepting] (fb)  [right of = mb]                                             {$F_B$};
-					\path[->](sb) edge node {$\lambda$} (mb);
-					\path[->](mb) edge node {$\lambda$} (fb);
+				\node[state]            (sb)  [below right of = ma, node distance = 2cm, yshift = -1 cm]  {$s_B$};
+				\node[elliptic state]   (mb)  [right of = sb]                                             {$\quad M_B \quad$};
+				\node[state, accepting] (fb)  [right of = mb]                                             {$F_B$};
+				\path[->](sb) edge          node {$\lambda$} (mb);
+				\path[->](mb) edge [double] node {$\lambda$} (fb);
 
 				\visible<3->{
 					\path[->](fa) edge  [out=0, in=180, distance=4cm, swap] node {$\lambda$}          (sb);
@@ -687,14 +712,14 @@
 	\frametitle{Kleene Closure of a Representable Language}
 	\begin{figure}[H]
 		\centering
-			\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2.7cm, initial left]
+			\begin{tikzpicture}[>=stealth,shorten >=1pt,auto,node distance=2.7cm, initial left]
 				\node[state, initial]            (sa)        {$s_A$};
 
 				\visible<1->{
 					\node[elliptic state]   (ma)  [right of = sa] {$\quad M_A \quad$};
 					\node[state,accepting]  (fa)  [right of = ma] {$F_A$};
-					\path[->](sa) edge node {$\lambda$} (ma);
-					\path[->](ma) edge node {$\lambda$} (fa);
+					\path[->](sa) edge          node {$\lambda$} (ma);
+					\path[->](ma) edge [double] node {$\lambda$} (fa);
 				}
 				\visible<2->{
 					\path[->](sa) edge [bend left, above, distance = 2.3 cm] node {$\lambda$} (fa);
@@ -787,7 +812,7 @@
 	\]
 	which implies
 	\[
-		\Delta'(\{ s \}, w) \in F' \iff \Delta(s, w) \subseteq F.
+		\Delta'(\{ s \}, w) \in F' \iff \Delta(s, w) \cap F \neq \emptyset.
 	\]
 \end{frame}
 \note[itemize]{
@@ -820,7 +845,7 @@
 		We want to construct a DFA $M'$.
 
 	\end{columns}
-	\alt<-2>
+	\temporal<2>{}
 	{$Q' = \big\{ \emptyset, \{ q_0 \}, \{ q_1 \}, \{ q_2 \}, \{ q_0, q_1 \}, \{ q_0, q_2 \}, \{ q_1, q_2 \}, \{ q_0, q_1, q_2 \} \big\}$}
 	{$Q' = \big\{ \emptyset, \{ q_0 \}, \{ q_1 \}, \cancel{\{ q_2 \}}, \{ q_0, q_1 \}, \{ q_0, q_2 \}, \cancel{\{ q_1, q_2 \}}, \cancel{\{ q_0, q_1, q_2 \}} \big\}$}
 	\pause
@@ -940,12 +965,13 @@
 
 \begin{frame}
 	\frametitle{Example}
+	$\mod 3$ finite automaton:
 	\begin{figure}[H]
 		\centering
 		\begin{tikzpicture}[>=stealth',shorten >= 1 pt, auto, node distance = 2 cm]
-			\alt<-2>
-			{\node[initial,state,accepting] (q0)                 {$q_0$};}
+			\alt<3->
 			{\node[initial,state,accepting] (q0)                 {$q_3$};}
+			{\node[initial,state,accepting] (q0)                 {$q_0$};}
 			\node[state]                    (q1) [right of = q0] {$q_1$};
 			\node[state]                    (q2) [right of = q1] {$q_2$};
 
@@ -957,6 +983,7 @@
 			\path[->](q2) edge [loop right] node {1} (q2);
 		\end{tikzpicture}
 	\end{figure}
+	\vspace{-2 ex}
 	\pause % 2 show text
 	\visible<2->
 	{We need to number the states starting at 1.}
@@ -1014,6 +1041,7 @@
 		\pause
 		\item We can represent a DFA as a matrix
 	\end{itemize}
+	\vspace{-2 ex}
 	\pause
 	\begin{columns}
 	\column{0.5 \textwidth}
@@ -1045,27 +1073,28 @@
 		\end{figure}
 	\end{columns}
 	\pause
-	Looking up a value in an array is $\bigo(1)$.\\
+	Looking up one value in an array is $\bigo(1)$.\\
 	\pause
 	Looking up $N$ values in an array is $\bigo(N)$.
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle{Grep (Everyone's Favorite Unix Utility!)}
+	\vspace{-3 ex}
 	\begin{center}
 		{\small
 		\begin{tabular}{|r l|}
 			\hline
 			\textbf{Expression} 	& \textbf{Meaning} \\
-			\hline
-			$\mathtt{.}$ 					& Any character \\
-			$\mathtt{a}$ 					& The letter $\mathtt{a}$ \\
-			$\mathtt{a?}$ 					& $\mathtt{a}$ once or zero times \\
-			$\mathtt{a*}$ 					& $\mathtt{a}$ zero or more times \\
-			$\mathtt{a+}$ 					& $\mathtt{a}$ one or more times \\
-			$\mathtt{a \{ n, m \}}$ 		& $\mathtt{a}$ between $\mathtt{n}$ and $\mathtt{m}$ times \\
-			$\mathtt{[\char`^{} abc]}$ 		& any character except $\mathtt{a}$, $\mathtt{b}$, or $\mathtt{c}$ \\
-			$\mathtt{(a | b)}$ 				& either $\mathtt{a}$ or $\mathtt{b}$ \\
+				\hline
+				\verb!.! 			& Any character \\
+				\verb!a! 			& The letter \verb!a! \\
+				\verb!a?! 			& \verb!a! once or zero times \\
+				\verb!a*! 			& \verb!a! zero or more times \\
+				\verb!a+! 			& \verb!a! one or more times \\
+				\verb!a{n, m}! 	& \verb!a! between \verb!n! and \verb!m! times \\
+				\verb![^abc]! 		& any character except \verb!a!, \verb!b!, or \verb!c! \\
+				\verb!(a|b)! 		& either \verb!a! or \verb!b! \\
 			\hline
 		\end{tabular}
 		}
@@ -1074,7 +1103,13 @@
 	\vspace{-3 ex}
 		\begin{itemize}
 			\item[] \verb!a (ND)?FA!
-			\item[] \verb!^\d{2}:\d{2}:\d{2}\d{1,2}\/\d{1,2}\/\d{1,2}$! 
+			\begin{itemize}
+				\item[] ``a FA'' or ``a NDFA'' but not ``a DFA''
+			\end{itemize}
+			\item[] \verb!^\d{2}:\d{2}:\d{2} \d{1,2}\/\d{1,2}\/\d{1,2}$! 
+			\begin{itemize}
+				\item[] ``12:00:00 11/28/17''
+			\end{itemize}
 		\end{itemize}
 	\end{block}
 \end{frame}
