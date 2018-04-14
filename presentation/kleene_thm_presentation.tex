@@ -36,15 +36,38 @@
 	\presstimefalse
 	\presstimetrue
 
+\newif\ifhandout
+	\handoutfalse
+
 \mode<presentation>{
 	\setbeameroption{hide notes}
 }
 \mode<handout>{
 	% \setbeameroption{show only notes}
 	\pgfpagesuselayout{2 on 1}[letterpaper, border shrink=5mm]
-
+	\handouttrue
 }
-
+\ifhandout
+	\usepackage{lastpage}
+	\usepackage{refcount}
+	\usepackage{ifthen}
+	\usepackage{background}
+	\SetBgAngle{0}
+	\SetBgScale{1}
+	\SetBgOpacity{1}
+	\SetBgColor{black}
+	\SetBgPosition{current page.north west}
+	\SetBgVshift{-5 pt}
+	\SetBgHshift{-20 pt}
+	\SetBgContents{}
+	\makeatletter
+	\AddEverypageHook{%
+	\ifthenelse{\isodd{\thepage}}%
+	{\SetBgContents{\the\numexpr\thepage/2\relax}}%
+	{\SetBgContents{}}%
+	\bg@material}
+	\makeatother
+\fi
 \ifpresstime
 		\renewcommand{\meo}[1]{}
 		\date{April 13, 2018}
